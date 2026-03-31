@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="images/svasthyaicon2.ico" type="image/ico" />
-
     <title>Svasthya | Dashboard</title>
     <!-- Bootstrap -->
     <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -37,37 +36,32 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-messaging.js"></script>
     <script type="module" src="../build/js/livepage/database_function.js"></script>
   </head>
-
   <body class="nav-md">
     <div class="container body">
       <div class="main_container">
-        <div class="col-md-3">
-          <div class="scroll-view">
-            <div class="navbar nav_title" style="border: 0">
-              <a href="dashboard.html" class="site_title"><img src="images/svasthyaicon.png" width="55" height="55" /> <span>SVASTHYA &trade;</span></a>
-            </div>
-
-            <div class="clearfix"></div>
-            <div class="menu_section">
-              <h3></h3>
-            </div>
-          </div>
-        </div>
         <!-- top navigation -->
         <div class="top_nav">
           <div class="">
+            <!-- Left: logo and title -->
+            <div class="Lefthand">
+              <a href="dashboard.html" class="site_title"><img src="images/svasthyaicon.png" width="55" height="55" /> <span>SVASTHYA &trade;</span></a>
+              <a id="DashboardSubtitle" href="dashboard.html"></a>
+            </div>
+            <!-- Right: profile avatar, name & logout dropdown -->
             <div class="Righthand">
-              <div class="form-group pull-right top_search">
-                <div class="input-group">
-                  <span
-                    ><a id="logout"
-                      ><span class="tooltiptext"><i class="fa fa-power-off"></i> Logout</span></a
-                    ></span
-                  >
+              <div class="profile-wrapper">
+                <div id="profileToggle" class="profile-toggle">
+                  <div class="profile-avatar">
+                    <i class="fa fa-user"></i>
+                  </div>
+                  <div class="profile-text">
+                    <span id="DoctorName"></span>
+                  </div>
+                </div>
+                <div id="profileMenu" class="profile-menu">
+                  <a id="logout"><i class="fa fa-power-off"></i> Logout</a>
                 </div>
               </div>
-
-              <a id="DashboardSubtitle" href="dashboard.html"></a>
             </div>
             <div id="myModal" class="modal">
               <!-- Modal content -->
@@ -76,13 +70,8 @@
                 <p id="content"></p>
               </div>
             </div>
-
-            <div class="Lefthand">
-              <p id="DoctorName"></p>
-            </div>
           </div>
         </div>
-
         <!-- /top navigation -->
 
         <div id="loader">
@@ -90,11 +79,10 @@
         </div>
       </div>
       <!-- Patient details -->
-      <div class="clearfix"></div>
 
       <div class="right_col" role="main">
         <div class="x_content">
-          <div id="p_details" class="patient_details" style="padding: 0rem 2rem 2rem"></div>
+          <div id="p_details" class="patient_details"></div>
         </div>
       </div>
       <div id="lightbox">
@@ -106,6 +94,7 @@
         <div id="closebuttoncontext">&times;</div>
       </div>
     </div>
+    <div class="version-badge">Version 0.5.0</div>
 
     <!-- jQuery -->
     <script src="../vendors/jquery/dist/jquery.min.js"></script>
@@ -149,7 +138,6 @@
     <!-- Custom Theme Scripts -->
     <script type="module" src="../build/js/LeftandTopNavigation/LeftandTopNavigation.js"></script>
     <script type="module" src="../build/js/dashboard/dashboard-custom.js"></script>
-    <script type="module" src="../build/js/backend/incomingpopup.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </body>
   <script>
@@ -158,5 +146,4 @@
       location.replace("index.html?openpage=livecomponents");
     }
   </script>
-  <div class="version-badge">Version 0.4.3</div>
 </html>

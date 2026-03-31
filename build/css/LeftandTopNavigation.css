@@ -2,7 +2,8 @@
 @font-face {
   font-family: "Glyphicons Halflings";
   src: url("https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.eot");
-  src: url("https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"),
+  src:
+    url("https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"),
     url("https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.woff") format("woff"),
     url("https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.ttf") format("truetype"),
     url("https://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular") format("svg");
@@ -16,7 +17,18 @@
   box-shadow: inset 0 0 5px rgba(172, 171, 171, 0.582);
   border-radius: 10px;
 }
-
+.version-badge {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  z-index: 9999;
+  pointer-events: none;
+}
 ::-webkit-scrollbar-thumb {
   background: rgba(26, 73, 143, 0.63);
   border-radius: 10px;
@@ -37,7 +49,9 @@
   align-items: center;
   justify-content: center;
   background: #333333a9;
-  transition: opacity 0.75s, visibility 0.75s;
+  transition:
+    opacity 0.75s,
+    visibility 0.75s;
 }
 
 .loader a {
@@ -114,7 +128,7 @@
   height: 100%;
   z-index: 9;
   width: 280px;
-  background: #026492;
+  background: #1991c994;
 }
 .nav-sm .nav.side-menu > li > a .menu-text {
   display: none !important;
@@ -250,15 +264,15 @@
 }
 
 .nav_menu {
-  background: #00458b;
-  border-bottom: 1px solid #00458b;
+  background: #1991c994;
+  border-bottom: 1px solid #1991c994;
 
   width: 100%;
   z-index: 7;
   overflow: hidden;
 
   position: relative;
-  height: 56px;
+  height: 57px;
 }
 
 .info-number .badge {
@@ -298,9 +312,9 @@
 .nav_title {
   width: 280px;
   float: left;
-  background: #ffffff;
+  /* background: #1991c994; */
   border-radius: 0;
-  height: 50px;
+  height: 57px;
   border-right: 5px #000;
   padding: 0px;
 }
@@ -420,7 +434,7 @@
 
 body {
   color: #2e2e2e;
-  background: #00458b;
+  background: #1991c994;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   font-size: 13px;
   font-weight: 400;
@@ -555,8 +569,8 @@ table.no-margin .progress {
   position: relative;
   min-height: 1px;
   float: left;
-  padding-right: 10px;
-  padding-left: 10px;
+  /* padding-right: 10px; */
+  /* padding-left: 10px; */
 }
 
 .grid_slider .col-md-6 {
@@ -602,6 +616,70 @@ a:focus {
   font-size: 20px;
 }
 
+/* Profile avatar + name + dropdown on the right of top nav */
+.profile-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.profile-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.profile-avatar i {
+  font-size: 18px;
+}
+
+.profile-text span {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.profile-menu {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  min-width: 140px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  padding: 4px 0;
+  display: none;
+  z-index: 1000;
+}
+
+.profile-menu a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  color: #333333;
+  text-decoration: none;
+}
+
+.profile-menu a:hover {
+  background-color: #f5f5f5;
+}
+
+.profile-menu i {
+  color: #000000;
+}
+
 .ContextRighthand {
   position: absolute;
   float: right;
@@ -622,8 +700,8 @@ a:focus {
 
 .Lefthand {
   float: left;
-  margin-left: 100px;
-  padding-top: 15px;
+  /* margin-left: 100px; */
+  /* padding-top: 15px; */
   color: #ffffff;
   font-size: large;
   height: 56px;
@@ -748,8 +826,12 @@ a:focus {
   text-shadow: rgba(0, 0, 0, 0.25) 0 -1px 0;
   background: -webkit-gradient(linear, left top, left bottom, from(#334556), to(#2c4257)), #2a3f54;
   background: linear-gradient(#334556, #2c4257), #2a3f54;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0;
-  box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0;
+  -webkit-box-shadow:
+    rgba(0, 0, 0, 0.25) 0 1px 0,
+    inset rgba(255, 255, 255, 0.16) 0 1px 0;
+  box-shadow:
+    rgba(0, 0, 0, 0.25) 0 1px 0,
+    inset rgba(255, 255, 255, 0.16) 0 1px 0;
 }
 
 .site_title {
@@ -758,10 +840,10 @@ a:focus {
   font-weight: 400;
   font-size: x-large;
   width: 100%;
-  background-color: #00458b;
-  box-shadow: 1px 0px rgb(0, 0, 0);
+  /* background-color: #1991c994; */
+  /* box-shadow: 1px 0px rgb(0, 0, 0); */
   color: #ecf0f1 !important;
-  margin-left: 0 !important;
+  margin-left: 10px;
   line-height: 59px;
   display: block;
   height: 57px;
@@ -1668,7 +1750,7 @@ span.right {
     position: fixed;
     height: 100%;
     width: 230px;
-    background: #026492;
+    background: #1991c994;
   }
   .nav_title {
     width: 230px;
@@ -1740,7 +1822,7 @@ span.right {
     position: fixed;
     height: 100%;
     width: 200px;
-    background: #026492;
+    background: #1991c994;
   }
   .nav_title {
     width: 200px;
@@ -1814,7 +1896,7 @@ span.right {
     position: fixed;
     height: 100%;
     width: 200px;
-    background: #00458b;
+    background: #1991c994;
   }
 
   .img-circle.profile_img {

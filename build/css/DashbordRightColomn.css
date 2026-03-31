@@ -75,7 +75,7 @@ form:after {
 
 .x_content {
   position: relative;
-
+  padding: 10px;
   width: 100%;
   z-index: initial;
   clear: both;
@@ -97,18 +97,80 @@ form:after {
   z-index: 9999;
   pointer-events: none;
 }
+.patient_details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 10px 16px;
+}
+
 .patient_details .profile_view {
-  display: inline-block;
+  display: block;
+  float: none;
   position: static;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  margin-left: 5px;
-  margin-right: 5px;
-  border-radius: 10px;
-  border-bottom: 1px solid black;
-  background-color: #000000;
-  width: 400px;
-  height: 410px;
+  margin: 0;
+  border: 1px solid rgba(55, 253, 18, 0.16);
+  border-radius: 18px;
+  background: radial-gradient(circle at top left, rgba(77, 160, 214, 0.18), transparent 34%), linear-gradient(180deg, #102536 0%, #0b1b28 100%);
+  width: min(100%, 392px);
+  min-height: 332px;
+  box-shadow: 0 16px 32px rgba(4, 11, 19, 0.34);
+  overflow: hidden;
+  cursor: pointer;
+  padding: 12px;
+  transition:
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.patient_details .profile_view:hover {
+  box-shadow: 0 22px 40px rgba(4, 11, 19, 0.42);
+  border-color: rgba(55, 253, 18, 0.32);
+}
+
+.blink-border {
+  border: 5px solid #37fd12;
+  animation: blink-border-colors 1s linear infinite;
+}
+
+@keyframes blink-border-colors {
+  0% {
+    border-color: #37fd12;
+    box-shadow: 0 0 100px rgba(55, 253, 18, 0.45);
+  }
+
+  50% {
+    border-color: #ff4d4d;
+    box-shadow: 0 0 100px rgba(255, 77, 77, 0.5);
+  }
+
+  100% {
+    border-color: #37fd12;
+    box-shadow: 0 0 100px rgba(55, 253, 18, 0.45);
+  }
+}
+.blink-text {
+  color: #37fd12;
+  animation: blink-text-colors 1s linear infinite;
+}
+
+@keyframes blink-text-colors {
+  0% {
+    color: #37fd12;
+    text-shadow: 0 0 10px rgba(55, 253, 18, 0.45);
+  }
+
+  50% {
+    color: #ff4d4d;
+    text-shadow: 0 0 12px rgba(255, 77, 77, 0.5);
+  }
+
+  100% {
+    color: #37fd12;
+    text-shadow: 0 0 10px rgba(55, 253, 18, 0.45);
+  }
 }
 
 .PatientAttributes {
@@ -133,10 +195,9 @@ form:after {
 }
 
 .border_1 {
-  height: 50px;
   width: 100%;
-  margin-bottom: 0.5rem;
-  border-radius: 10px;
+  margin-bottom: 0;
+  border-radius: 18px;
 }
 
 .ews_bar_1 {
@@ -160,6 +221,163 @@ form:after {
   background-clip: padding-box;
   -webkit-transition: all 300ms ease-in-out;
   transition: all 300ms ease-in-out;
+}
+
+.patient-card__shell {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 180ms ease;
+  will-change: transform;
+  /* padding: 14px; */
+}
+
+.patient_details .profile_view:hover .patient-card__shell {
+  transform: translateY(-3px);
+}
+
+.patient-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.patient-card__identity {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.patient-card__name-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.patient-card__caption {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #7aa2d6;
+}
+
+.patient-card__name {
+  display: block;
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.05;
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.patient-card__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.patient-card__meta span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(122, 162, 214, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.patient-card__meta--badges span {
+  color: #d9ecff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.patient-card__ews {
+  min-width: 74px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  text-align: center;
+  color: #ffffff;
+}
+
+.patient-card__ews-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.patient-card__ews-value {
+  display: block;
+  margin-top: 4px;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.patient-card__content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.8fr);
+  gap: 12px;
+  min-height: 0;
+}
+
+.patient-card__waveforms {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.wave-card {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 8px 5px;
+  border: 1px solid rgba(55, 253, 18, 0.16);
+  border-radius: 12px;
+  background: rgba(7, 20, 35, 0.78);
+}
+
+.wave-card__title {
+  display: block;
+  margin: 0 0 3px;
+  color: #37fd12;
+  font-size: 10px;
+  letter-spacing: 0.8px;
+}
+
+.wave-card__chart {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 52px;
+  margin-bottom: 0;
+}
+
+.wave-card__chart--ecg,
+.wave-card__chart--ppg {
+  height: 52px;
+}
+
+.wave-card__chart--rr {
+  height: 52px;
+}
+
+.patient-card__vitals-panel {
+  padding-left: 12px;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .ews_card.ews_bar.ews {
@@ -193,25 +411,33 @@ form:after {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
 }
 .vitals-list li.vital {
   position: relative;
-  margin: 0px 0 12px;
-  padding: 14px 10px 10px;
+  margin: 0;
+  padding: 14px 6px 8px;
   border: 1px solid currentColor;
-  border-radius: 6px;
-  background: #000;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.48);
+  min-height: 52px;
+}
+
+.vitals-list li.vital.vital--wide {
+  grid-column: auto;
 }
 
 .vital-label {
   position: absolute;
   top: -9px;
-  left: 12px;
+  left: 10px;
   padding: 0 6px 1px;
-  background: #000;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  background: #05111f;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
   line-height: 1.1;
   color: currentColor;
@@ -226,14 +452,17 @@ form:after {
 .vital-main {
   display: flex;
   align-items: flex-end;
-  gap: 6px;
+  justify-content: center;
+  gap: 4px;
+  min-height: 100%;
 }
 
 .vital-value {
   margin: 0;
-  font-size: 22px;
+  font-size: 16px;
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.1;
+  white-space: nowrap;
 }
 
 .vital-unit {
@@ -277,7 +506,6 @@ h2 {
 }
 h3 {
   display: inline;
-  margin-left: 10px;
   font-size: 15px;
   font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
 }
@@ -305,6 +533,27 @@ h3 {
   .patient_details {
     padding-left: 0px;
     height: 55dvh;
+  }
+
+  .patient_details .profile_view {
+    width: 100%;
+  }
+
+  .patient-card__content {
+    grid-template-columns: 1fr;
+  }
+
+  .patient-card__waveforms {
+    grid-template-columns: 1fr;
+  }
+
+  .patient-card__vitals-panel {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .vitals-list {
+    grid-template-columns: 1fr;
   }
 }
 .list-unstyled {

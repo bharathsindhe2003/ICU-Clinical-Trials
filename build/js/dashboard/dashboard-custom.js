@@ -3,319 +3,465 @@ import { patient_details } from "./Dashboard-UI.js";
 
 document.getElementById("loader").className = "loader";
 
-let ews_list = fb.database().ref().child("EWS");
+const ews_list = fb.database().ref().child("EWS");
+const ecg_list = fb.database().ref().child("ECG_plot");
+const ppg_list = fb.database().ref().child("PPG_plot");
+const rr_list = fb.database().ref().child("RR_plot");
+const vital_list = fb.database().ref().child("patientlivedata7s");
+const pat_bp_5sec_ref = fb.database().ref().child("PAT_BP_5s_tree");
 
-let ecg_list = fb.database().ref().child("ECG_plot");
-let ppg_list = fb.database().ref().child("PPG_plot");
-let rr_list = fb.database().ref().child("RR_plot");
-let vital_list = fb.database().ref().child("patientlivedata7s");
+const chartRegistry = new Map();
+const DEFAULT_EWS_VALUE = "--";
+const DEFAULT_EWS_COLOR = "0";
+const PATIENT_ID_INDEX = 4;
+const PATIENT_EWS_VALUE_INDEX = 5;
+const PATIENT_EWS_COLOR_INDEX = 6;
+const PATIENT_HR_INDEX = 7;
+const PATIENT_BP_INDEX = 8;
+const PATIENT_SPO2_INDEX = 9;
+const PATIENT_TEMP_INDEX = 10;
+const PATIENT_RR_INDEX = 11;
+const PATIENT_ECG_INDEX = 12;
+const PATIENT_ECG_TIMESTAMP_INDEX = 13;
+const PATIENT_PPG_INDEX = 14;
+const PATIENT_PPG_TIMESTAMP_INDEX = 15;
+const PATIENT_RR_WAVE_INDEX = 16;
+const PATIENT_RR_TIMESTAMP_INDEX = 17;
 
-var obj = {};
-
-let pat_bp_5sec_ref = fb.database().ref().child("PAT_BP_5s_tree");
-
+// let pat_bp_5sec_ref = fb.database().ref().child("PAT_BP_5s_tree");
 var doctor_id = localStorage.getItem("doctor_id");
-var ref_doc_id = localStorage.getItem("doc_ref_id");
-firebase_Data_retrieval(ref_doc_id);
-document.getElementById("DoctorName").innerHTML = "Welcome Dr. " + localStorage.getItem("docname");
+var doctor_name = localStorage.getItem("docname");
+var ref_doc_id = localStorage.getItem("doc_registerId");
+
+var DoctorNameElement = document.getElementById("DoctorName");
+
+if (DoctorNameElement && doctor_name) {
+  DoctorNameElement.innerHTML = "Dr. " + doctor_name;
+  firebase_Data_retrieval(ref_doc_id);
+} else {
+  console.warn('[dashboard-custom.js] Element with id "DoctorName" not found.');
+}
 
 function firebase_Data_retrieval(ref_doc_id) {
-  var patient_list = fb.database().ref().child("patients");
-  patient_list.on("value", function (snapshot) {
-    document.getElementById("p_details").innerHTML = "";
+  try {
+    var patient_list = fb.database().ref().child("patients");
+    patient_list.on(
+      "value",
+      function (snapshot) {
+        try {
+          var patient_info = [];
 
-    var patient_info = [];
-    snapshot.forEach((data) => {
-      let patients_json = data.val();
+          snapshot.forEach((data) => {
+            let patients_string = JSON.stringify(data.val(), null, 2);
+            let patients_json = JSON.parse(patients_string);
 
-      var doc_id = patients_json.docId;
-      if (doc_id === ref_doc_id) {
-        patient_info.push([patients_json.username, patients_json.age, patients_json.gender, patients_json.ailment, patients_json.id]);
-      }
-    });
-
-    for (var i = 0; i < patient_info.length; i++) {}
-    var NewPatientInfo = [];
-    var ews_value = "";
-    var ews_color = "";
-    var ID;
-    const Obtain_ews = new Promise((resolve, reject) => {
-      for (let i = 0; i < patient_info.length; i++) {
-        const uuid = patient_info[i][4];
-        ews_list
-          .child(uuid)
-          .limitToLast(1)
-          .on("value", function (snapshot) {
-            if (snapshot.val() != null) {
-              snapshot.forEach((data) => {
-                ID = uuid;
-                obj[ID] = ID;
-                let ews_json = data.val();
-                ews_value = ews_json.ews_score.toString();
-                obj[ID + "ewsv"] = ews_value;
-                ews_color = ews_json.color.toString();
-                obj[ID + "ewsc"] = ews_color;
-
-                NewPatientInfo.push([patient_info[i][0], patient_info[i][1], patient_info[i][2], patient_info[i][3], uuid, ews_value, ews_color]);
-              });
-            } else {
-              obj[ID + "ewsv"] = "--";
-              obj[ID + "ewsc"] = "0";
-              NewPatientInfo.push([patient_info[i][0], patient_info[i][1], patient_info[i][2], patient_info[i][3], uuid, "--", "0"]);
-            }
-            refreshews(obj[ID + "ewsv"], obj[ID + "ewsc"], ID);
-            if (i == patient_info.length - 1) {
-              resolve(NewPatientInfo);
+            var doc_id = patients_json.docId;
+            if (doc_id === ref_doc_id) {
+              var id = patients_json.id.toString();
+              patient_info.push([patients_json.username, patients_json.age, patients_json.gender, patients_json.ailment, id]);
             }
           });
-      }
-    });
-    var ID;
 
-    var ecg_info = [];
-    const Obtain_ecg = new Promise((resolve, reject) => {
-      for (let i = 0; i < patient_info.length; i++) {
-        const uuid = patient_info[i][4];
-        ecg_list.child(uuid).on("value", function (snapshot) {
-          if (snapshot.val() != null) {
-            ID = uuid;
-            obj[ID] = ID;
+          localStorage.setItem("patient_info", JSON.stringify(patient_info));
 
-            let ecg_json = snapshot.val();
-            let type = ecg_json.type;
-            let ecg1 = ecg_json.ecg;
-            let timestamp = ecg_json.timestamp;
-
-            if (type == "noise" || type == "flat") {
-              obj[ID + "final_min_ecg"] = [];
-            } else {
-              var ecg_text = ecg1;
-              let ecg_result = ecg_text.replace(/\]\[/g, ", ").trim();
-              ecg_result = ecg_result.replace(/\]/g, "").trim();
-              ecg_result = ecg_result.replace(/\[/g, "").trim();
-              var ecgvalue = ecg_result.split(",").map(Number);
-              obj[ID + "final_min_ecg"] = ecgvalue;
+          const Obtain_ews = new Promise((resolve, reject) => {
+            if (patient_info.length === 0) {
+              resolve(patient_info);
+              return;
             }
 
-            var f_ecgtimestamp = timestamp;
-            var date = new Date(f_ecgtimestamp * 1000);
-            var ecgdate = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
-            var ecgtime = ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
-            ecgdate = date == undefined ? (ecgdate = "--/--/----") : ecgdate;
-            ecgtime = date == undefined ? (ecgtime = "--/--/----") : ecgtime;
+            const loadedEwsPatients = new Set();
 
-            var dt = ecgdate + " " + ecgtime;
-            obj[ID + "dt"] = dt;
-          } else {
-            obj[ID + "final_min_ecg"] = [];
-            obj[ID + "dt"] = "";
-          }
+            for (let i = 0; i < patient_info.length; i++) {
+              const currentPatient = patient_info[i];
+              const currentPatientId = currentPatient[PATIENT_ID_INDEX];
 
-          createECGchart(obj[ID + "final_min_ecg"], ID);
-          if (i == ecg_info.length - 1) {
-            resolve(ecg_info);
-          }
-        });
-      }
-    });
+              ews_list
+                .child(currentPatientId)
+                .orderByKey()
+                .limitToLast(1)
+                .on("value", function (snapshot) {
+                  let nextEwsValue = DEFAULT_EWS_VALUE;
+                  let nextEwsColor = DEFAULT_EWS_COLOR;
 
-    const ppg_info = [];
-    const Obtain_ppg = new Promise((resolve, reject) => {
-      for (let i = 0; i < patient_info.length; i++) {
-        const uuid = patient_info[i][4];
-        let promise = new Promise((resolve, reject) => {
-          ppg_list.child(uuid).on("value", function (snapshot) {
-            let ID = uuid;
-            let obj = {};
+                  if (snapshot.val() != null) {
+                    snapshot.forEach((data) => {
+                      let ews_string = JSON.stringify(data.val(), null, 2);
+                      let ews_json = JSON.parse(ews_string);
+                      nextEwsValue = ews_json.ews_score.toString();
+                      nextEwsColor = ews_json.color.toString();
+                    });
+                  }
 
-            if (snapshot.val() != null) {
-              obj[ID] = ID;
-              let ppg_json = snapshot.val();
-              let ppg_data = ppg_json.ppg;
+                  currentPatient[PATIENT_EWS_VALUE_INDEX] = nextEwsValue;
+                  currentPatient[PATIENT_EWS_COLOR_INDEX] = nextEwsColor;
+                  refreshews(nextEwsValue, nextEwsColor, currentPatientId);
 
-              let result1;
-              if (typeof ppg_data === "string") {
-                result1 = ppg_data.replace(/\,/g, "").trim();
-              } else {
-                result1 = "";
-              }
+                  if (!loadedEwsPatients.has(currentPatientId)) {
+                    loadedEwsPatients.add(currentPatientId);
+                  }
 
-              var final_ppg = result1
-                .split(" ")
-                .map(Number)
-                .filter((n) => !isNaN(n));
-
-              obj[ID + "ppg"] = final_ppg;
-
-              var f_ecgtimestamp = ppg_json.timestamp;
-              var date = new Date(f_ecgtimestamp * 1000);
-              var ecgdate = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
-              var ecgtime = ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
-              ecgdate = date == undefined ? (ecgdate = "--/--/----") : ecgdate;
-              ecgtime = date == undefined ? (ecgtime = "--/--/----") : ecgtime;
-
-              var dt = ecgdate + " " + ecgtime;
-              obj[ID + "dt"] = dt;
-            } else {
-              obj[ID + "ppg"] = [];
-              obj[ID + "dt"] = "";
-            }
-            createPPGchart(obj[ID + "ppg"], ID);
-            if (i == ppg_info.length - 1) {
-              resolve(ppg_info);
-            }
-          });
-        });
-      }
-    });
-
-    const rr_info = [];
-    const Obtain_rr = new Promise((resolve, reject) => {
-      for (let i = 0; i < patient_info.length; i++) {
-        const uuid = patient_info[i][4];
-        let promise = new Promise((resolve, reject) => {
-          rr_list.child(uuid).on("value", function (snapshot) {
-            let ID = uuid;
-            let obj = {};
-            if (snapshot.val() != null) {
-              obj[ID] = ID;
-              let rr_json = snapshot.val();
-              let rr_data = rr_json.res;
-              let rr_timestamp = rr_json.timestamp;
-
-              let result1 = "";
-              if (typeof rr_data === "string") {
-                result1 = rr_data.replace(/\,/g, "").trim();
-              } else {
-                result1 = "";
-              }
-              var final_rr = result1
-                .split(" ")
-                .map(Number)
-                .filter((n) => !isNaN(n));
-              obj[ID + "rr"] = final_rr;
-
-              var date = new Date(rr_timestamp * 1000);
-              var rrdate = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
-              var rrtime = ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
-              rrdate = date == undefined ? (rrdate = "--/--/----") : rrdate;
-              rrtime = date == undefined ? (rrtime = "--/--/----") : rrtime;
-              var dt = rrdate + " " + rrtime;
-              obj[ID + "dt"] = dt;
-            } else {
-              obj[ID + "rr"] = [];
-              obj[ID + "dt"] = "";
-            }
-            createRRchart(obj[ID + "rr"], ID);
-            if (i == rr_info.length - 1) {
-              resolve(rr_info);
-            }
-          });
-        });
-      }
-    });
-    const latest5secHR = [];
-    const obtain_5sec_HR = new Promise((resolve, reject) => {
-      for (let i = 0; i < patient_info.length; i++) {
-        const uuid = patient_info[i][4];
-        pat_bp_5sec_ref.child(uuid).on("value", (snapshot) => {
-          var ID = uuid;
-          const val = snapshot.val();
-          if (val != null) {
-            const timestamps = Object.keys(val)
-              .map((k) => Number(k))
-              .filter((n) => Number.isFinite(n));
-            if (timestamps.length === 0) return;
-            const maxTs = Math.max(...timestamps);
-            const latest = val[maxTs];
-            if (latest && typeof latest.ECG_HR === "number") {
-              // Find existing entry
-              const idx = latest5secHR.findIndex((entry) => entry.patientId === ID);
-              if (idx !== -1) {
-                // Update existing
-                latest5secHR[idx] = {
-                  patientId: ID,
-                  HR: latest.ECG_HR,
-                  timestamps: maxTs,
-                };
-              } else {
-                latest5secHR.push({
-                  patientId: ID,
-                  HR: latest.ECG_HR,
-                  timestamps: maxTs,
+                  if (loadedEwsPatients.size === patient_info.length) {
+                    resolve(patient_info);
+                  }
                 });
+            }
+          });
+          Obtain_ews.then((value) => {
+            if (patient_info.length == value.length) {
+              patient_details(value);
+            }
+          });
+          const latest5secHR = [];
+
+          for (let i = 0; i < patient_info.length; i++) {
+            const uuid = patient_info[i][4];
+            pat_bp_5sec_ref.child(uuid).on("value", (snapshot) => {
+              var ID = uuid;
+              const val = snapshot.val();
+              if (val != null) {
+                const timestamps = Object.keys(val)
+                  .map((k) => Number(k))
+                  .filter((n) => Number.isFinite(n));
+                if (timestamps.length === 0) return;
+                const maxTs = Math.max(...timestamps);
+                const latest = val[maxTs];
+                if (latest && typeof latest.ECG_HR === "number") {
+                  // Find existing entry
+                  const idx = latest5secHR.findIndex((entry) => entry.patientId === ID);
+                  if (idx !== -1) {
+                    // Update existing
+                    latest5secHR[idx] = {
+                      patientId: ID,
+                      HR: latest.ECG_HR,
+                      timestamps: maxTs,
+                    };
+                  } else {
+                    latest5secHR.push({
+                      patientId: ID,
+                      HR: latest.ECG_HR,
+                      timestamps: maxTs,
+                    });
+                  }
+                }
               }
-            }
-          }
-        });
-      }
-    });
-    const Obtain_vitals = new Promise((resolve, reject) => {
-      var ID;
-      var vitalinfo = [];
-      const nowSec = Date.now() / 1000;
-      for (let i = 0; i < patient_info.length; i++) {
-        const uuid = patient_info[i][4];
-        vital_list.child(uuid).on("value", (snapshot) => {
-          if (snapshot.val() != null) {
-            const data = snapshot.val();
-            ID = data.userId;
-            obj[ID] = data.userId;
-
-            const latest = latest5secHR.find((entry) => entry.patientId === ID);
-            const latestPatHr = latest ? latest.HR : null;
-            const latestPatHrTs = latest ? latest.timestamps : null;
-
-            if (latestPatHr !== null && typeof latestPatHrTs === "number" && Number.isFinite(latestPatHrTs) && !isNaN(latestPatHrTs) && nowSec - latestPatHrTs < 10) {
-              obj[ID + "hr"] = latestPatHr;
-            } else {
-              obj[ID + "hr"] = data.hr === "00" || data.hr === "0" || data.hr === 0 ? "--" : data.hr;
-            }
-
-            if (data.bp == "0/0") {
-              obj[ID + "bp"] = "--/--";
-            } else {
-              obj[ID + "bp"] = data.bp;
-            }
-            if (data.spo == "00") {
-              obj[ID + "spo"] = "--";
-            } else {
-              obj[ID + "spo"] = data.spo;
-            }
-            if (parseFloat(data.temp) == 0.0 || parseFloat(data.temp) >= 238.48) {
-              obj[ID + "temp"] = "--";
-            } else {
-              obj[ID + "temp"] = parseFloat(data.temp).toFixed(2);
-            }
-            if (data.rr == "0") {
-              obj[ID + "rr"] = "--";
-            } else {
-              obj[ID + "rr"] = data.rr;
-            }
-          } else {
-            obj[ID + "hr"] = "--";
-            obj[ID + "bp"] = "--/--";
-            obj[ID + "spo"] = "--";
-            obj[ID + "temp"] = "--";
-            obj[ID + "rr"] = "--";
-            vitalinfo.push([obj[ID + "hr"], obj[ID + "rr"], obj[ID + "temp"], obj[ID + "spo"], obj[ID + "bp"]]);
+            });
           }
 
-          refreshvitals(obj[ID + "hr"], obj[ID + "bp"], obj[ID + "temp"], obj[ID + "rr"], obj[ID + "spo"], obj[ID]);
+          var vitalinfo = [];
+          for (let i = 0; i < patient_info.length; i++) {
+            const currentPatient = patient_info[i];
+            const currentPatientId = currentPatient[PATIENT_ID_INDEX];
+            vital_list.child(currentPatientId).on("value", (snapshot) => {
+              let patientId = currentPatientId;
+              let patientlivedata7s_timestamp = null;
+              if (snapshot.val() != null) {
+                const data = snapshot.val() || {};
+                patientId = data.userId || currentPatientId;
+                patientlivedata7s_timestamp = data.timestamp || null;
 
-          if (i == vitalinfo.length - 1) {
-            resolve(vitalinfo);
+                const latest = latest5secHR.find((entry) => entry.patientId === currentPatientId);
+                const latestPatHr = latest ? latest.HR : null;
+                const latestPatHrTs = latest ? latest.timestamps : null;
+
+                if (latestPatHr !== null && typeof latestPatHrTs === "number" && Number.isFinite(latestPatHrTs) && !isNaN(latestPatHrTs) && Date.now() / 1000 - latestPatHrTs < 10) {
+                  currentPatient[PATIENT_HR_INDEX] = data.hr === "00" || data.hr === "0" || data.hr === 0 ? "--" : latestPatHr;
+                } else {
+                  currentPatient[PATIENT_HR_INDEX] = data.hr === "00" || data.hr === "0" || data.hr === 0 ? "--" : data.hr;
+                }
+
+                if (data.bp == "0/0") {
+                  currentPatient[PATIENT_BP_INDEX] = "--/--";
+                } else {
+                  currentPatient[PATIENT_BP_INDEX] = data.bp;
+                }
+                if (data.spo == "00") {
+                  currentPatient[PATIENT_SPO2_INDEX] = "--";
+                } else {
+                  currentPatient[PATIENT_SPO2_INDEX] = data.spo;
+                }
+                if (parseFloat(data.temp) == 0.0 || parseFloat(data.temp) >= 238.48) {
+                  currentPatient[PATIENT_TEMP_INDEX] = "--";
+                } else {
+                  currentPatient[PATIENT_TEMP_INDEX] = parseFloat(data.temp).toFixed(2);
+                }
+                if (data.rr == "0") {
+                  currentPatient[PATIENT_RR_INDEX] = "--";
+                } else {
+                  currentPatient[PATIENT_RR_INDEX] = data.rr;
+                }
+              } else {
+                currentPatient[PATIENT_HR_INDEX] = "--";
+                currentPatient[PATIENT_BP_INDEX] = "--/--";
+                currentPatient[PATIENT_SPO2_INDEX] = "--";
+                currentPatient[PATIENT_TEMP_INDEX] = "--";
+                currentPatient[PATIENT_RR_INDEX] = "--";
+                vitalinfo.push([
+                  currentPatient[PATIENT_HR_INDEX],
+                  currentPatient[PATIENT_RR_INDEX],
+                  currentPatient[PATIENT_TEMP_INDEX],
+                  currentPatient[PATIENT_SPO2_INDEX],
+                  currentPatient[PATIENT_BP_INDEX],
+                ]);
+              }
+
+              refreshvitals(
+                currentPatient[PATIENT_HR_INDEX],
+                currentPatient[PATIENT_BP_INDEX],
+                currentPatient[PATIENT_TEMP_INDEX],
+                currentPatient[PATIENT_RR_INDEX],
+                currentPatient[PATIENT_SPO2_INDEX],
+                patientId,
+              );
+              ews_list
+                .child(currentPatientId)
+                .orderByKey()
+                .limitToLast(1)
+                .once("value", (snapshot) => {
+                  const data = snapshot.val() || {};
+                  const key = Object.keys(data)[0];
+                  const timestamp = data[key].timestamp;
+                  if (timestamp != null && patientlivedata7s_timestamp != null) {
+                    const nexttimestampdiffernce = patientlivedata7s_timestamp - timestamp;
+                    if (nexttimestampdiffernce > 70) {
+                      refreshews("--", "0", currentPatientId);
+                    }
+                  }
+                });
+
+              if (i == vitalinfo.length - 1) {
+                resolve(vitalinfo);
+              }
+            });
           }
-        });
-      }
-    });
+          var ecg_info = [];
+          for (let i = 0; i < patient_info.length; i++) {
+            const currentPatient = patient_info[i];
+            const currentPatientId = currentPatient[PATIENT_ID_INDEX];
 
-    Obtain_ews.then((value) => {
-      if (NewPatientInfo.length == value.length) {
-        patient_details(value);
-      }
-    });
-  });
+            ecg_list.child(currentPatientId).on("value", function (snapshot) {
+              const ecgData = snapshot.val() || {};
+              if (ecgData != null) {
+                let type = ecgData.type;
+                let ecg1 = ecgData.ecg || "";
+                let timestamp = ecgData.timestamp;
+
+                if (type == "noise" || type == "flat") {
+                  currentPatient[PATIENT_ECG_INDEX] = [];
+                } else {
+                  var ecg_text = ecg1;
+                  let ecg_result = ecg_text.replace(/\]\[/g, ", ").trim();
+                  ecg_result = ecg_result.replace(/\]/g, "").trim();
+                  ecg_result = ecg_result.replace(/\[/g, "").trim();
+                  var ecgvalue = ecg_result.split(",").map(Number);
+
+                  currentPatient[PATIENT_ECG_INDEX] = ecgvalue;
+                }
+
+                var f_ecgtimestamp = timestamp;
+                var date = new Date(f_ecgtimestamp * 1000);
+                var ecgdate = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
+                var ecgtime = ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
+                ecgdate = date == undefined ? (ecgdate = "--/--/----") : ecgdate;
+                ecgtime = date == undefined ? (ecgtime = "--/--/----") : ecgtime;
+
+                var dt = ecgdate + " " + ecgtime;
+                currentPatient[PATIENT_ECG_TIMESTAMP_INDEX] = dt;
+              } else {
+                currentPatient[PATIENT_ECG_INDEX] = [];
+                currentPatient[PATIENT_ECG_TIMESTAMP_INDEX] = "";
+              }
+
+              createECGchart(currentPatient[PATIENT_ECG_INDEX], currentPatientId);
+              if (i == ecg_info.length - 1) {
+                resolve(ecg_info);
+              }
+            });
+          }
+
+          const ppg_info = [];
+          for (let i = 0; i < patient_info.length; i++) {
+            const currentPatient = patient_info[i];
+            const currentPatientId = currentPatient[PATIENT_ID_INDEX];
+
+            ppg_list.child(currentPatientId).on("value", function (snapshot) {
+              const ppgData = snapshot.val() || {};
+              if (ppgData != null) {
+                let ppg_data = ppgData.ppg;
+
+                let result1;
+                if (typeof ppg_data === "string") {
+                  result1 = ppg_data.replace(/\,/g, "").trim();
+                } else {
+                  result1 = "";
+                }
+
+                var final_ppg = result1
+                  .split(" ")
+                  .map(Number)
+                  .filter((n) => !isNaN(n));
+
+                currentPatient[PATIENT_PPG_INDEX] = final_ppg;
+
+                var f_ecgtimestamp = ppgData.timestamp;
+                var date = new Date(f_ecgtimestamp * 1000);
+                var ecgdate = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
+                var ecgtime = ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
+                ecgdate = date == undefined ? (ecgdate = "--/--/----") : ecgdate;
+                ecgtime = date == undefined ? (ecgtime = "--/--/----") : ecgtime;
+
+                var dt = ecgdate + " " + ecgtime;
+                currentPatient[PATIENT_PPG_TIMESTAMP_INDEX] = dt;
+              } else {
+                currentPatient[PATIENT_PPG_INDEX] = [];
+                currentPatient[PATIENT_PPG_TIMESTAMP_INDEX] = "";
+              }
+              createPPGchart(currentPatient[PATIENT_PPG_INDEX], currentPatientId);
+              if (i == ppg_info.length - 1) {
+                resolve(ppg_info);
+              }
+            });
+          }
+          const rr_info = [];
+          for (let i = 0; i < patient_info.length; i++) {
+            const currentPatient = patient_info[i];
+            const currentPatientId = currentPatient[PATIENT_ID_INDEX];
+
+            rr_list.child(currentPatientId).on("value", function (snapshot) {
+              const rrdata = snapshot.val();
+              if (snapshot.val() != null) {
+                let rr_data = rrdata.res;
+                let rr_timestamp = rrdata.timestamp;
+
+                let result1 = rr_data.replace(/\,/g, "").trim();
+                var final_rr = result1.split(" ").map(Number);
+                currentPatient[PATIENT_RR_WAVE_INDEX] = final_rr;
+
+                var date = new Date(rr_timestamp * 1000);
+                var rrdate = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
+                var rrtime = ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
+                rrdate = date == undefined ? (rrdate = "--/--/----") : rrdate;
+                rrtime = date == undefined ? (rrtime = "--/--/----") : rrtime;
+                var dt = rrdate + " " + rrtime;
+                currentPatient[PATIENT_RR_TIMESTAMP_INDEX] = dt;
+              } else {
+                currentPatient[PATIENT_RR_WAVE_INDEX] = [];
+                currentPatient[PATIENT_RR_TIMESTAMP_INDEX] = "";
+              }
+              createRRchart(currentPatient[PATIENT_RR_WAVE_INDEX], currentPatientId);
+              if (i == rr_info.length - 1) {
+                resolve(rr_info);
+              }
+            });
+          }
+
+          // Use limittolast logic
+          // for (let i = 0; i < patient_info.length; i++) {
+          //   const patientId = patient_info[i][4];
+          //   // console.log("LOOPING", patientId);
+          //   const ref_valid = fb.database().ref().child("validpatientlivedata").child(patientId).orderByKey().limitToLast(1); //1 minute data
+          //   const ecg_min = fb.database().ref().child("patientecgdata").child(patientId).orderByKey().limitToLast(1);
+          //   const ppg_min = fb.database().ref().child("patientppgdata").child(patientId).orderByKey().limitToLast(1);
+          //   const rr_min = fb.database().ref().child("patientrrdata").child(patientId).orderByKey().limitToLast(1);
+          //   Promise.all([ecg_min.once("value"), ppg_min.once("value"), rr_min.once("value"), ref_valid.once("value")])
+          //     .then(([ecgSnapshot, ppgSnapshot, rrSnapshot, refValidSnapshot]) => {
+          //       const data = refValidSnapshot.val() || {};
+          //       const key = Object.keys(data)[0];
+          //       // vitals
+          //       const data1 = data[key] || {};
+          //       const lastTimestamp = data1.timestamp;
+          //       console.log("LOOPING valid data", patientId, data, lastTimestamp);
+          //       let respiration_rate = data1.rr === "00" || data1.rr === "0" || data1.rr === 0 ? "--" : data1.rr;
+
+          //       let heart_rate = data1.hr === "00" || data1.hr === "0" || data1.hr === 0 ? "--" : data1.hr;
+          //       let spo2 = data1.spo === "00" || data1.spo === "0" || data1.spo === 0 ? "--" : data1.spo;
+          //       let bp_text = data1.bp === 0 / 0 || data1.bp === "0/0" || data1.bp === "--/--" ? "--/--" : data1.bp;
+
+          //       let oldtemp = data1.temp;
+          //       let parsedTemp = parseFloat(String(oldtemp).replace(/[^0-9.+-]/g, ""));
+          //       let temp = isNaN(parsedTemp) ? "--" : parsedTemp;
+
+          //       console.log("LOOPING vitals", heart_rate, bp_text, oldtemp, respiration_rate, spo2, patientId);
+          //       refreshvitals(heart_rate, bp_text, temp, respiration_rate, spo2, patientId);
+          //       // ecg
+          //       const ecgData = ecgSnapshot.val() || {};
+          //       const ecgKey = Object.keys(ecgData)[0];
+          //       const ecg = ecgData[ecgKey].payload;
+          //       const type = ecgData[ecgKey].type;
+          //       let final_min_ecg = [];
+
+          //       if (typeof ecg === "string" && type !== "noise" && type !== "flat") {
+          //         let ecg_result = ecg.replace(/\]\[/g, ", ").trim();
+          //         ecg_result = ecg_result.replace(/\]/g, "").trim();
+          //         ecg_result = ecg_result.replace(/\[/g, "").trim();
+          //         final_min_ecg = ecg_result
+          //           .split(",")
+          //           .map(Number)
+          //           .filter((value) => !isNaN(value));
+          //       }
+
+          //       if (final_min_ecg.length > 625) {
+          //         final_min_ecg = final_min_ecg.slice(-625);
+          //       }
+          //       createECGchart(final_min_ecg, patientId);
+
+          //       // ppg
+          //       const ppgDataValue = ppgSnapshot.val() || {};
+          //       // const latestPPGEntry = getLatestSnapshotEntry(ppgDataValue);
+          //       // const PPGkey = latestPPGEntry.key;
+          //       // const latestPPG = latestPPGEntry.value;
+          //       const ppgDataKey = Object.keys(ppgDataValue)[0];
+          //       const ppgdata = ppgDataValue[ppgDataKey].payload;
+          //       let final_ppg = [];
+
+          //       if (typeof ppgdata === "string") {
+          //         let result1 = ppgdata.replace(/\,/g, "").trim();
+          //         final_ppg = result1
+          //           .split(" ")
+          //           .map(Number)
+          //           .filter((value) => !isNaN(value));
+          //       }
+
+          //       if (final_ppg.length > 500) {
+          //         final_ppg = final_ppg.slice(-500);
+          //       }
+          //       createPPGchart(final_ppg, patientId);
+
+          //       // RR
+          //       const rrDataValue = rrSnapshot.val() || {};
+          //       const rrDataKey = Object.keys(rrDataValue)[0];
+          //       const rrdata = rrDataValue[rrDataKey].payload;
+          //       let final_rr = [];
+
+          //       if (typeof rrdata === "string") {
+          //         final_rr = rrdata
+          //           .replace(/,/g, " ")
+          //           .trim()
+          //           .split(/\s+/)
+          //           .map(Number)
+          //           .filter((value) => Number.isFinite(value));
+          //       }
+
+          //       if (final_rr.length > 125) {
+          //         final_rr = final_rr.slice(-125);
+          //       }
+          //       createRRchart(final_rr, patientId);
+          //     })
+          //     .catch((error) => {
+          //       console.error("[dashboard-custom.js] Error retrieving chart/vital snapshots for patient:", patientId, error);
+          //     });
+          // }
+        } catch (e) {
+          console.error("[dashboard-custom.js] Error processing patient data:", e);
+        }
+      },
+      function (error) {
+        console.error("[dashboard-custom.js] Error retrieving patient data:", error);
+      },
+    );
+  } catch (e) {
+    console.error("[dashboard-custom.js] Error in firebase_Data_retrieval:", e);
+  }
 }
 function refreshews(ews_value, ews_color, ID) {
   var ewsvId = "ewsv" + ID;
@@ -323,6 +469,7 @@ function refreshews(ews_value, ews_color, ID) {
 
   var ews_v = document.getElementById(ewsvId);
   var ews_c = document.getElementById(ewscId);
+  console.log("[dashboard-custom.js]  refreshews", ID, ews_value, ews_color);
   if (ews_v === null) {
   } else {
     ews_v.textContent = ews_value;
@@ -330,12 +477,50 @@ function refreshews(ews_value, ews_color, ID) {
   }
 }
 
+function getOrCreateChart(containerId) {
+  const container = document.getElementById(containerId);
+
+  if (!container) {
+    return null;
+  }
+
+  let chart = echarts.getInstanceByDom(container);
+  if (!chart) {
+    chart = echarts.init(container);
+  }
+
+  chartRegistry.set(containerId, chart);
+  return chart;
+}
+
+function resizeAllCharts() {
+  chartRegistry.forEach((chart, containerId) => {
+    const container = document.getElementById(containerId);
+
+    if (!container) {
+      chartRegistry.delete(containerId);
+      return;
+    }
+
+    chart.resize();
+  });
+}
+
+window.addEventListener("resize", resizeAllCharts);
+document.addEventListener("visibilitychange", function () {
+  if (!document.hidden) {
+    setTimeout(resizeAllCharts, 0);
+  }
+});
+
 function createECGchart(ecg, Id) {
   var LiveECGId = "chart" + Id;
+  var chart = getOrCreateChart(LiveECGId);
 
-  var ecgContainer = document.getElementById(LiveECGId);
-
-  var chart = echarts.init(ecgContainer);
+  if (!chart) {
+    console.warn("[dashboard-custom.js] ECG container not found for ID:", LiveECGId);
+    return;
+  }
 
   var ecgData = ecg;
   var reference_data = [
@@ -364,8 +549,9 @@ function createECGchart(ecg, Id) {
       data.push(randomData());
     }
   } catch (e) {
-    console.error("EcgData.length:", e.message);
+    console.log("[dashboard-custom.js] EcgData.length:", e.message);
   }
+  console.log("[dashboard-custom.js] data ecg", ecgData.length);
   if (ecgData.length < 625) {
     chart.clear();
 
@@ -414,7 +600,7 @@ function createECGchart(ecg, Id) {
         },
       },
     };
-    chart.setOption(option1);
+    chart.setOption(option1, true);
   } else {
     var endzoom = 0;
     var option1 = {
@@ -431,7 +617,7 @@ function createECGchart(ecg, Id) {
         top: 5,
         left: 10,
         right: 10,
-        bottom: 52,
+        bottom: 8,
       },
       toolbox: {
         orient: "vertical",
@@ -581,20 +767,17 @@ function createECGchart(ecg, Id) {
         endValue: endzoom,
       });
     }
-    chart.setOption(option1);
+    chart.setOption(option1, true);
   }
 }
-
 function createPPGchart(ppg, ID) {
   var LivePPGId = "ppgchart" + ID;
-  var ppgContainer = document.getElementById(LivePPGId);
+  var chart = getOrCreateChart(LivePPGId);
 
-  if (!ppgContainer) {
+  if (!chart) {
     console.error("PPG container not found for ID:", LivePPGId);
     return;
   }
-
-  var chart = echarts.init(ppgContainer);
 
   var ppgData = ppg;
 
@@ -616,7 +799,7 @@ function createPPGchart(ppg, ID) {
       data.push(randomData());
     }
   } catch (e) {
-    console.error("EcgData.length:", e.message);
+    console.log("[dashboard-custom.js] EcgData.length:", e.message);
   }
   if (ppgData.length < 500) {
     chart.clear();
@@ -666,7 +849,7 @@ function createPPGchart(ppg, ID) {
         },
       },
     };
-    chart.setOption(option1);
+    chart.setOption(option1, true);
   } else {
     var endzoom = 0;
     var option1 = {
@@ -683,7 +866,7 @@ function createPPGchart(ppg, ID) {
         top: 5,
         left: 10,
         right: 10,
-        bottom: 52,
+        bottom: 8,
       },
       toolbox: {
         orient: "vertical",
@@ -831,39 +1014,38 @@ function createPPGchart(ppg, ID) {
         endValue: endzoom,
       });
     }
-    chart.setOption(option1);
+    chart.setOption(option1, true);
   }
 }
-
 function createRRchart(rr, ID) {
   var LiveRRId = "rrchart" + ID;
-  var rrContainer = document.getElementById(LiveRRId);
-  var value;
-  if (!rrContainer) {
-    console.error("RR container not found for ID:", LiveRRId);
+  var chart = getOrCreateChart(LiveRRId);
+
+  if (!chart) {
+    console.error("[dashboard-custom.js] RR container not found for ID:", LiveRRId);
     return;
   }
 
-  var chart = echarts.init(rrContainer);
   var rrData = rr;
 
   var counter = 0;
   function randomData() {
-    value = rrData[counter % rrData.length];
+    var value = rrData[counter % rrData.length];
     counter++;
-    return { value: [counter, value] };
+    return { value: [counter % rrData.length, value] };
   }
+  console.log("[dashboard-custom.js] rrdata length", rrData.length);
   var data = [];
   try {
-    for (var i = 0; i < rrData.length; i++) {
+    for (var i = 1; i < rrData.length; i++) {
       data.push(randomData());
     }
   } catch (e) {
-    console.error("RRData.length error:", e.message);
+    console.error("[dashboard-custom.js] RRData.length error:", e);
   }
-  chart.clear();
   let option;
-  if (rrData.length < 120) {
+  chart.clear();
+  if (rrData.length < 125) {
     option = {
       title: {
         text: "WAITING FOR VALID RR",
@@ -884,6 +1066,7 @@ function createRRchart(rr, ID) {
             realtime: true,
             start: 0,
             end: 100,
+            //xAxisIndex: [0, 1],
           },
           {
             type: "slider",
@@ -911,7 +1094,7 @@ function createRRchart(rr, ID) {
     };
   } else {
     option = {
-      grid: { top: 5, left: 10, right: 10, bottom: 52 },
+      grid: { top: 5, left: 10, right: 10, bottom: 8 },
       xAxis: {
         type: "value",
         show: false,
@@ -938,9 +1121,8 @@ function createRRchart(rr, ID) {
       ],
     };
   }
-  chart.setOption(option);
+  chart.setOption(option, true);
 }
-
 function refreshvitals(hr, bp, temp, rr, spo, ID) {
   var hrId = "hr" + ID;
   var bpId = "bp" + ID;
@@ -954,61 +1136,26 @@ function refreshvitals(hr, bp, temp, rr, spo, ID) {
   var spov = document.getElementById(spoId);
   var tempv = document.getElementById(tempId);
 
+  console.log("[dashboard-custom.js] in refresh vitals", hr, bp, temp, rr, spo, ID);
+
+  function formatValue(val) {
+    const value = Number(val);
+    return value !== 0 && !isNaN(value) ? val : "--";
+  }
+  function formatValueV2(val) {
+    return val === 0 || val ? val : "--/--";
+  }
+
+  hr = formatValue(hr);
+  bp = formatValueV2(bp);
+  rr = formatValue(rr);
+  spo = formatValue(spo);
+  temp = formatValue(temp);
+  console.log("[dashboard-custom.js] in refresh vitals after", hr, bp, temp, rr, spo, ID);
+
   if (hrv) hrv.textContent = hr + " bpm";
   if (bpv) bpv.textContent = bp + " mmHg";
   if (rrv) rrv.textContent = rr + " rpm";
   if (spov) spov.textContent = spo + " %";
   if (tempv) tempv.textContent = temp + " ˚C";
 }
-
-const messaging = fb.messaging();
-
-messaging
-  .requestPermission()
-  .then(function () {
-    var docid = localStorage.getItem("doctor_id");
-    return messaging
-      .getToken(messaging, { vapidKey: "BIFe69rLA_x7ZgZW9kuRTZ1Z2SD05ltvxpbxgtCuUAEEG085oEKGR0KxOolLbLidL3COAUZ5nXFr0bKpYdicns4" })
-
-      .then((currentToken) => {
-        if (currentToken) {
-          var context_assessmenttoken = fb.database().ref().child("FCM_token").child(currentToken);
-
-          context_assessmenttoken.set({
-            Id: localStorage.getItem("doctor_id"),
-          });
-
-          console.log("current token", currentToken);
-        } else {
-          console.log("No registration token available. Request permission to generate one.");
-        }
-      })
-      .catch(function (err) {
-        console.error("Error setting FCM token in database:", err);
-      });
-  })
-  .catch(function (err) {
-    console.error("Error requesting permission or getting token:", err);
-  });
-
-messaging.onMessage(function (payload) {
-  if (payload.data.timestamp && payload.data.patient_info) {
-    const param1 = btoa(payload.data.timestamp);
-    const param2 = btoa(payload.data.patient_info);
-    const param3 = btoa("2");
-
-    const url = "context_assment.html" + "?param1=" + param1 + "&param2=" + param2 + "&param3=" + param3;
-
-    var childWindow = window.open(url, "Context Assessment", "width=1050,height=670,left=150,top=200,titlebar=0,toolbar=0,status=0");
-
-    setTimeout(function () {
-      if (childWindow && !childWindow.closed) {
-        childWindow.close();
-      } else {
-        console.log("Child window is already closed or not available.");
-      }
-    }, 30000);
-  } else {
-    console.log("Invalid timestamp or final_patient_uid in payload data");
-  }
-});

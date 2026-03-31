@@ -21,7 +21,24 @@ try {
 } catch (e) {
   console.log("In HTML ID: Login is not found", e.message);
 }
+// Toggle profile dropdown (logout menu) when profile avatar is clicked
+try {
+  const profileToggle = document.getElementById("profileToggle");
+  const profileMenu = document.getElementById("profileMenu");
 
+  if (profileToggle && profileMenu) {
+    profileToggle.addEventListener("click", function (event) {
+      event.stopPropagation();
+      profileMenu.style.display = profileMenu.style.display === "block" ? "none" : "block";
+    });
+
+    document.addEventListener("click", function () {
+      profileMenu.style.display = "none";
+    });
+  }
+} catch (e) {
+  console.error("Unable to attach profile dropdown handlers", e);
+}
 function logout() {
   // Get the current user's FCM token
   try {

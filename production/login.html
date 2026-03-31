@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="images/svasthyaicon2.ico" type="image/ico" />
+    <title>Svasthya Login</title>
+
+    <!-- Bootstrap -->
+    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- NProgress -->
+    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet" />
+    <!-- Animate.css -->
+    <link href="../vendors/animate.css/animate.min.css" rel="stylesheet" />
+    <!-- Toastify library -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+    <!-- Custom Theme Style -->
+    <link href="../build/css/login-custom.css" rel="stylesheet" />
+    <script src="../vendors/jquery/dist/jquery.min.js"></script>
+    <!-- 
+    <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-analytics.js"></script> -->
+    <!-- <script type="module" src="../build/js/livepage/database_function.js"></script> -->
+  </head>
+
+  <body id="loginform" class="login">
+    <main class="login_page">
+      <section class="card_cluster" aria-label="Svasthya login">
+        <section class="brand_panel brand_card" aria-label="Svasthya information">
+          <div class="svasthya_icon">
+            <img src="images/login_icon.png" alt="Svasthya logo" />
+          </div>
+
+          <div class="svasthya_about">
+            <h1>
+              "Svasthya" is a Bio-informatics platform for remote health discovery and delivery. Bio-vitals of the user is captured in real-time and doctor and family members can view the data from
+              anywhere in the world. Svasthya also monitors the vitals continuously and generates alerts for appropriate health response from healthcare professionals whenever the vitals cross the
+              thresholds set by the doctor.
+            </h1>
+          </div>
+        </section>
+
+        <section class="login_layout" aria-label="Login form">
+          <a class="hiddenanchor" id="signup"></a>
+          <a class="hiddenanchor" id="signin"></a>
+
+          <div class="login_wrapper">
+            <div class="animate form login_form">
+              <section class="login_content">
+                <form class="login_card" autocomplete="on" onsubmit="return false;">
+                  <div class="login_header">
+                    <!-- <p class="login_eyebrow">LOGIN</p> -->
+                    <!-- <span class="login_header_mark" aria-hidden="true"></span> -->
+                  </div>
+
+                  <div class="field_group">
+                    <label class="field_label" for="email">Email</label>
+                    <div class="field_shell">
+                      <i class="fa fa-user field_icon" aria-hidden="true"></i>
+                      <input type="text" id="email" class="form-control" placeholder="Enter email" name="uname" autocomplete="username" />
+                    </div>
+                  </div>
+
+                  <div class="field_group">
+                    <label class="field_label" for="password">Password</label>
+                    <div class="field_shell">
+                      <i class="fa fa-lock field_icon" aria-hidden="true"></i>
+                      <input type="password" id="password" value="" class="form-control" placeholder="Enter Password" name="psw" autocomplete="current-password" />
+                      <button id="password_toggle" class="password_toggle" type="button" onclick="hideshow()" aria-label="Show password" aria-pressed="false">
+                        <i id="eye" class="fa fa-eye" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="form_row">
+                    <label class="remember_option" for="rememberMe">
+                      <input id="rememberMe" type="checkbox" />
+                      <span class="checkmark" aria-hidden="true"></span>
+                      <span class="remember_text">Remember me</span>
+                    </label>
+                  </div>
+
+                  <button id="submit_button" class="login_button" type="button">LOGIN</button>
+                </form>
+              </section>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+    <!-- Custom Theme Scripts -->
+    <script type="module" src="../build/js/login/login.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+	  https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-analytics.js"></script>
+
+    <script>
+      var state = false;
+      function hideshow() {
+        var passwordField = document.getElementById("password");
+        var toggleButton = document.getElementById("password_toggle");
+        var eyeIcon = document.getElementById("eye");
+
+        if (state) {
+          passwordField.setAttribute("type", "password");
+          toggleButton.classList.remove("is-active");
+          toggleButton.setAttribute("aria-label", "Show password");
+          toggleButton.setAttribute("aria-pressed", "false");
+          eyeIcon.className = "fa fa-eye";
+          state = false;
+        } else {
+          passwordField.setAttribute("type", "text");
+          toggleButton.classList.add("is-active");
+          toggleButton.setAttribute("aria-label", "Hide password");
+          toggleButton.setAttribute("aria-pressed", "true");
+          eyeIcon.className = "fa fa-eye-slash";
+          state = true;
+        }
+      }
+    </script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  </body>
+</html>

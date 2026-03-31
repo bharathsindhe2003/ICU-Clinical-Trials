@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="images/svasthyaicon2.ico" type="image/ico" />
+
+    <title>Svasthya | Dashboard</title>
+    <!-- Bootstrap -->
+    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- NProgress -->
+    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet" />
+    <!-- iCheck -->
+    <link href="../vendors/iCheck/skins/flat/green.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
+    <!-- bootstrap-progressbar -->
+    <link href="../vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" />
+    <!-- JQVMap -->
+    <link href="../vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet" />
+    <!-- bootstrap-daterangepicker -->
+    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <link href="../build/css/incomingDialogbox.css" rel="stylesheet" />
+    <link href="../build/css/lightbox.css" rel="stylesheet" />
+    <!-- Custom Theme Style -->
+    <link href="../build/css/LeftandTopNavigation.css" rel="stylesheet" />
+    <link href="../build/css/DashbordRightColomn.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-messaging.js"></script>
+    <script type="module" src="../build/js/livepage/database_function.js"></script>
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3">
+          <div class="scroll-view">
+            <div class="navbar nav_title" style="border: 0">
+              <a href="dashboard.html" class="site_title"><img src="images/svasthyaicon.png" width="55" height="55" /> <span>SVASTHYA &trade;</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+            <div class="menu_section">
+              <h3></h3>
+            </div>
+          </div>
+        </div>
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="">
+            <div class="Righthand">
+              <div class="form-group pull-right top_search">
+                <div class="input-group">
+                  <span
+                    ><a id="logout"
+                      ><span class="tooltiptext"><i class="fa fa-power-off"></i> Logout</span></a
+                    ></span
+                  >
+                </div>
+              </div>
+
+              <a id="DashboardSubtitle" href="dashboard.html"></a>
+            </div>
+            <div id="myModal" class="modal">
+              <!-- Modal content -->
+              <div class="modal-content">
+                <span class="close">&times;</span>
+                <p id="content"></p>
+              </div>
+            </div>
+
+            <div class="Lefthand">
+              <p id="DoctorName"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- /top navigation -->
+
+        <div id="loader">
+          <a></a>
+        </div>
+      </div>
+      <!-- Patient details -->
+      <div class="clearfix"></div>
+
+      <div class="right_col" role="main">
+        <div class="x_content">
+          <div id="p_details" class="patient_details" style="padding: 0rem 2rem 2rem"></div>
+        </div>
+      </div>
+      <div id="lightbox">
+        <div id="lightboxcontainer"></div>
+        <div id="closebutton">&times;</div>
+      </div>
+      <div id="lightboxcontext">
+        <div id="lightboxcontainercontext"></div>
+        <div id="closebuttoncontext">&times;</div>
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="../vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="../vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="../vendors/nprogress/nprogress.js"></script>
+    <!-- Chart.js -->
+    <script src="../vendors/Chart.js/dist/Chart.min.js"></script>
+    <!-- gauge.js -->
+    <script src="../vendors/gauge.js/dist/gauge.min.js"></script>
+    <!-- bootstrap-progressbar -->
+    <script src="../vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+    <!-- iCheck -->
+    <script src="../vendors/iCheck/icheck.min.js"></script>
+    <!-- Skycons -->
+    <script src="../vendors/skycons/skycons.js"></script>
+    <!-- Flot -->
+    <script src="../vendors/Flot/jquery.flot.js"></script>
+    <script src="../vendors/Flot/jquery.flot.pie.js"></script>
+    <script src="../vendors/Flot/jquery.flot.time.js"></script>
+    <script src="../vendors/Flot/jquery.flot.stack.js"></script>
+    <script src="../vendors/Flot/jquery.flot.resize.js"></script>
+    <!-- Flot plugins -->
+    <script src="../vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+    <script src="../vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+    <script src="../vendors/flot.curvedlines/curvedLines.js"></script>
+    <!-- DateJS -->
+    <script src="../vendors/DateJS/build/date.js"></script>
+    <!-- JQVMap -->
+    <script src="../vendors/jqvmap/dist/jquery.vmap.js"></script>
+    <script src="../vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+    <script src="../vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="../vendors/moment/min/moment.min.js"></script>
+    <script src="../vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="../vendors/echarts/dist/echarts.min.js"></script>
+    <script src="../vendors/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+    <!-- Custom Theme Scripts -->
+    <script type="module" src="../build/js/LeftandTopNavigation/LeftandTopNavigation.js"></script>
+    <script type="module" src="../build/js/dashboard/dashboard-custom.js"></script>
+    <script type="module" src="../build/js/backend/incomingpopup.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </body>
+  <script>
+    function cardclick(id) {
+      localStorage.setItem("patient_unique_id", id);
+      location.replace("index.html?openpage=livecomponents");
+    }
+  </script>
+  <div class="version-badge">Version 0.4.3</div>
+</html>

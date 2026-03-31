@@ -1,0 +1,77 @@
+#incoming {
+  vertical-align: middle;
+  text-align: center;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: white;
+}
+
+#incoming img {
+  vertical-align: middle;
+  width: 200px;
+  height: auto;
+  padding-top: 68px;
+}
+
+.PatientNameBox {
+  padding-top: 30px;
+  width: 100%;
+  height: auto;
+  text-align: center;
+  background-color: #0099cb;
+}
+
+.PnameHeading {
+  color: white;
+  font-size: x-large;
+}
+
+.Pname {
+  color: white;
+  font-size: large;
+}
+
+.right_col_downIncoming {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin-top: 20px;
+
+  padding-bottom: 10px;
+}
+
+.right_col_downIncoming button {
+  display: flex-root;
+
+  align-items: center;
+  color: white;
+  border: none;
+  padding: 0px;
+  font-size: 31px;
+  height: auto;
+  width: 49px;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.right_col_downIncoming button:active {
+  transform: translateY(2px);
+}
+
+.right_col_downIncoming button:not(:first-child) {
+  margin-top: 10px;
+}
+
+.round-2 {
+  border-radius: 70%;
+  background-color: #a01010;
+  box-shadow: 0 0 2px rgb(165, 94, 76);
+}
+
+.round-1 {
+  border-radius: 70%;
+  background-color: #0e7c0a;
+  box-shadow: 0 0 2px rgb(18, 78, 16);
+}

@@ -1,0 +1,300 @@
+.nav-sm .container.body .right_col {
+  padding: 10px 10px;
+  margin-left: 70px;
+}
+
+body .container.body .right_col {
+  height: 100%;
+  position: relative;
+  overflow: auto;
+  background: #dbebf3;
+}
+
+.nav-md .container.body .right_col {
+  padding: 10px 1px 0;
+  margin-left: 80px;
+  height: 100dvh;
+}
+
+.vitals {
+  display: inline-block;
+  margin-bottom: auto;
+  position: relative;
+  margin-top: 10px;
+  margin-left: 10px;
+  border-radius: 10px;
+}
+
+.vitals-box {
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  padding: 20px;
+  margin: 20px 0;
+  background-color: #000000;
+  width: 400px;
+  height: 150px;
+}
+
+.vitals-box h2 {
+  margin: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.vitals-inputs {
+  display: flex;
+  flex-direction: row;
+}
+
+.vitals-inputs input[type="text"] {
+  width: 50%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-right: 10px;
+  color: black;
+}
+
+h2 {
+  color: white;
+}
+
+h2.RespiratoryRate,
+h2.BloodPressure {
+  color: white;
+}
+
+.edit-icon {
+  /* small dynamic pill button that participates in the wrap */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  margin: 16px;
+  padding: 10px 18px;
+  height: 44px;
+  width: auto;
+  min-width: 120px;
+  max-width: 200px;
+  background-color: #000000;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.05s ease;
+  user-select: none;
+}
+.configuration .edit-icon {
+  /* push the button to the end of the grid */
+  order: 99;
+}
+.edit-icon:hover {
+  background-color: #1565c0;
+}
+.edit-icon:active {
+  transform: translateY(1px);
+}
+
+/* Responsive sizing to match other vitals cards */
+@media (min-width: 901px) and (max-width: 1341px) {
+  .edit-icon {
+    min-width: 120px;
+    max-width: 200px;
+    height: 44px;
+  }
+  .configuration .edit-icon {
+    flex-basis: 100%;
+    align-self: center;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 900px) {
+  .edit-icon {
+    min-width: 120px;
+    max-width: 220px;
+    height: 44px;
+    padding: 10px 18px;
+    margin: 16px;
+  }
+}
+
+@media (max-width: 599px) {
+  .edit-icon {
+    width: calc(100% - 32px);
+    min-width: 0;
+    height: 44px;
+    padding: 10px 16px;
+    margin: 16px;
+  }
+}
+
+.right_col {
+  color: aliceblue;
+  float: right;
+  width: 80%;
+}
+
+.vitals_components {
+  display: none;
+}
+
+.show_vitals {
+  display: block;
+}
+
+#VitalsComponents {
+  display: none;
+}
+
+@media (min-width: 600px) and (max-width: 900px) {
+  #VitalsComponents {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+  }
+  .vitals {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 16px 0;
+    width: 100%;
+  }
+  .vitals-box {
+    width: 90%;
+    max-width: 400px;
+    min-width: 250px;
+    margin: 16px auto;
+    padding: 16px;
+    height: auto;
+  }
+  .vitals-inputs {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .vitals-inputs input[type="text"] {
+    width: 100%;
+    margin-right: 0;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1341px) {
+  .configuration {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 24px;
+    justify-items: center;
+    align-items: start;
+  }
+  .vitals {
+    display: inline-block;
+    margin: 16px;
+    width: 350px;
+  }
+  .vitals-box {
+    width: 100%;
+    padding: 20px;
+    height: 150px;
+  }
+  .vitals-inputs {
+    flex-direction: row;
+    gap: 10px;
+  }
+  .vitals-inputs input[type="text"] {
+    width: 50%;
+    margin-right: 10px;
+  }
+  .configuration .edit-icon {
+    grid-column: 1 / -1; /* span full row */
+    justify-self: center;
+    margin-top: 8px;
+  }
+  .configuration {
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  /* body.nav-md .configuration {
+    margin-left: 0rem !important;
+  }
+
+  body.nav-sm .configuration {
+    margin-left: -10rem !important;
+  } */
+}
+
+@media all and (min-width: 1342px) and (max-width: 1920px) {
+  .configuration {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(380px, 1fr));
+    gap: 24px;
+    justify-items: center;
+    align-items: start;
+  }
+  .configuration .edit-icon {
+    grid-column: 1 / -1; /* span full row */
+    justify-self: center;
+    margin-top: 8px;
+  }
+  /* body.nav-md .configuration {
+    margin-left: -10rem !important;
+  }
+
+  body.nav-sm .configuration {
+    margin-left: -30rem !important;
+  } */
+  .vitals {
+    display: block;
+    margin: 0;
+    width: 100%;
+  }
+  .vitals-box {
+    width: 100%;
+    padding: 20px;
+    height: 150px;
+  }
+  .vitals-inputs {
+    flex-direction: row;
+    gap: 10px;
+  }
+  .vitals-inputs input[type="text"] {
+    width: 50%;
+    margin-right: 10px;
+  }
+}
+
+@media (min-width: 1000px) and (max-width: 1100px) {
+  .nav-md .container.body .right_col {
+    margin-left: 200px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    position: relative !important;
+  }
+
+  .LiveSpecification {
+    margin-left: 0px !important;
+    padding-left: 0px !important;
+  }
+
+  .Vitalsspecification {
+    margin-left: 0px !important;
+    padding-left: 0px !important;
+    width: 100% !important;
+  }
+
+  .configuration {
+    margin-left: 0px !important;
+    padding-left: 0px !important;
+    width: 100% !important;
+  }
+
+  .col-md-12,
+  .col-sm-12,
+  .col-xs-12 {
+    padding-left: 0px !important;
+    padding-right: 10px !important;
+  }
+}

@@ -1,4 +1,4 @@
-import { fb } from "../livepage/database_function.js";
+import { fb } from "../firebase/config.js";
 
 var patientname;
 var gender;
@@ -19,7 +19,7 @@ var doctor_id = localStorage.getItem("doctor_id");
 try {
   document.getElementById("logout").addEventListener("click", logout);
 } catch (e) {
-  console.log("In HTML ID: Login is not found", e.message);
+  console.error("In HTML ID: Logout is not found", e.message);
 }
 // Toggle profile dropdown (logout menu) when profile avatar is clicked
 try {
@@ -64,7 +64,7 @@ function logout() {
         console.error("An error occurred while retrieving token. Unable to delete FCM token.", error);
       });
   } catch (e) {
-    console.log("In HTML ID: Login is not found", e.message);
+    console.error("In HTML ID: Logout is not found", e.message);
   }
 
   // Remove the user's data from local storage
@@ -77,14 +77,12 @@ function logout() {
 }
 
 var id = localStorage.getItem("patient_unique_id");
-//console.log("LTN",id);
 if (id != null && id != undefined) {
   var patients = fb.database().ref().child("patients").child(id);
 
   patients.once("value", function (snapshot) {
     let patient_data = JSON.stringify(snapshot.val(), null, 2);
     let patient_data1 = JSON.parse(patient_data);
-    console.log(document.getElementById("PatientImg"));
     patientname = patient_data1.username;
 
     gender = patient_data1.gender == "" ? (gender = "--") : (gender = patient_data1.gender);
@@ -115,7 +113,7 @@ if (id != null && id != undefined) {
       if (document.getElementById("PatientEmail")) document.getElementById("PatientEmail").innerHTML = "Email Id: " + email;
       if (document.getElementById("PatientMob")) document.getElementById("PatientMob").innerHTML = "Mob No: " + mobile;
     } catch (e) {
-      console.log("Unable to set innerHTML", e.message);
+      console.error("Unable to set innerHTML", e);
     }
   });
 }

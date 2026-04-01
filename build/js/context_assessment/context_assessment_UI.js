@@ -1,4 +1,4 @@
-import { fb } from "../livepage/database_function.js";
+import { fb } from "../firebase/config.js";
 
 import { heartrate_data, blood_pressure_data, respiration_rate_data, acceleration_data, blood_oxygen_data, temperature_data, ews_value_passing } from "../livepage/live-custom.js";
 import { NoEcgData, NoPpgData, NoRRData } from "../livepage/EchartGraphs.js";

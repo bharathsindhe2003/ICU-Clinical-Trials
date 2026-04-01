@@ -1,8 +1,18 @@
 .Historyspecification {
   overflow-x: hidden;
+  /* margin-left: var(--sidebar-width-expanded) !important; */
   width: 100%;
   height: 100%;
   background: #ffffff;
+}
+
+/* Prevent ECharts from painting outside the card while layout is changing */
+.Historyspecification .x_panel .x_content {
+  overflow: hidden;
+}
+
+.Historyspecification .x_panel .x_content > div {
+  max-width: 100%;
 }
 
 /* body.nav-md .Historyspecification {
@@ -51,7 +61,7 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
 }
 
 .Horizontaltablink {
-  background-color: #00458b;
+  background-color: #1991c994;
   position: relative;
   color: white;
   border: none;
@@ -67,6 +77,35 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
 
 .Horizontaltablink:hover {
   background-color: #0e7097;
+}
+
+.HistoryChartclick {
+  clear: both;
+  margin-top: 12px;
+}
+
+.HistoryCharttablink {
+  background-color: #ffffff;
+  position: relative;
+  color: #1083b1;
+  border: 1px solid #d9e5ec;
+  outline: none;
+  cursor: pointer;
+  float: left;
+  width: 50%;
+  vertical-align: middle;
+  height: 36px;
+  font-size: small;
+  z-index: 1;
+}
+
+.HistoryCharttablink:hover {
+  background-color: #ffffff;
+  color: #1083b1;
+}
+
+.history-chart-content {
+  display: none;
 }
 
 .tabcontent {
@@ -237,6 +276,10 @@ input:checked + .slider:before {
   .Horizontaltablink {
     height: 30px;
   }
+
+  .HistoryCharttablink {
+    height: 30px;
+  }
 }
 
 @media all and (min-width: 768px) and (max-width: 1024px) {
@@ -262,6 +305,10 @@ input:checked + .slider:before {
   .Horizontaltablink {
     height: 30px;
   }
+
+  .HistoryCharttablink {
+    height: 30px;
+  }
 }
 @media all and (max-width: 480px) {
   .tabcontent {
@@ -281,6 +328,10 @@ input:checked + .slider:before {
     height: 30px;
     z-index: 1;
     margin-left: 0px;
+  }
+
+  .HistoryCharttablink {
+    height: 30px;
   }
 
   #graphs {
@@ -320,6 +371,10 @@ input:checked + .slider:before {
     z-index: 1;
   }
 
+  .HistoryCharttablink {
+    height: 25px;
+  }
+
   .Graphcard {
     float: left;
     width: 50%;
@@ -349,14 +404,14 @@ input:checked + .slider:before {
 }
 @media all and (min-width: 1342px) and (max-width: 1920px) {
   .Graphcard {
-    margin-left: 20px;
+    /* margin-left: 20px; */
   }
   .Historyspecification {
     overflow-x: hidden;
     width: 100%;
     height: 100%;
     background: #ffffff;
-    margin-left: -2rem;
+    /* margin-left: -2rem; */
   }
 
   /* body.nav-md .Historyspecification {
@@ -388,5 +443,465 @@ input:checked + .slider:before {
   .col-xs-12 {
     padding-left: 0px !important;
     padding-right: 10px !important;
+  }
+}
+
+#HistoryComponents.right_col {
+  min-height: 100vh;
+  padding: 28px 24px 40px;
+  background: radial-gradient(circle at top left, rgba(79, 195, 217, 0.18), transparent 30%), linear-gradient(180deg, #f2f9fd 0%, #edf5fb 45%, #f8fbfd 100%);
+}
+
+#HistoryComponents .Historyspecification {
+  width: 100%;
+  min-height: 100%;
+  overflow: visible;
+  background: transparent;
+}
+
+#HistoryComponents .row {
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+#HistoryComponents .history-shell {
+  display: flex;
+  flex-direction: column;
+  /* gap: 20px; */
+}
+
+#HistoryComponents .history-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 24px;
+  padding: 28px 32px;
+  border-radius: 26px;
+  background: linear-gradient(135deg, #0d5d7e 0%, #1083b1 56%, #4fc3d9 100%);
+  box-shadow: 0 24px 48px rgba(14, 63, 91, 0.18);
+  color: #ffffff;
+}
+
+#HistoryComponents .history-hero__copy {
+  max-width: 680px;
+}
+
+#HistoryComponents .history-hero__eyebrow {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.82;
+}
+
+#HistoryComponents .history-hero__title {
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.08;
+  font-weight: 800;
+}
+
+#HistoryComponents .history-hero__text {
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+#HistoryComponents .history-hero__meta {
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+}
+
+#HistoryComponents .history-hero__stat {
+  min-width: 170px;
+  padding: 18px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+}
+
+#HistoryComponents .history-hero__stat span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.8;
+}
+
+#HistoryComponents .history-hero__stat strong {
+  display: block;
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+#HistoryComponents .history-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
+  gap: 18px;
+  padding: 22px;
+  margin-top: 10px;
+  border: 1px solid rgba(128, 164, 186, 0.2);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 18px 34px rgba(29, 75, 102, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+#HistoryComponents .history-toolbar__group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#HistoryComponents .history-toolbar__label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6a8798;
+}
+
+#HistoryComponents .Horizontalclick,
+#HistoryComponents .HistoryChartclick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  clear: none;
+  margin-top: 0;
+}
+
+#HistoryComponents .history-toolbar__group--compact .HistoryChartclick {
+  /* gap: 8px; */
+  align-items: center;
+}
+
+#HistoryComponents .Horizontaltablink,
+#HistoryComponents .HistoryCharttablink {
+  float: none;
+  width: auto;
+  min-width: 120px;
+  height: 46px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: #eef5fa;
+  color: #476476;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+
+#HistoryComponents .Horizontaltablink:hover,
+#HistoryComponents .HistoryCharttablink:hover {
+  transform: translateY(-1px);
+  border-color: rgba(16, 131, 177, 0.24);
+  background: #f7fbfe;
+  color: #0d5d7e;
+}
+
+#HistoryComponents .Horizontaltablink.is-active,
+#HistoryComponents .HistoryCharttablink.is-active {
+  background: linear-gradient(135deg, #1083b1 0%, #0d6284 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 12px 24px rgba(16, 131, 177, 0.28);
+}
+
+#HistoryComponents .history-toolbar__group--compact .HistoryCharttablink {
+  min-width: 34px;
+  width: 34px;
+  height: 20px;
+  padding: 0;
+  border: 1px solid #d7e2e9;
+  border-radius: 4px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(32, 77, 104, 0.12);
+}
+
+#HistoryComponents .history-toolbar__group--compact .HistoryCharttablink:hover {
+  transform: none;
+  background: #ffffff;
+  border-color: #c3d5df;
+  box-shadow: 0 4px 10px rgba(32, 77, 104, 0.14);
+}
+
+#HistoryComponents .history-toolbar__group--compact .HistoryCharttablink.is-active {
+  background: linear-gradient(135deg, #1083b1 0%, #0d6284 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 12px 24px rgba(16, 131, 177, 0.28);
+}
+
+#HistoryComponents .history-toolbar__group--compact .HistoryCharttablink.is-active:hover {
+  background: linear-gradient(135deg, #1083b1 0%, #0d6284 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 12px 24px rgba(16, 131, 177, 0.28);
+  transform: none;
+}
+
+#HistoryComponents .history-tabcontent {
+  display: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  background: transparent;
+  color: #17384a;
+}
+
+#HistoryComponents .history-tabcontent--custom {
+  padding: 20px 22px;
+  border: 1px solid rgba(128, 164, 186, 0.18);
+  margin-top: 10px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 16px 30px rgba(30, 76, 104, 0.08);
+}
+
+#HistoryComponents .DateRangePicker {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+}
+
+#HistoryComponents .history-date-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 16px;
+}
+
+#HistoryComponents .history-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 190px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #436071;
+}
+
+#HistoryComponents .history-field span {
+  line-height: 1;
+}
+
+#HistoryComponents .history-field input {
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid #c9dbe6;
+  border-radius: 14px;
+  background: #f7fbfe;
+  color: #16394c;
+  font-size: 14px;
+}
+
+#HistoryComponents .history-field input:focus {
+  outline: none;
+  border-color: #1083b1;
+  box-shadow: 0 0 0 4px rgba(16, 131, 177, 0.12);
+}
+
+#HistoryComponents .history-date-actions {
+  display: flex;
+  gap: 12px;
+}
+
+#HistoryComponents .buttonbar {
+  min-width: 112px;
+  height: 46px;
+  padding: 0 20px;
+  border: 1px solid #bfd5e2;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #0d6588;
+  font-size: 14px;
+  font-weight: 700;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+
+#HistoryComponents .buttonbar:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(23, 76, 103, 0.12);
+}
+
+#HistoryComponents .buttonbar--primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, #1083b1 0%, #0d6284 100%);
+  color: #ffffff;
+}
+
+#HistoryComponents #graphs.history-graphs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 0;
+  background: transparent;
+}
+
+#HistoryComponents .history-chart-content {
+  display: none;
+}
+
+#HistoryComponents .Graphcard {
+  padding: 10px;
+}
+
+#HistoryComponents .Graphcard .x_panel {
+  margin-bottom: 0;
+  min-height: 100%;
+  border: 1px solid rgba(94, 142, 173, 0.28);
+  border-radius: 22px;
+  background: linear-gradient(180deg, #08131d 0%, #11283a 100%);
+  box-shadow: 0 22px 40px rgba(10, 36, 55, 0.2);
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+#HistoryComponents .Graphcard .x_panel:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 28px 48px rgba(10, 36, 55, 0.28);
+}
+
+#HistoryComponents .Graphcard .x_title {
+  margin: 0;
+  padding: 20px 22px 0;
+  border-bottom: 0;
+}
+
+#HistoryComponents .Graphcard .x_title h2 {
+  margin: 0;
+  float: none;
+  font-size: 18px;
+  font-weight: 700;
+  color: #f2fbff;
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+
+#HistoryComponents .Graphcard .x_content {
+  padding: 10px 16px 16px;
+}
+
+#HistoryComponents .Graphcard .x_content > div {
+  width: 100% !important;
+  min-height: 270px;
+  border-radius: 18px;
+  background: radial-gradient(circle at top left, rgba(77, 160, 214, 0.18), transparent 34%), linear-gradient(180deg, #102536 0%, #0b1b28 100%);
+  box-shadow: inset 0 0 0 1px rgba(146, 193, 224, 0.08);
+}
+
+#HistoryComponents #loader {
+  margin: 0 auto;
+}
+
+@media (max-width: 1199px) {
+  #HistoryComponents .history-hero {
+    flex-direction: column;
+  }
+
+  #HistoryComponents .history-toolbar {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 991px) {
+  #HistoryComponents.right_col {
+    padding: 22px 16px 32px;
+  }
+
+  #HistoryComponents .history-hero {
+    padding: 24px;
+  }
+
+  #HistoryComponents .history-hero__title {
+    font-size: 28px;
+  }
+
+  #HistoryComponents .history-hero__meta {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 767px) {
+  #HistoryComponents .history-hero,
+  #HistoryComponents .history-toolbar,
+  #HistoryComponents .history-tabcontent--custom {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  #HistoryComponents .history-hero__title {
+    font-size: 24px;
+  }
+
+  #HistoryComponents .history-hero__stat {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  #HistoryComponents .Horizontaltablink,
+  #HistoryComponents .HistoryCharttablink {
+    flex: 1 1 calc(50% - 10px);
+    min-width: 0;
+  }
+
+  #HistoryComponents .history-toolbar__group--compact .HistoryCharttablink {
+    flex: 0 0 34px;
+  }
+
+  #HistoryComponents .history-field,
+  #HistoryComponents .history-date-actions {
+    width: 100%;
+  }
+
+  #HistoryComponents .history-date-actions {
+    flex-direction: column;
+  }
+
+  #HistoryComponents .buttonbar {
+    width: 100%;
+  }
+
+  #HistoryComponents .Graphcard {
+    width: 100%;
+  }
+}
+
+@media (max-width: 479px) {
+  #HistoryComponents.right_col {
+    padding: 16px 12px 28px;
+  }
+
+  #HistoryComponents .Horizontaltablink,
+  #HistoryComponents .HistoryCharttablink {
+    flex-basis: 100%;
+  }
+
+  #HistoryComponents .history-toolbar__group--compact .HistoryCharttablink {
+    flex-basis: 34px;
+  }
+
+  #HistoryComponents .Graphcard .x_title h2 {
+    font-size: 16px;
   }
 }

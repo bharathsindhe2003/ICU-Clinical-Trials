@@ -1,4 +1,4 @@
-import { fb } from "../livepage/database_function.js";
+import { fb } from "../firebase/config.js";
 
 var docId = localStorage.getItem("doctor_id");
 var lightbox = document.getElementById("lightbox");

@@ -1,5 +1,4 @@
 export async function patient_details(patient_info) {
-  console.log("[Dashboard-UI.js] patient_info before in array: ", patient_info.length);
   const normalizedPatientInfo = Array.isArray(patient_info)
     ? patient_info.map((patient) => {
         const nextPatient = patient.slice(0, 7);
@@ -35,7 +34,6 @@ export async function patient_details(patient_info) {
       })
     : [];
 
-  // console.log("[Dashboard-UI.js] patient_info before in array: ", normalizedPatientInfo);
   normalizedPatientInfo.sort(sortFunction);
 
   function sortFunction(a, b) {
@@ -45,9 +43,6 @@ export async function patient_details(patient_info) {
       return a[5] > b[5] ? -1 : 1;
     }
   }
-  // console.log("[Dashboard-UI.js] patient_info after in array: ", normalizedPatientInfo);
-
-  // console.log("[Dashboard-UI.js] Data before creating charts:", normalizedPatientInfo);
 
   var modal = document.getElementById("myModal");
 
@@ -69,7 +64,6 @@ export async function patient_details(patient_info) {
     products.innerHTML = "";
 
     for (var i = 0; i < normalizedPatientInfo.length; i++) {
-      console.log("[Dashboard-UI.js] Creating card for:", normalizedPatientInfo[i]);
       let LiveECGId = "chart" + normalizedPatientInfo[i][4];
       let LivePPGId = "ppgchart" + normalizedPatientInfo[i][4];
       let LiveRRId = "rrchart" + normalizedPatientInfo[i][4];
@@ -88,13 +82,10 @@ export async function patient_details(patient_info) {
       let bpBorderId = "bpBorder" + normalizedPatientInfo[i][4];
 
       createCard(normalizedPatientInfo[i], LiveECGId, LivePPGId, LiveRRId, hrId, spoId, bpId, rrId, tempId, ewsvId, ewscId, borderId, hrBorderId, spo2BorderId, tempBorderId, rrBorderId, bpBorderId);
-
-      console.log("[Dashboard-UI.js] Created card for:", normalizedPatientInfo[i]);
     }
 
     function createCard(patientDetails, LiveECGId, LivePPGId, LiveRRId, hrId, spoId, bpId, rrId, tempId, ewsvId, ewscId, borderId, hrBorderId, spo2BorderId, tempBorderId, rrBorderId, bpBorderId) {
       const [name, age, gender, ailment, patient_id_no, ews, color] = patientDetails;
-      console.log("[Dashboard-UI.js] Creating card with IDs:", ewsvId, ewscId);
 
       const ageLabel = age === undefined || age === null || age === "" ? "--" : `${age}Y`;
       const genderLabel = gender === undefined || gender === null || gender === "" ? "--" : gender;
@@ -180,7 +171,6 @@ export async function patient_details(patient_info) {
       const item = items[i];
 
       item.addEventListener("click", function (index) {
-        console.log("[Dashboard-UI.js] Clicked on " + i, normalizedPatientInfo[i][4]);
         history.pushState({ page: "index" }, "Title", "../production/index.html");
         cardclick(normalizedPatientInfo[i][4]);
       });

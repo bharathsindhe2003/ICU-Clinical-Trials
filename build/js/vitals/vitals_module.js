@@ -1,4 +1,4 @@
-import { fb } from "../livepage/database_function.js";
+import { fb } from "../firebase/config.js";
 
 var uid = localStorage.getItem("patient_unique_id");
 console.log("vitals id", uid);

@@ -9,7 +9,7 @@ import {
   //history_Respiration_Rate,
 } from "./history_UI_module.js";
 import { showToast } from "../backend/toastmsg.js";
-import { fb } from "../livepage/database_function.js";
+import { fb } from "../firebase/config.js";
 
 var button_clicked = "want_hour";
 

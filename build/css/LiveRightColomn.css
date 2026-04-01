@@ -3,15 +3,71 @@
   margin-left: 90px;
 }
 
+/* ---------------------------------------------
+   Gauge panel compact overrides
+   Goal: reduce gauge height & remove vertical gap
+   --------------------------------------------- */
+.gauge-inline {
+  /* stack gauge + title tightly */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 6px 0 4px; /* minimal vertical padding */
+  gap: 2px; /* tiny space between gauge and title */
+  overflow: visible !important; /* allow title to render fully */
+}
+
+.gauge-inline .x_content {
+  /* remove default padding if any */
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.gauge-inline .echartsgauges1 {
+  /* make gauge fill the box */
+  width: 100% !important;
+  height: 120px !important;
+  max-width: none !important;
+}
+
+.gauge-inline h4.name_title {
+  /* remove large default h4 margins */
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 13px;
+  line-height: 1.1;
+  color: #fff;
+  text-align: center;
+}
+
+/* Reduce overall card height without shrinking the gauge too much */
+.x_panel.gauge-inline,
+.x_panel.fixed_height_310.gauge-inline {
+  height: 190px !important; /* allow larger gauge + title */
+  min-height: 190px !important;
+}
+
+/* Responsive fine-tuning: keep gauges readable on very small heights */
+@media (max-height: 500px) {
+  .gauge-inline .echartsgauges1 {
+    height: 44px !important;
+  }
+  .gauge-inline h4.name_title {
+    font-size: 12px;
+  }
+}
+
 #ews_id.ews_card_js {
-  position: fixed !important;
-  top: calc(var(--top-nav-height, 56px) + 12px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2000;
-  width: auto;
-  max-width: 90vw;
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+  z-index: auto;
+  width: 100%;
+  max-width: 100%;
   pointer-events: auto;
+  animation: none;
 }
 
 #ews_id .ews_card {
@@ -19,19 +75,16 @@
   border-radius: 10px;
   box-shadow: none;
   overflow: visible;
-  display: inline-block;
-  margin: 0;
+  display: block;
+  margin: 0 auto;
 }
 
 #ews_id .ews_bar {
   border-radius: 999px;
-  /* Use flex to perfectly center the score text */
-
   align-items: center;
   justify-content: center;
-  /* Keep a compact pill height and horizontal padding */
   height: 30px;
-  padding: 0 14px !important;
+  /* padding: 0 14px !important; */
   margin: 0 auto;
 }
 
@@ -41,30 +94,6 @@
   color: #111;
   text-align: center;
   line-height: 1;
-}
-
-#ews_id.ews_card_js {
-  animation: ewsToastIn 280ms ease-out;
-}
-
-@keyframes ewsToastIn {
-  from {
-    transform: translateY(-8px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@media (max-width: 600px) {
-  #ews_id.ews_card_js {
-    right: 8px;
-    left: 8px;
-    width: auto;
-    max-width: 100%;
-  }
 }
 
 body .container.body .right_col {
@@ -229,7 +258,7 @@ body .container.body .right_col {
 
 .x_panel {
   position: relative;
-  width: 95%;
+  width: 100%;
   height: 100%;
   border-radius: 12px;
   display: inline-block;
@@ -237,10 +266,30 @@ body .container.body .right_col {
   border: 1px solid #e6e9ed;
   -webkit-column-break-inside: avoid;
   -moz-column-break-inside: avoid;
-  column-break-inside: avoid;
+  break-inside: avoid;
   opacity: 1;
   -webkit-transition: all 0.2s ease;
   transition: all 0.2s ease;
+}
+
+/* Live ECG/PPG panels: make chart fill available vertical space */
+.x_panel.live-chart-panel {
+  display: flex;
+  flex-direction: column;
+  /* dynamic height relative to viewport so charts scale */
+  height: 25vh;
+}
+
+.x_panel.live-chart-panel .x_title {
+  flex: 0 0 auto;
+}
+
+.x_panel.live-chart-panel #LiveECGId,
+.x_panel.live-chart-panel #LiveRRId,
+.x_panel.live-chart-panel #LivePPGId {
+  flex: 1 1 auto;
+  width: 100%;
+  height: auto;
 }
 
 .x_title {
@@ -353,8 +402,8 @@ form:after {
   position: relative;
   min-height: 1px;
   float: left;
-  padding-right: 10px;
-  padding-left: 10px;
+  /* padding-right: 10px; */
+  /* padding-left: 10px; */
 }
 
 #LiveECGId,
@@ -363,6 +412,13 @@ form:after {
   width: 100%;
   height: 200px;
   background-color: #000000;
+  /* ensure chart canvas never visually overflows its panel */
+  overflow: hidden;
+}
+
+/* Prevent ECharts from painting outside the card while layout is changing */
+.LiveSpecification .x_panel .x_content {
+  overflow: hidden;
 }
 
 .progress_summary .row .col-xs-2 {
@@ -439,6 +495,15 @@ form:after {
   overflow: auto;
   background-color: #000(0, 0, 0, 0.5);
 }
+.modal-content.modal2 {
+  background-color: #ffffff;
+  margin: 0% auto;
+  padding: 0px;
+  border: 1px solid #888;
+  width: 98dvw;
+  height: 20dvh;
+  overflow: hidden;
+}
 
 .modal-content {
   background-color: #ffffff;
@@ -448,6 +513,14 @@ form:after {
   width: 98dvw;
   height: 98dvh;
   overflow: hidden;
+}
+
+.modal-content > iframe {
+  display: block;
+  width: 100%;
+  height: calc(100% - 36px);
+  margin-top: 36px;
+  border: none;
 }
 
 .close {
@@ -465,9 +538,149 @@ form:after {
 }
 
 iframe {
-  width: 100dvw;
-  height: 100dvh;
   border: none;
+}
+
+.gauge-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.echartsgauges1 {
+  width: 100%;
+  max-width: 180px;
+  height: 70px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.live-vitals-grid__row--center {
+  text-align: center;
+}
+
+.live-vitals-grid__row--center > [class*="col-"] {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.left_col {
+  transition: width 0.25s ease;
+}
+.nav_menu,
+.main_container .top_nav,
+.container.body .right_col {
+  transition:
+    margin-left 0.25s ease,
+    width 0.25s ease;
+}
+
+body.nav-sm .left_col {
+  width: 70px;
+  overflow: hidden;
+}
+body.nav-sm .nav_title {
+  width: 70px;
+}
+/* In collapsed mode, push the first menu item (sidebar toggle)
+   further down so it is clearly below the logo */
+body.nav-sm #sidebar-menu .side-menu li:first-child a {
+  margin-top: 40px;
+}
+body.nav-sm .site_title span {
+  display: none;
+}
+body.nav-sm .profile,
+body.nav-sm #left_colomn_details {
+  display: none;
+}
+body.nav-sm #sidebar-menu .side-menu li a {
+  white-space: nowrap;
+  font-size: 0;
+  padding: 14px 12px;
+}
+body.nav-sm #sidebar-menu .side-menu li a i {
+  font-size: 20px;
+  margin-right: 0;
+}
+body.nav-sm .main_container .top_nav {
+  margin-left: 70px;
+}
+body.nav-sm .container.body .right_col {
+  margin-left: 70px;
+  width: calc(100% - 70px);
+}
+
+body.nav-md #sidebar-menu .side-menu li a {
+  font-size: 14px;
+}
+
+body.nav-sm #sidebar-menu .side-menu li a:hover {
+  font-size: 12px;
+  position: relative;
+}
+body.nav-sm #sidebar-menu .side-menu li a:hover span {
+  display: inline-block;
+}
+
+body.nav-sm .nav-md .container.body .right_col {
+  width: calc(100% - 70px);
+}
+
+.left_col {
+  width: 280px;
+  transition: width 0.25s ease;
+}
+
+body.nav-md .main_container .top_nav {
+  margin-left: 280px !important;
+  transition: margin-left 0.25s ease;
+}
+body.nav-md .container.body .right_col {
+  margin-left: 280px !important;
+  width: calc(100% - 280px) !important;
+  transition:
+    margin-left 0.25s ease,
+    width 0.25s ease;
+  position: relative;
+}
+
+body.nav-sm .left_col {
+  width: 70px !important;
+  overflow: hidden;
+}
+body.nav-sm .main_container .top_nav {
+  margin-left: 70px !important;
+}
+body.nav-sm .container.body .right_col {
+  margin-left: 70px !important;
+  width: calc(100% - 70px) !important;
+}
+
+body.nav-sm .site_title span,
+body.nav-sm #left_colomn_details,
+body.nav-sm .profile {
+  display: none !important;
+}
+
+body.nav-sm #sidebar-menu .side-menu li a {
+  font-size: 0;
+  padding: 14px 12px;
+  white-space: nowrap;
+  transition: font-size 0.15s;
+}
+body.nav-sm #sidebar-menu .side-menu li a i {
+  font-size: 20px;
+  margin-right: 0;
+}
+body.nav-sm #sidebar-menu .side-menu li a:hover {
+  font-size: 12px;
+}
+
+.container.body .right_col {
+  box-sizing: border-box;
 }
 
 @media all and (min-width: 1024px) and (max-width: 1280px) {
@@ -475,17 +688,6 @@ iframe {
   #LivePPGId,
   #LiveRRId {
     width: 95%;
-    height: 260px; /* Ensure waves/canvas never spill outside the black panel during layout transitions */
-    position: relative;
-    overflow: hidden;
-  }
-}
-
-@media all and (min-width: 1024px) and (max-width: 1280px) {
-  #LiveECGId,
-  #LivePPGId,
-  #LiveRRId {
-    width: 9%;
     height: 260px; /* Ensure waves/canvas never spill outside the black panel during layout transitions */
     position: relative;
     overflow: hidden;
@@ -550,6 +752,7 @@ iframe {
     }
   }
 }
+
 @media (max-height: 500px) {
   .echartsgauges1 {
     height: 80px;
@@ -570,26 +773,6 @@ iframe {
     max-width: 160px;
     height: 100px;
   }
-}
-
-.gauge-inline {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  padding: 4px 0;
-}
-
-.echartsgauges1 {
-  width: 100%;
-  max-width: 180px;
-  height: 110px;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-.x_panel .x_content {
-  padding: 4px !important;
 }
 
 @media (min-width: 901px) and (max-width: 1341px) {
@@ -644,135 +827,6 @@ iframe {
   }
 }
 
-.left_col {
-  transition: width 0.25s ease;
-}
-.nav_menu,
-.main_container .top_nav,
-.container.body .right_col {
-  transition: margin-left 0.25s ease, width 0.25s ease;
-}
-
-.sidebar-toggle {
-  display: inline-block;
-  margin-right: 12px;
-  color: #ffffff;
-  cursor: pointer;
-}
-.sidebar-toggle i {
-  font-size: 20px;
-}
-
-body.nav-sm .left_col {
-  width: 70px;
-  overflow: hidden;
-}
-body.nav-sm .nav_title {
-  width: 70px;
-}
-body.nav-sm .site_title span {
-  display: none;
-}
-body.nav-sm .profile,
-body.nav-sm #left_colomn_details {
-  display: none;
-}
-body.nav-sm #sidebar-menu .side-menu li a {
-  white-space: nowrap;
-  font-size: 0;
-  padding: 14px 12px;
-}
-body.nav-sm #sidebar-menu .side-menu li a i {
-  font-size: 20px;
-  margin-right: 0;
-}
-body.nav-sm .main_container .top_nav {
-  margin-left: 70px;
-}
-body.nav-sm .container.body .right_col {
-  margin-left: 70px;
-  width: calc(100% - 70px);
-}
-
-body.nav-md #sidebar-menu .side-menu li a {
-  font-size: 14px;
-}
-
-body.nav-sm #sidebar-menu .side-menu li a:hover {
-  font-size: 12px;
-  position: relative;
-}
-body.nav-sm #sidebar-menu .side-menu li a:hover span {
-  display: inline-block;
-}
-
-body.nav-sm .nav-md .container.body .right_col {
-  width: calc(100% - 70px);
-}
-
-.left_col {
-  width: 280px;
-  transition: width 0.25s ease;
-}
-
-body.nav-md .main_container .top_nav {
-  margin-left: 280px !important;
-  transition: margin-left 0.25s ease;
-}
-body.nav-md .container.body .right_col {
-  margin-left: 280px !important;
-  width: calc(100% - 280px) !important;
-  transition: margin-left 0.25s ease, width 0.25s ease;
-  position: relative;
-}
-
-body.nav-sm .left_col {
-  width: 70px !important;
-  overflow: hidden;
-}
-body.nav-sm .main_container .top_nav {
-  margin-left: 70px !important;
-}
-body.nav-sm .container.body .right_col {
-  margin-left: 70px !important;
-  width: calc(100% - 70px) !important;
-}
-
-body.nav-sm .site_title span,
-body.nav-sm #left_colomn_details,
-body.nav-sm .profile {
-  display: none !important;
-}
-
-body.nav-sm #sidebar-menu .side-menu li a {
-  font-size: 0;
-  padding: 14px 12px;
-  white-space: nowrap;
-  transition: font-size 0.15s;
-}
-body.nav-sm #sidebar-menu .side-menu li a i {
-  font-size: 20px;
-  margin-right: 0;
-}
-body.nav-sm #sidebar-menu .side-menu li a:hover {
-  font-size: 12px;
-}
-
-.sidebar-toggle {
-  display: inline-block;
-  margin-right: 12px;
-  color: #ffffff;
-  cursor: pointer;
-}
-.sidebar-toggle i {
-  font-size: 20px;
-  line-height: 1;
-}
-
-.container.body .right_col {
-  box-sizing: border-box;
-}
-
 @media (min-width: 1000px) and (max-width: 1100px) {
   .nav-md .container.body .right_col {
     margin-left: 200px !important;
@@ -796,5 +850,568 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
   .col-xs-12 {
     padding-left: 0px !important;
     padding-right: 10px !important;
+  }
+}
+
+/* Final live gauge layout override.
+   Keep this near the end of the file so duplicate older rules do not collapse the gauge canvas. */
+.x_panel.gauge-inline,
+.x_panel.fixed_height_310.gauge-inline {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  height: 190px !important;
+  min-height: 190px !important;
+  overflow: hidden !important;
+}
+
+.x_panel.gauge-inline .x_content,
+.x_panel.fixed_height_310.gauge-inline .x_content {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  min-height: 132px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.x_panel.gauge-inline .echartsgauges1,
+.x_panel.fixed_height_310.gauge-inline .echartsgauges1 {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: 128px !important;
+  min-height: 128px !important;
+  margin: 0 auto !important;
+}
+
+.x_panel.gauge-inline h4.name_title,
+.x_panel.fixed_height_310.gauge-inline h4.name_title {
+  margin: 0 !important;
+  padding: 0 0 10px !important;
+  text-align: center !important;
+  line-height: 1.1 !important;
+}
+
+@media (min-width: 1200px) and (min-height: 700px) {
+  .live-monitor-layout {
+    display: flex;
+    align-items: stretch;
+    min-height: calc(100vh - 132px);
+  }
+
+  .live-monitor-layout > .live-chart-column,
+  .live-monitor-layout > .live-vitals-column {
+    float: none;
+    min-height: 0;
+  }
+
+  .live-chart-column {
+    display: flex;
+    flex: 0 0 66.666667%;
+    flex-direction: column;
+    max-width: 66.666667%;
+    padding-right: 6px;
+  }
+
+  .live-chart-column > .animated.flipInY {
+    flex: 0 0 auto;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 2px;
+  }
+
+  .live-chart-column > .row {
+    display: flex;
+    flex: 1 1 0;
+    margin-bottom: 2px;
+    min-height: 0;
+  }
+
+  .live-chart-column > .row:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .live-chart-column > .row > [class*="col-"] {
+    display: flex;
+    min-height: 0;
+  }
+
+  .live-chart-column .x_panel.live-chart-panel {
+    height: auto;
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+
+  .live-chart-column .x_title {
+    padding: 8px 5px 5px;
+    margin-bottom: 6px;
+  }
+
+  .live-chart-column .x_title h2 {
+    margin: 2px 0 4px;
+    font-size: 16px;
+  }
+
+  .live-vitals-column {
+    display: flex;
+    flex: 0 0 33.333333%;
+    flex-direction: column;
+    max-width: 33.333333%;
+  }
+
+  .live-vitals-meta {
+    flex: 0 0 auto;
+    margin-bottom: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .live-vitals-grid {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: stretch;
+    gap: 6px;
+    min-height: 0;
+  }
+
+  .live-vitals-grid__row {
+    display: flex;
+    flex: 1 1 0;
+    align-items: stretch;
+    margin-left: -7px;
+    margin-right: -7px;
+    min-height: 0;
+  }
+
+  .live-vitals-grid__row > [class*="col-"] {
+    float: none;
+    display: flex;
+    flex: 1 1 0;
+    min-height: 0;
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .live-vitals-grid__row--center {
+    justify-content: center;
+  }
+
+  .live-vitals-grid__row--center > [class*="col-"] {
+    flex: 0 0 calc(50% - 14px);
+    max-width: calc(50% - 14px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .live-vitals-column .x_panel.gauge-inline,
+  .live-vitals-column .x_panel.fixed_height_310.gauge-inline {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    width: 100%;
+    height: auto !important;
+    min-height: 170px !important;
+  }
+
+  .live-vitals-column .x_panel.gauge-inline .x_content,
+  .live-vitals-column .x_panel.fixed_height_310.gauge-inline .x_content {
+    min-height: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  .live-vitals-column .x_panel.gauge-inline .echartsgauges1,
+  .live-vitals-column .x_panel.fixed_height_310.gauge-inline .echartsgauges1 {
+    height: clamp(96px, 100%, 138px) !important;
+    min-height: 96px !important;
+  }
+
+  .live-vitals-column .x_panel.gauge-inline h4.name_title,
+  .live-vitals-column .x_panel.fixed_height_310.gauge-inline h4.name_title {
+    padding-bottom: 4px !important;
+    font-size: 12px;
+  }
+}
+
+/* Live section refresh aligned with History and Configuration surfaces */
+#LiveComponents.right_col {
+  min-height: 100vh;
+  padding: 18px 12px 24px !important;
+  position: relative !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: radial-gradient(circle at top left, rgba(79, 195, 217, 0.18), transparent 30%), linear-gradient(180deg, #f2f9fd 0%, #edf5fb 45%, #f8fbfd 100%) !important;
+}
+
+#LiveComponents .LiveSpecification {
+  width: 100%;
+  min-height: 100%;
+  overflow: visible;
+  background: transparent;
+}
+
+#LiveComponents .live-shell {
+  max-width: none;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#LiveComponents #ews_id.ews_card_js {
+  width: 100%;
+  max-width: 240px;
+  margin: 0;
+}
+
+#LiveComponents #ews_id .ews_card {
+  margin: 0;
+}
+
+#LiveComponents #ews_id .ews_card > div {
+  width: 100%;
+}
+
+#LiveComponents #ews_id .ews_bar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 176px;
+  width: auto;
+  max-width: 100%;
+  height: 48px;
+  padding: 0 20px !important;
+  border: 0;
+  border-radius: 999px;
+  box-shadow:
+    inset 0 0 0 1px rgba(11, 58, 78, 0.12),
+    0 10px 22px rgba(30, 76, 104, 0.08);
+}
+
+#LiveComponents #ews_id .ews_no {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0c3143;
+}
+
+#LiveComponents .live-monitor-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(380px, 1fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+#LiveComponents .live-chart-column,
+#LiveComponents .live-vitals-column {
+  min-width: 0;
+  width: 100%;
+  max-width: none;
+  flex: none;
+  justify-self: stretch;
+}
+
+#LiveComponents .live-chart-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#LiveComponents .live-vitals-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-self: stretch;
+  min-height: 100%;
+}
+
+#LiveComponents .live-wave-card,
+#LiveComponents .live-ews-surface,
+#LiveComponents .live-vitals-surface {
+  padding: 22px;
+  border: 1px solid rgba(128, 164, 186, 0.2);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 18px 34px rgba(29, 75, 102, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+#LiveComponents .live-wave-card {
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+#LiveComponents .live-wave-card:hover,
+#LiveComponents .live-vital-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 42px rgba(24, 70, 95, 0.14);
+}
+
+#LiveComponents .live-ews-surface {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 132px;
+}
+
+#LiveComponents .live-ews-surface.is-visible {
+  display: flex;
+}
+
+#LiveComponents .live-ews-surface__header {
+  margin-bottom: 12px;
+}
+
+#LiveComponents .live-ews-surface__header h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #11384c;
+}
+
+#LiveComponents .live-ews-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  padding: 10px 0 2px;
+}
+
+#LiveComponents .live-wave-card__header,
+#LiveComponents .live-vitals-surface__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+#LiveComponents .live-wave-card__header h2,
+#LiveComponents .live-vitals-surface__header h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #11384c;
+}
+
+#LiveComponents .live-wave-card__meta,
+#LiveComponents .live-vitals-surface__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+#LiveComponents .live-wave-card__meta span,
+#LiveComponents .live-vitals-surface__meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #eef5fa;
+  color: #476476;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+#LiveComponents .live-wave-card__meta label,
+#LiveComponents .live-vitals-surface__meta label {
+  margin: 0;
+  color: #0d6284;
+  font-weight: 800;
+}
+
+#LiveComponents .x_panel.live-chart-panel {
+  margin-bottom: 0;
+  height: auto !important;
+  min-height: 0;
+  flex: 0 0 auto;
+  padding: 14px 14px 18px;
+  border: 1px solid rgba(94, 142, 173, 0.28);
+  border-radius: 22px;
+  background: linear-gradient(180deg, #08131d 0%, #11283a 100%);
+  box-shadow: 0 22px 40px rgba(10, 36, 55, 0.2);
+  overflow: hidden;
+}
+
+#LiveComponents .x_panel.live-chart-panel:hover {
+  box-shadow: 0 28px 48px rgba(10, 36, 55, 0.28);
+}
+
+#LiveComponents #LiveECGId,
+#LiveComponents #LivePPGId,
+#LiveComponents #LiveRRId {
+  display: block;
+  width: 100% !important;
+  height: clamp(270px, 34vh, 380px) !important;
+  border-radius: 18px;
+  background: radial-gradient(circle at top left, rgba(77, 160, 214, 0.18), transparent 34%), linear-gradient(180deg, #102536 0%, #0b1b28 100%);
+  box-shadow: inset 0 0 0 1px rgba(146, 193, 224, 0.08);
+  overflow: hidden;
+}
+
+#LiveComponents .live-vitals-surface {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+}
+
+#LiveComponents .live-vitals-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+#LiveComponents .live-vital-card {
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  min-height: 0;
+  border: 1px solid rgba(94, 142, 173, 0.28);
+  border-radius: 20px;
+  background: linear-gradient(180deg, #08131d 0%, #11283a 100%);
+  box-shadow: 0 22px 40px rgba(10, 36, 55, 0.2);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+#LiveComponents .live-vital-card--full {
+  grid-column: 1 / -1;
+}
+
+#LiveComponents .live-vital-card__chart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-height: 118px;
+  margin-bottom: 8px;
+  border-radius: 18px;
+  background: radial-gradient(circle at top left, rgba(77, 160, 214, 0.18), transparent 34%), linear-gradient(180deg, #102536 0%, #0b1b28 100%);
+  box-shadow: inset 0 0 0 1px rgba(146, 193, 224, 0.08);
+}
+
+#LiveComponents .live-vital-card .echartsgauges1 {
+  width: 100% !important;
+  max-width: none !important;
+  height: 100% !important;
+  min-height: 118px !important;
+  margin: 0 auto !important;
+}
+
+#LiveComponents .live-vital-card .name_title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #f2fbff;
+  text-align: center;
+}
+
+@media (max-width: 1199px) {
+  #LiveComponents .live-monitor-layout,
+  #LiveComponents .live-wave-card__header,
+  #LiveComponents .live-vitals-surface__header {
+    grid-template-columns: 1fr;
+  }
+
+  #LiveComponents .live-wave-card__header,
+  #LiveComponents .live-vitals-surface__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #LiveComponents .live-monitor-layout {
+    grid-template-columns: 1fr;
+  }
+
+  #LiveComponents .live-vitals-column {
+    min-height: auto;
+  }
+
+  #LiveComponents .live-vitals-grid {
+    grid-template-rows: none;
+  }
+}
+
+@media (max-width: 991px) {
+  #LiveComponents.right_col {
+    padding: 16px 12px 24px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  #LiveComponents .live-wave-card,
+  #LiveComponents .live-ews-surface,
+  #LiveComponents .live-vitals-surface {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  #LiveComponents .live-wave-card__meta,
+  #LiveComponents .live-vitals-surface__meta {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  #LiveComponents .live-wave-card__meta span,
+  #LiveComponents .live-vitals-surface__meta span {
+    flex: 1 1 100%;
+    white-space: normal;
+  }
+
+  #LiveComponents .live-vitals-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #LiveComponents .live-vital-card--full {
+    grid-column: auto;
+  }
+
+  #LiveComponents #LiveECGId,
+  #LiveComponents #LivePPGId,
+  #LiveComponents #LiveRRId {
+    height: 260px !important;
+  }
+}
+
+@media (max-width: 479px) {
+  #LiveComponents.right_col {
+    padding: 12px 10px 20px !important;
+  }
+
+  #LiveComponents .live-ews-surface__header h2,
+  #LiveComponents .live-wave-card__header h2,
+  #LiveComponents .live-vitals-surface__header h2 {
+    font-size: 21px;
+  }
+
+  #LiveComponents #ews_id.ews_card_js {
+    max-width: 100%;
+  }
+
+  #LiveComponents #ews_id .ews_bar {
+    width: 100%;
+    min-width: 0;
   }
 }

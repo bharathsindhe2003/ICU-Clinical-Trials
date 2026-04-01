@@ -1,4 +1,4 @@
-import { fb } from "../livepage/database_function.js";
+import { fb } from "../firebase/config.js";
 import { showToast } from "../backend/toastmsg.js";
 
 let internetConnectionStatus = window.navigator.onLine ? "Online" : "OFFline";

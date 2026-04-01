@@ -11,36 +11,8 @@ import {
   RR_data_passing,
 } from "./live-custom.js";
 import { NoEcgData, NoData, NoPpgData, NoRRData } from "./EchartGraphs.js";
-import { showToast } from "../backend/toastmsg.js";
 
-export const firebaseConfig = {
-  // svasthya-icu-clinical-trials
-  // apiKey: "AIzaSyBAqVd7OH-L7Zr86aNtIPFMo0SYXVwUoJs",
-  // authDomain: "svasthya-icu-clinical-trials.firebaseapp.com",
-  // databaseURL: "https://svasthya-icu-clinical-trials-default-rtdb.firebaseio.com",
-  // projectId: "svasthya-icu-clinical-trials",
-  // storageBucket: "svasthya-icu-clinical-trials.firebasestorage.app",
-  // messagingSenderId: "667544106913",
-  // appId: "1:667544106913:web:0cfdea8866edfb507abde0",
-  // measurementId: "G-ZHLTHLEVCE",
-
-  // svasthya-icu-clinical-trials 2
-  apiKey: "AIzaSyBsnDOIETbbYrnIY5ubf8wwUpA6Wr9TGpo",
-  authDomain: "phc-testing-c20d5.firebaseapp.com",
-  databaseURL: "https://phc-testing-c20d5-default-rtdb.firebaseio.com",
-  projectId: "phc-testing-c20d5",
-  storageBucket: "phc-testing-c20d5.appspot.com",
-  messagingSenderId: "801955076843",
-  appId: "1:801955076843:web:9bf242e4293cddae153cae",
-  measurementId: "G-WY33YWRX21",
-};
-
-export let sensor_flag;
-
-export const fb = firebase.initializeApp(firebaseConfig);
-var ongoing_val = 0;
-var call_decline_val;
-var docId = localStorage.getItem("doctor_id");
+import { fb } from "../firebase/config.js";
 
 function init_echarts() {
   $(document).ready(() => {
@@ -73,7 +45,6 @@ function init_echarts() {
     var ref_valid;
     var context_assessment;
     var patients;
-    sensor_flag = 0;
     var ecg_flag = 0;
     var ppg_ref;
     var rr_ref;
@@ -151,8 +122,6 @@ function init_echarts() {
           var sensortime = ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
           document.getElementById("sensordate").innerHTML = sensordate;
           document.getElementById("sensortime").innerHTML = sensortime;
-
-          console.log("battery", batteryPercentage);
 
           heart_rate = parseInt(heart_rate) === 238 || heart_rate === 2.38 ? "--" : heart_rate;
           sbp = parseInt(sbp) === 238 ? "--" : sbp;

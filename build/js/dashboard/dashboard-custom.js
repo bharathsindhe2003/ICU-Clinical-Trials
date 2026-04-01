@@ -1,4 +1,4 @@
-import { fb } from "../livepage/database_function.js";
+import { fb } from "../firebase/config.js";
 import { patient_details } from "./Dashboard-UI.js";
 
 document.getElementById("loader").className = "loader";
@@ -549,9 +549,8 @@ function createECGchart(ecg, Id) {
       data.push(randomData());
     }
   } catch (e) {
-    console.log("[dashboard-custom.js] EcgData.length:", e.message);
+    console.error("[dashboard-custom.js] EcgData.length:", e);
   }
-  console.log("[dashboard-custom.js] data ecg", ecgData.length);
   if (ecgData.length < 625) {
     chart.clear();
 
@@ -799,7 +798,7 @@ function createPPGchart(ppg, ID) {
       data.push(randomData());
     }
   } catch (e) {
-    console.log("[dashboard-custom.js] EcgData.length:", e.message);
+    console.error("[dashboard-custom.js] EcgData.length:", e);
   }
   if (ppgData.length < 500) {
     chart.clear();
@@ -1136,8 +1135,6 @@ function refreshvitals(hr, bp, temp, rr, spo, ID) {
   var spov = document.getElementById(spoId);
   var tempv = document.getElementById(tempId);
 
-  console.log("[dashboard-custom.js] in refresh vitals", hr, bp, temp, rr, spo, ID);
-
   function formatValue(val) {
     const value = Number(val);
     return value !== 0 && !isNaN(value) ? val : "--";
@@ -1151,7 +1148,6 @@ function refreshvitals(hr, bp, temp, rr, spo, ID) {
   rr = formatValue(rr);
   spo = formatValue(spo);
   temp = formatValue(temp);
-  console.log("[dashboard-custom.js] in refresh vitals after", hr, bp, temp, rr, spo, ID);
 
   if (hrv) hrv.textContent = hr + " bpm";
   if (bpv) bpv.textContent = bp + " mmHg";

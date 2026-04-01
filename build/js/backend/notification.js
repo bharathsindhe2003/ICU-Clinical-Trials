@@ -1,4 +1,4 @@
-import { fb } from "../livepage/database_function.js";
+import { fb } from "../firebase/config.js";
 
 if (fb !== undefined) {
   console.log("Firebase initialized successfully.");

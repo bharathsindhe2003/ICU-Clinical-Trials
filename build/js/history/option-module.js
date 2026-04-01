@@ -1,5 +1,5 @@
 import { firebase } from "./history_fb_module.js";
-import { fb } from "../livepage/database_function.js";
+import { fb } from "../firebase/config.js";
 import { showToast } from "../backend/toastmsg.js";
 
 //console.log("fb",fb);

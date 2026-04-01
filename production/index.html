@@ -330,72 +330,150 @@
         </div>
       </div>
 
-      <div id="VitalsComponents" class="right_col" role="main" style="padding: 2rem">
-        <div class="Vitalsspecification"></div>
-
-        <br /><br /><br />
-        <div class="configuration">
-          <!-- Spo2 Box and Heart Rate Box -->
-          <div class="vitals">
-            <div class="vitals-box">
-              <h2>Spo2</h2>
-              <div id="spo2" class="vitals-inputs">
-                <div>Min: <input id="spo2min" type="text" class="min-value" placeholder="Min" /></div>
-                <div>Max: <input id="spo2max" type="text" class="max-value" placeholder="Spo2 Max" /></div>
-              </div>
-            </div>
-          </div>
-          <div class="vitals">
-            <div class="vitals-box">
-              <h2>Heart Rate</h2>
-              <div id="hr" class="vitals-inputs">
-                <div>Min: <input id="hrmin" type="text" class="min-value" placeholder="Heart Rate Min" /></div>
-                <div>Max: <input id="hrmax" type="text" class="max-value" placeholder="Heart Rate Max" /></div>
+      <div
+        id="VitalsComponents"
+        class="right_col"
+        role="main"
+        style="padding: 2rem; background: radial-gradient(circle at top left, rgba(79, 195, 217, 0.18), transparent 30%), linear-gradient(180deg, #f2f9fd 0%, #edf5fb 45%, #f8fbfd 100%)">
+        <section class="vitals-shell">
+          <div class="vitals-hero">
+            <div class="vitals-hero__heading">
+              <p class="vitals-hero__eyebrow">Configuration</p>
+              <div class="vitals-hero__actions">
+                <span id="vitalsSaveStatus" class="vitals-save-status" aria-live="polite"></span>
+                <button id="saveVitalsConfig" class="vitals-save-button" type="button">Edit</button>
               </div>
             </div>
           </div>
 
-          <!-- Temperature Box and  Respiratory Rate Box -->
-          <div class="vitals">
-            <div class="vitals-box">
-              <h2>Temperature</h2>
-              <div id="temp" class="vitals-inputs">
-                <div>Min: <input id="tempmin" type="text" class="min-value" placeholder="Temperature Min" /></div>
-                <div>Max: <input id="tempmax" type="text" class="max-value" placeholder="Temperature Max" /></div>
+          <div class="configuration vitals-grid">
+            <article class="vital-card" data-vital-key="spo2">
+              <div class="vital-card__header">
+                <div>
+                  <p class="vital-card__eyebrow">Oxygen Threshold</p>
+                  <h4>SpO2</h4>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="vitals">
-            <div class="vitals-box">
-              <h2>Respiratory Rate</h2>
-              <div id="rr" class="vitals-inputs">
-                <div>Min: <input id="rrmin" type="text" class="min-value" placeholder=" Min" /></div>
-                <div>Max: <input id="rrmax" type="text" class="max-value" placeholder="Max" /></div>
+              <div class="vital-rule" id="spo2rule">
+                <div class="vital-values" data-vital-values="spo2">
+                  <label class="vital-field vital-field--min">
+                    <span>Min</span>
+                    <input id="spo2min" type="number" inputmode="numeric" step="1" placeholder="Minimum" />
+                  </label>
+                  <label class="vital-field vital-field--max">
+                    <span>Max</span>
+                    <input id="spo2max" type="number" inputmode="numeric" step="1" placeholder="Maximum" />
+                  </label>
+                </div>
               </div>
-            </div>
-          </div>
+            </article>
 
-          <!-- Blood Pressure Box and Diastolic Blood Pressure Box-->
-          <div class="vitals">
-            <div class="vitals-box">
-              <h2>Blood Pressure</h2>
-              <div id="sbp" class="vitals-inputs">
-                <div>SBP Min: <input id="sbpmin" type="text" class="min-value" placeholder="Blood Pressure Min" /></div>
-                <div>SBP Max: <input id="sbpmax" type="text" class="max-value" placeholder="Blood Pressure Max" /></div>
+            <article class="vital-card" data-vital-key="hr">
+              <div class="vital-card__header">
+                <div>
+                  <p class="vital-card__eyebrow">Pulse Threshold</p>
+                  <h4>Heart Rate</h4>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="vitals">
-            <div class="vitals-box">
-              <h2>Diastolic Blood Pressure</h2>
-              <div id="dbp" class="vitals-inputs">
-                <div>DBP Min: <input id="dbpmin" type="text" class="min-value" placeholder="Diastolic Pressure Min" /></div>
-                <div>DBP Max: <input id="dbpmax" type="text" class="max-value" placeholder="Diastolic Pressure Max" /></div>
+              <div class="vital-rule" id="hrrule">
+                <div class="vital-values" data-vital-values="hr">
+                  <label class="vital-field vital-field--min">
+                    <span>Min</span>
+                    <input id="hrmin" type="number" inputmode="numeric" step="1" placeholder="Minimum" />
+                  </label>
+                  <label class="vital-field vital-field--max">
+                    <span>Max</span>
+                    <input id="hrmax" type="number" inputmode="numeric" step="1" placeholder="Maximum" />
+                  </label>
+                </div>
               </div>
-            </div>
+            </article>
+
+            <article class="vital-card" data-vital-key="temp">
+              <div class="vital-card__header">
+                <div>
+                  <p class="vital-card__eyebrow">Temperature Threshold</p>
+                  <h4>Temperature</h4>
+                </div>
+              </div>
+              <div class="vital-rule" id="temprule">
+                <div class="vital-values" data-vital-values="temp">
+                  <label class="vital-field vital-field--min">
+                    <span>Min</span>
+                    <input id="tempmin" type="number" inputmode="decimal" step="0.1" placeholder="Minimum" />
+                  </label>
+                  <label class="vital-field vital-field--max">
+                    <span>Max</span>
+                    <input id="tempmax" type="number" inputmode="decimal" step="0.1" placeholder="Maximum" />
+                  </label>
+                </div>
+              </div>
+            </article>
+
+            <article class="vital-card" data-vital-key="rr">
+              <div class="vital-card__header">
+                <div>
+                  <p class="vital-card__eyebrow">Breathing Threshold</p>
+                  <h4>Respiratory Rate</h4>
+                </div>
+              </div>
+              <div class="vital-rule" id="rrrule">
+                <div class="vital-values" data-vital-values="rr">
+                  <label class="vital-field vital-field--min">
+                    <span>Min</span>
+                    <input id="rrmin" type="number" inputmode="numeric" step="1" placeholder="Minimum" />
+                  </label>
+                  <label class="vital-field vital-field--max">
+                    <span>Max</span>
+                    <input id="rrmax" type="number" inputmode="numeric" step="1" placeholder="Maximum" />
+                  </label>
+                </div>
+              </div>
+            </article>
+
+            <article class="vital-card" data-vital-key="sbp">
+              <div class="vital-card__header">
+                <div>
+                  <p class="vital-card__eyebrow">Pressure Threshold</p>
+                  <h4>Systolic Blood Pressure</h4>
+                </div>
+              </div>
+              <div class="vital-rule" id="sbprule">
+                <div class="vital-values" data-vital-values="sbp">
+                  <label class="vital-field vital-field--min">
+                    <span>Min</span>
+                    <input id="sbpmin" type="number" inputmode="numeric" step="1" placeholder="Minimum" />
+                  </label>
+                  <label class="vital-field vital-field--max">
+                    <span>Max</span>
+                    <input id="sbpmax" type="number" inputmode="numeric" step="1" placeholder="Maximum" />
+                  </label>
+                </div>
+              </div>
+            </article>
+
+            <article class="vital-card" data-vital-key="dbp">
+              <div class="vital-card__header">
+                <div>
+                  <p class="vital-card__eyebrow">Pressure Threshold</p>
+                  <h4>Diastolic Blood Pressure</h4>
+                </div>
+              </div>
+              <div class="vital-rule" id="dbprule">
+                <div class="vital-values" data-vital-values="dbp">
+                  <label class="vital-field vital-field--min">
+                    <span>Min</span>
+                    <input id="dbpmin" type="number" inputmode="numeric" step="1" placeholder="Minimum" />
+                  </label>
+                  <label class="vital-field vital-field--max">
+                    <span>Max</span>
+                    <input id="dbpmax" type="number" inputmode="numeric" step="1" placeholder="Maximum" />
+                  </label>
+                </div>
+              </div>
+            </article>
           </div>
-          <div id="edit" class="edit-icon">Edit</div>
-        </div>
+        </section>
       </div>
     </div>
 

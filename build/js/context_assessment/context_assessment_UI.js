@@ -18,7 +18,7 @@ function setEpochSecondsToZero(epoch) {
   } else {
     const d = new Date(Math.floor(num) * 1000);
     d.setSeconds(0, 0);
-    return Math.floor(d.getTime() / 1000).toString();
+    return Math.floor(d.getTime() / 1000);
   }
 }
 var scale;
@@ -45,23 +45,39 @@ var rrref;
 var rrref1;
 
 if (page == "1") {
-  patientsDataRef = fb.database().ref().child("Average_complete_Data").child(id).child(timestamp);
-  ecgref1 = fb.database().ref().child("patientecgdata").child(id).child(timestamp);
-  ppgref1 = fb.database().ref().child("patientppgdata").child(id).child(timestamp);
-  rrref1 = fb.database().ref().child("patientrrdata").child(id).child(timestamp);
+  patientsDataRef = fb.database().ref().child("Average_complete_Data");
+  ecgref1 = fb.database().ref().child("patientecgdata").child(id);
+  ppgref1 = fb.database().ref().child("patientppgdata").child(id);
+  rrref1 = fb.database().ref().child("patientrrdata").child(id);
 } else if (page == "2") {
-  patientsDataRef = fb.database().ref().child("patientlivedata").child(id).child(timestamp);
-  ecgref = fb.database().ref().child("patientecgdata").child(id).child(timestamp);
-  ppgref = fb.database().ref().child("patientppgdata").child(id).child(timestamp);
-  rrref = fb.database().ref().child("patientrrdata").child(id).child(timestamp);
+  patientsDataRef = fb.database().ref().child("patientlivedata");
+  ecgref = fb.database().ref().child("patientecgdata").child(id);
+  ppgref = fb.database().ref().child("patientppgdata").child(id);
+  rrref = fb.database().ref().child("patientrrdata").child(id);
 }
 
 var patientRef = patientsDataRef.child(id);
 
 patientRef
   .once("value", function (snapshot) {
+    console.log("Fetching live patient data...");
     var patientData = snapshot.val();
     console.log("Raw patient data:", patientData);
+
+    const found = Object.entries(patientData || {}).find(([key, entry]) => {
+      const entryTs = entry && entry.timestamp !== undefined ? setEpochSecondsToZero(parseInt(entry.timestamp)) : null;
+      const keyTs = setEpochSecondsToZero(parseInt(key));
+
+      return entryTs === timestamp || keyTs === timestamp;
+    });
+    if (found) {
+      const [foundKey, foundEntry] = found;
+      console.log("Matched patient data entry:", { [foundKey]: foundEntry });
+      patientData = foundEntry;
+    } else {
+      console.log("No matching patient data entry found for the given timestamp.");
+      patientData = null;
+    }
 
     if (patientData) {
       console.log("patient data snapshot:", patientData);
@@ -146,14 +162,33 @@ patientRef
 
         Promise.all([
           ecgref1.once("value", function (snapshot) {
+            var newts = null;
             var ecg = null;
 
             if (snapshot.exists()) {
               const parsedData = snapshot.val();
-              ecg = parsedData && parsedData.payload !== undefined ? parsedData.payload : null;
+              console.log("Parsed ECG data: 1", parsedData);
+              const found = Object.entries(parsedData).find(([key, entry]) => {
+                const entryTs = entry && entry.timestamp !== undefined ? setEpochSecondsToZero(parseInt(entry.timestamp)) : null;
+                const keyTs = setEpochSecondsToZero(parseInt(key));
+
+                return entryTs === timestamp || keyTs === timestamp;
+              });
+              if (found) {
+                const [foundKey, foundEntry] = found;
+                console.log("Parsed ECG data: 2", { [foundKey]: foundEntry });
+                newts = foundEntry && foundEntry.timestamp !== undefined ? setEpochSecondsToZero(foundEntry.timestamp) : setEpochSecondsToZero(Number(foundKey));
+                ecg = foundEntry && foundEntry.payload !== undefined ? foundEntry.payload : null;
+              } else {
+                console.log("Parsed ECG data: 2 []");
+                newts = null;
+                ecg = null;
+              }
             }
+            console.log("newts ecg", newts);
+
             if (ecg != null) {
-              var ECGDateTime = timestamp;
+              var ECGDateTime = new Date(newts * 1000);
               var ContextEcgDate = ("0" + ECGDateTime.getDate()).slice(-2) + "/" + ("0" + (ECGDateTime.getMonth() + 1)).slice(-2) + "/" + ECGDateTime.getFullYear();
               var ContextEcgTime = ("0" + ECGDateTime.getHours()).slice(-2) + ":" + ("0" + ECGDateTime.getMinutes()).slice(-2) + ":" + ("0" + ECGDateTime.getSeconds()).slice(-2);
               document.getElementById("contextecgdate").innerHTML = ContextEcgDate;
@@ -176,15 +211,33 @@ patientRef
           }),
 
           ppgref1.once("value", function (snapshot) {
+            var newts = null;
             var ppg = null;
 
             if (snapshot.exists()) {
               const parsedData = snapshot.val();
-              ppg = parsedData && parsedData.payload !== undefined ? parsedData.payload : null;
+              console.log("Parsed PPG data: 1", parsedData);
+              const found = Object.entries(parsedData).find(([key, entry]) => {
+                const entryTs = entry && entry.timestamp !== undefined ? setEpochSecondsToZero(parseInt(entry.timestamp)) : null;
+                const keyTs = setEpochSecondsToZero(parseInt(key));
+
+                return entryTs === timestamp || keyTs === timestamp;
+              });
+
+              if (found) {
+                const [foundKey, foundEntry] = found;
+                console.log("Parsed PPG data: 2", { [foundKey]: foundEntry });
+                newts = foundEntry && foundEntry.timestamp !== undefined ? foundEntry.timestamp : Number(foundKey);
+                ppg = foundEntry && foundEntry.payload !== undefined ? foundEntry.payload : null;
+              } else {
+                console.log("Parsed PPG data: 2 []");
+                newts = null;
+                ppg = null;
+              }
             }
             console.log("newts ecg", newts, ppg);
             if (ppg != null) {
-              var PpgDateTime = timestamp;
+              var PpgDateTime = new Date(newts * 1000);
               var ContextPpgDate = ("0" + PpgDateTime.getDate()).slice(-2) + "/" + ("0" + (PpgDateTime.getMonth() + 1)).slice(-2) + "/" + PpgDateTime.getFullYear();
               var ContextPpgTime = ("0" + PpgDateTime.getHours()).slice(-2) + ":" + ("0" + PpgDateTime.getMinutes()).slice(-2) + ":" + ("0" + PpgDateTime.getSeconds()).slice(-2);
               console.log("newts ecg", newts, ContextPpgDate, ContextPpgTime);
@@ -207,14 +260,31 @@ patientRef
           }),
 
           rrref1.once("value", function (snapshot) {
+            var newts = null;
             var rr = null;
             if (snapshot.exists()) {
               const parsedData = snapshot.val();
-              rr = parsedData && parsedData.payload !== undefined ? parsedData.payload : null;
-            }
+              console.log("Parsed RR data: 1", parsedData);
+              const found = Object.entries(parsedData).find(([key, entry]) => {
+                const entryTs = entry && entry.timestamp !== undefined ? setEpochSecondsToZero(parseInt(entry.timestamp)) : null;
+                const keyTs = setEpochSecondsToZero(parseInt(key));
 
+                return entryTs === timestamp || keyTs === timestamp;
+              });
+              if (found) {
+                const [foundKey, foundEntry] = found;
+                console.log("Parsed RR data: 2", { [foundKey]: foundEntry });
+                newts = foundEntry && foundEntry.timestamp !== undefined ? foundEntry.timestamp : Number(foundKey);
+                rr = foundEntry && foundEntry.payload !== undefined ? foundEntry.payload : null;
+              } else {
+                console.log("Parsed RR data: 2 []");
+                newts = null;
+                rr = null;
+              }
+            }
+            console.log("newts ecg", newts);
             if (rr != null) {
-              var RrDateTime = timestamp;
+              var RrDateTime = new Date(newts * 1000);
               var ContextRrDate = ("0" + RrDateTime.getDate()).slice(-2) + "/" + ("0" + (RrDateTime.getMonth() + 1)).slice(-2) + "/" + RrDateTime.getFullYear();
               var ContextRrTime = ("0" + RrDateTime.getHours()).slice(-2) + ":" + ("0" + RrDateTime.getMinutes()).slice(-2) + ":" + ("0" + RrDateTime.getSeconds()).slice(-2);
               document.getElementById("contextrrdate").innerHTML = ContextRrDate;
@@ -245,9 +315,26 @@ patientRef
         Promise.all([
           ecgref.once("value", function (snapshot) {
             var ecg = null;
+            var newts = null;
             if (snapshot.exists()) {
               const parsedData = snapshot.val();
-              ecg = parsedData && parsedData.payload !== undefined ? parsedData.payload : null;
+              console.log("Parsed ECG data:", parsedData);
+              const found = Object.entries(parsedData).find(([key, entry]) => {
+                const entryTs = entry && entry.timestamp !== undefined ? setEpochSecondsToZero(parseInt(entry.timestamp)) : null;
+                const keyTs = setEpochSecondsToZero(parseInt(key));
+
+                return entryTs === timestamp || keyTs === timestamp;
+              });
+              if (found) {
+                const [foundKey, foundEntry] = found;
+                console.log("Parsed ECG data after filter:", { [foundKey]: foundEntry });
+                newts = foundEntry && foundEntry.timestamp !== undefined ? foundEntry.timestamp : Number(foundKey);
+                ecg = foundEntry && foundEntry.payload !== undefined ? foundEntry.payload : null;
+              } else {
+                console.log("Parsed ECG data after filter: []");
+                newts = null;
+                ecg = null;
+              }
             }
 
             if (ecg != null) {
@@ -275,10 +362,28 @@ patientRef
 
           ppgref.once("value", function (snapshot) {
             var ppg = null;
+            var newts = null;
             if (snapshot.exists()) {
               const parsedData = snapshot.val();
-              ppg = parsedData && parsedData.payload !== undefined ? parsedData.payload : null;
+              console.log("Parsed PPG data:", parsedData);
+              const found = Object.entries(parsedData).find(([key, entry]) => {
+                const entryTs = entry && entry.timestamp !== undefined ? setEpochSecondsToZero(parseInt(entry.timestamp)) : null;
+                const keyTs = setEpochSecondsToZero(parseInt(key));
+
+                return entryTs === timestamp || keyTs === timestamp;
+              });
+              if (found) {
+                const [foundKey, foundEntry] = found;
+                console.log("Parsed PPG data after filter:", { [foundKey]: foundEntry });
+                newts = foundEntry && foundEntry.timestamp !== undefined ? foundEntry.timestamp : Number(foundKey);
+                ppg = foundEntry && foundEntry.payload !== undefined ? foundEntry.payload : null;
+              } else {
+                console.log("Parsed PPG data after filter: []");
+                newts = null;
+                ppg = null;
+              }
             }
+
             if (ppg != null) {
               var PpgDateTime = new Date(newts * 1000);
               var ContextPpgDate = ("0" + PpgDateTime.getDate()).slice(-2) + "/" + ("0" + (PpgDateTime.getMonth() + 1)).slice(-2) + "/" + PpgDateTime.getFullYear();
@@ -305,9 +410,26 @@ patientRef
 
           rrref.once("value", function (snapshot) {
             var rr = null;
+            var newts = null;
             if (snapshot.exists()) {
               const parsedData = snapshot.val();
-              rr = parsedData && parsedData.payload !== undefined ? parsedData.payload : null;
+              console.log("Parsed RR data:", parsedData);
+              const found = Object.entries(parsedData).find(([key, entry]) => {
+                const entryTs = entry && entry.timestamp !== undefined ? setEpochSecondsToZero(parseInt(entry.timestamp)) : null;
+                const keyTs = setEpochSecondsToZero(parseInt(key));
+
+                return entryTs === timestamp || keyTs === timestamp;
+              });
+              if (found) {
+                const [foundKey, foundEntry] = found;
+                console.log("Parsed RR data after filter:", { [foundKey]: foundEntry });
+                newts = foundEntry && foundEntry.timestamp !== undefined ? foundEntry.timestamp : Number(foundKey);
+                rr = foundEntry && foundEntry.payload !== undefined ? foundEntry.payload : null;
+              } else {
+                console.log("Parsed RR data after filter: []");
+                newts = null;
+                rr = null;
+              }
             }
             if (rr != null) {
               var RrDateTime = new Date(newts * 1000);
@@ -341,13 +463,18 @@ patientRef
     }
   })
   .catch((error) => {
-    console.error("Error fetching context assessment data:", error);
+    console.error("Error fetching data:", error);
   })
   .finally(() => {
     const loader = document.querySelector(".loader");
     loader.classList.add("loader--hidden");
   });
 
+function logout() {
+  console.log("Logging out...");
+  localStorage.removeItem("doctor_id");
+  window.location.replace("login.html");
+}
 function ECG_data(LiveEcgValues, ecgdate, ecgtime, option1, value, ecgdata, endzoom) {
   console.log("EcgValues in echarts", "context:", ecgdata);
   var EcgData;

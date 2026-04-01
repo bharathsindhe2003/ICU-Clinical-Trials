@@ -58,13 +58,10 @@
             <a onclick="dashboardclick()" class="site_title"><img src="images/svasthyaicon.png" width="55" height="55" /> <span id="SvasthyaTitle">SVASTHYA &trade;</span></a>
           </div>
 
-          <div class="clearfix"></div>
-
           <!-- menu profile quick info -->
           <div id="left_colomn_details" class="left_colomn_details">
             <div class="profile clearfix">
               <div class="profile_pic">
-                <!-- <img src="images/${gender}.jpg" alt="..." width="50" height="70" class="img-circle profile_img"> -->
                 <img id="PatientImg" alt="..." class="img-circle profile_img" />
               </div>
               <div id="profile_info" class="profile_info">
@@ -85,10 +82,9 @@
 
           <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
             <div class="menu_section">
-              <h3></h3>
               <ul class="nav side-menu">
                 <li>
-                  <a id="sidebarToggle" class="sidebar-toggle" title="Toggle Sidebar"><i class="fa fa-bars"></i>&nbsp; </a>
+                  <a id="sidebarToggle" class="tablink" title="Toggle Sidebar"><i class="fa fa-bars"></i>&nbsp; </a>
                 </li>
                 <li>
                   <a class="tablink" id="defaultOpen" title="Live"><i class="fa fa-desktop"></i><span class="menu-text">&nbsp; Live</span></a>
@@ -108,7 +104,6 @@
         <div class="top_nav">
           <div class="nav_menu">
             <div class="Righthand">
-              <!-- <a id="joinclick"><i class="fa-solid fa-video"></i>&nbsp; &nbsp;</a> -->
               <span id="battery-percentage" style="color: white"></span>&nbsp; &nbsp;
               <a onclick="dashboardclick()"><i class="fa fa-home"></i> Dashboard &nbsp;</a>
               <span
@@ -178,10 +173,6 @@
               </section>
 
               <aside class="live-vitals-column" aria-label="Live warning score and vital signs">
-                <!-- <section class="live-ews-surface" aria-label="Early warning score"> -->
-                <!-- <div class="live-ews-surface__header">
-                    <h2>Early Warning Score</h2>
-                  </div> -->
                 <div class="live-ews-card">
                   <div id="ews_id" class="ews_card_js">
                     <div class="ews_card">
@@ -193,7 +184,6 @@
                     </div>
                   </div>
                 </div>
-                <!-- </section> -->
 
                 <section class="live-vitals-surface">
                   <div class="live-vitals-surface__header">
@@ -248,170 +238,164 @@
           </div>
         </div>
       </div>
-    </div>
+      <div id="HistoryComponents" class="right_col" role="main">
+        <div class="Historyspecification">
+          <div class="Horizontalclick">
+            <button id="onehourbutton" class="Horizontaltablink" onclick="HorizontalNavigationBar('Hour', this, 'white')">Hour</button>
+            <button id="onedaybutton" class="Horizontaltablink" onclick="HorizontalNavigationBar('Day', this, 'white')">Day</button>
+            <button id="oneweekbutton" class="Horizontaltablink" onclick="HorizontalNavigationBar('Week', this, 'white')">Week</button>
+            <button id="custombutton" class="Horizontaltablink" onclick="HorizontalNavigationBar('Custom', this, 'white')">Custom</button>
 
-    <div id="HistoryComponents" class="right_col" role="main">
-      <div class="Historyspecification">
-        <div class="Horizontalclick">
-          <button id="onehourbutton" class="Horizontaltablink" onclick="HorizontalNavigationBar('Hour', this, 'white')">Hour</button>
-          <button id="onedaybutton" class="Horizontaltablink" onclick="HorizontalNavigationBar('Day', this, 'white')">Day</button>
-          <button id="oneweekbutton" class="Horizontaltablink" onclick="HorizontalNavigationBar('Week', this, 'white')">Week</button>
-          <button id="custombutton" class="Horizontaltablink" onclick="HorizontalNavigationBar('Custom', this, 'white')">Custom</button>
-
-          <br />
-        </div>
-
-        <script>
-          function HorizontalNavigationBar(pageName, elmnt, color) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-              tabcontent[i].style.display = "none";
-            }
-            tablinks = document.getElementsByClassName("Horizontaltablink");
-            for (i = 0; i < tablinks.length; i++) {
-              tablinks[i].style.backgroundColor = "";
-              tablinks[i].style.color = "";
-              // tablinks[i].style.borderTopRightRadius = "";
-              // tablinks[i].style.borderTopLeftRadius = "";
-            }
-            document.getElementById(pageName).style.display = "block";
-            // document.getElementById(pageName).style.color = "#ff0000";
-            elmnt.style.backgroundColor = color;
-            elmnt.style.color = "#1083b1";
-            // elmnt.style.borderTopRightRadius = "10px";
-            // elmnt.style.borderTopLeftRadius = "10px";
-          }
-
-          // Get the element with id="defaultOpen" and click on it
-        </script>
-
-        <!--one hour selection -->
-        <div id="Hour" class="tabcontent"></div>
-        <!--/one hour selection -->
-
-        <!--one day selection -->
-        <div id="Day" class="tabcontent"></div>
-        <!--/one day selection -->
-
-        <!--one week  selection -->
-        <div id="Week" class="tabcontent"></div>
-        <!--/one week  selection -->
-
-        <!--custom Date setting bar -->
-        <div id="Custom" class="tabcontent">
-          <div class="DateRangePicker">
-            <form>
-              <label>From Date:</label>
-              <input type="date" id="fromdate" name="fromdate" />
-              <label>To Date:</label>
-              <input type="date" id="todate" name="todate" />
-              <button id="apply" class="buttonbar" type="button">Apply</button>
-              <button id="cancel" class="buttonbar" type="button">Cancel</button>
-              <!-- <input type="number" id="myNumber" value="100"> -->
-            </form>
+            <br />
           </div>
-        </div>
 
-        <div id="loader"></div>
+          <script>
+            function HorizontalNavigationBar(pageName, elmnt, color) {
+              var i, tabcontent, tablinks;
+              tabcontent = document.getElementsByClassName("tabcontent");
+              for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+              }
+              tablinks = document.getElementsByClassName("Horizontaltablink");
+              for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].style.backgroundColor = "";
+                tablinks[i].style.color = "";
+              }
+              document.getElementById(pageName).style.display = "block";
+              elmnt.style.backgroundColor = color;
+              elmnt.style.color = "#1083b1";
+            }
 
-        <div id="graphs">
-          <div class="col-sm-12 Graphcard">
-            <div class="x_panel">
-              <div class="x_title">
-                <h2>Vitals</h2>
-                <div class="clearfix"></div>
-              </div>
-              <div class="x_content">
-                <div id="echart_context" style="width: 95%; height: 250px"></div>
-              </div>
+            // Get the element with id="defaultOpen" and click on it
+          </script>
+
+          <!--one hour selection -->
+          <div id="Hour" class="tabcontent"></div>
+          <!--/one hour selection -->
+
+          <!--one day selection -->
+          <div id="Day" class="tabcontent"></div>
+          <!--/one day selection -->
+
+          <!--one week  selection -->
+          <div id="Week" class="tabcontent"></div>
+          <!--/one week  selection -->
+
+          <!--custom Date setting bar -->
+          <div id="Custom" class="tabcontent">
+            <div class="DateRangePicker">
+              <form>
+                <label>From Date:</label>
+                <input type="date" id="fromdate" name="fromdate" />
+                <label>To Date:</label>
+                <input type="date" id="todate" name="todate" />
+                <button id="apply" class="buttonbar" type="button">Apply</button>
+                <button id="cancel" class="buttonbar" type="button">Cancel</button>
+                <!-- <input type="number" id="myNumber" value="100"> -->
+              </form>
             </div>
           </div>
 
-          <!--/Context Assessment-->
+          <div id="loader"></div>
 
-          <!--Electrocardiogram(ECG)  echart_ecg-->
-          <div class="col-md-12 col-sm-12 Graphcard">
-            <div class="x_panel">
-              <div class="x_title">
-                <h2>Alert History</h2>
-                <div class="clearfix"></div>
+          <div id="graphs">
+            <div class="col-sm-12 Graphcard">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Vitals</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div id="echart_context" style="width: 95%; height: 250px"></div>
+                </div>
               </div>
+            </div>
 
-              <div class="x_content">
-                <div id="echart_ecg" style="width: 95%; height: 250px"></div>
+            <!--/Context Assessment-->
+
+            <!--Electrocardiogram(ECG)  echart_ecg-->
+            <div class="col-md-12 col-sm-12 Graphcard">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Alert History</h2>
+                  <div class="clearfix"></div>
+                </div>
+
+                <div class="x_content">
+                  <div id="echart_ecg" style="width: 95%; height: 250px"></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div id="VitalsComponents" class="right_col" role="main" style="padding: 2rem">
-      <div class="Vitalsspecification"></div>
+      <div id="VitalsComponents" class="right_col" role="main" style="padding: 2rem">
+        <div class="Vitalsspecification"></div>
 
-      <br /><br /><br />
-      <div class="configuration">
-        <!-- Spo2 Box and Heart Rate Box -->
-        <div class="vitals">
-          <div class="vitals-box">
-            <h2>Spo2</h2>
-            <div id="spo2" class="vitals-inputs">
-              <div>Min: <input id="spo2min" type="text" class="min-value" placeholder="Min" /></div>
-              <div>Max: <input id="spo2max" type="text" class="max-value" placeholder="Spo2 Max" /></div>
+        <br /><br /><br />
+        <div class="configuration">
+          <!-- Spo2 Box and Heart Rate Box -->
+          <div class="vitals">
+            <div class="vitals-box">
+              <h2>Spo2</h2>
+              <div id="spo2" class="vitals-inputs">
+                <div>Min: <input id="spo2min" type="text" class="min-value" placeholder="Min" /></div>
+                <div>Max: <input id="spo2max" type="text" class="max-value" placeholder="Spo2 Max" /></div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="vitals">
-          <div class="vitals-box">
-            <h2>Heart Rate</h2>
-            <div id="hr" class="vitals-inputs">
-              <div>Min: <input id="hrmin" type="text" class="min-value" placeholder="Heart Rate Min" /></div>
-              <div>Max: <input id="hrmax" type="text" class="max-value" placeholder="Heart Rate Max" /></div>
+          <div class="vitals">
+            <div class="vitals-box">
+              <h2>Heart Rate</h2>
+              <div id="hr" class="vitals-inputs">
+                <div>Min: <input id="hrmin" type="text" class="min-value" placeholder="Heart Rate Min" /></div>
+                <div>Max: <input id="hrmax" type="text" class="max-value" placeholder="Heart Rate Max" /></div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Temperature Box and  Respiratory Rate Box -->
-        <div class="vitals">
-          <div class="vitals-box">
-            <h2>Temperature</h2>
-            <div id="temp" class="vitals-inputs">
-              <div>Min: <input id="tempmin" type="text" class="min-value" placeholder="Temperature Min" /></div>
-              <div>Max: <input id="tempmax" type="text" class="max-value" placeholder="Temperature Max" /></div>
+          <!-- Temperature Box and  Respiratory Rate Box -->
+          <div class="vitals">
+            <div class="vitals-box">
+              <h2>Temperature</h2>
+              <div id="temp" class="vitals-inputs">
+                <div>Min: <input id="tempmin" type="text" class="min-value" placeholder="Temperature Min" /></div>
+                <div>Max: <input id="tempmax" type="text" class="max-value" placeholder="Temperature Max" /></div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="vitals">
-          <div class="vitals-box">
-            <h2>Respiratory Rate</h2>
-            <div id="rr" class="vitals-inputs">
-              <div>Min: <input id="rrmin" type="text" class="min-value" placeholder=" Min" /></div>
-              <div>Max: <input id="rrmax" type="text" class="max-value" placeholder="Max" /></div>
+          <div class="vitals">
+            <div class="vitals-box">
+              <h2>Respiratory Rate</h2>
+              <div id="rr" class="vitals-inputs">
+                <div>Min: <input id="rrmin" type="text" class="min-value" placeholder=" Min" /></div>
+                <div>Max: <input id="rrmax" type="text" class="max-value" placeholder="Max" /></div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Blood Pressure Box and Diastolic Blood Pressure Box-->
-        <div class="vitals">
-          <div class="vitals-box">
-            <h2>Blood Pressure</h2>
-            <div id="sbp" class="vitals-inputs">
-              <div>SBP Min: <input id="sbpmin" type="text" class="min-value" placeholder="Blood Pressure Min" /></div>
-              <div>SBP Max: <input id="sbpmax" type="text" class="max-value" placeholder="Blood Pressure Max" /></div>
+          <!-- Blood Pressure Box and Diastolic Blood Pressure Box-->
+          <div class="vitals">
+            <div class="vitals-box">
+              <h2>Blood Pressure</h2>
+              <div id="sbp" class="vitals-inputs">
+                <div>SBP Min: <input id="sbpmin" type="text" class="min-value" placeholder="Blood Pressure Min" /></div>
+                <div>SBP Max: <input id="sbpmax" type="text" class="max-value" placeholder="Blood Pressure Max" /></div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="vitals">
-          <div class="vitals-box">
-            <h2>Diastolic Blood Pressure</h2>
-            <div id="dbp" class="vitals-inputs">
-              <div>DBP Min: <input id="dbpmin" type="text" class="min-value" placeholder="Diastolic Pressure Min" /></div>
-              <div>DBP Max: <input id="dbpmax" type="text" class="max-value" placeholder="Diastolic Pressure Max" /></div>
+          <div class="vitals">
+            <div class="vitals-box">
+              <h2>Diastolic Blood Pressure</h2>
+              <div id="dbp" class="vitals-inputs">
+                <div>DBP Min: <input id="dbpmin" type="text" class="min-value" placeholder="Diastolic Pressure Min" /></div>
+                <div>DBP Max: <input id="dbpmax" type="text" class="max-value" placeholder="Diastolic Pressure Max" /></div>
+              </div>
             </div>
           </div>
+          <div id="edit" class="edit-icon">Edit</div>
         </div>
-        <div id="edit" class="edit-icon">Edit</div>
       </div>
     </div>
 
@@ -479,37 +463,121 @@
     <!-- easy-pie-chart -->
     <script src="../vendors/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js"></script>
 
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
+      function showMainSection(sectionId) {
+        var sectionMap = {
+          LiveComponents: "defaultOpen",
+          HistoryComponents: "openhistory",
+          VitalsComponents: "openvitals",
+        };
+
+        Object.keys(sectionMap).forEach(function (id) {
+          var section = document.getElementById(id);
+          var trigger = document.getElementById(sectionMap[id]);
+          var isActive = id === sectionId;
+
+          if (section) {
+            section.style.display = isActive ? "block" : "none";
+          }
+
+          if (trigger) {
+            trigger.classList.toggle("active", isActive);
+            trigger.setAttribute("aria-current", isActive ? "page" : "false");
+          }
+        });
+
+        try {
+          window.dispatchEvent(
+            new CustomEvent("main-section:shown", {
+              detail: { sectionId: sectionId },
+            }),
+          );
+          window.dispatchEvent(new Event("resize"));
+          setTimeout(function () {
+            window.dispatchEvent(new Event("resize"));
+          }, 150);
+        } catch (error) {
+          console.error("Unable to resize layout after section switch", error);
+        }
+      }
+
       document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("openvitals").click();
+        var sectionByTrigger = {
+          defaultOpen: "LiveComponents",
+          openhistory: "HistoryComponents",
+          openvitals: "VitalsComponents",
+        };
+        var querySection = new URLSearchParams(window.location.search).get("openpage");
+        var normalizedQuerySection = querySection ? querySection.toLowerCase() : "";
+        var initialSection = "VitalsComponents";
+
+        if (normalizedQuerySection === "livecomponents") {
+          initialSection = "LiveComponents";
+        } else if (normalizedQuerySection === "historycomponents") {
+          initialSection = "HistoryComponents";
+        } else if (normalizedQuerySection === "vitalscomponents") {
+          initialSection = "VitalsComponents";
+        }
+
+        Object.keys(sectionByTrigger).forEach(function (triggerId) {
+          var trigger = document.getElementById(triggerId);
+          if (!trigger) return;
+
+          trigger.addEventListener("click", function (event) {
+            event.preventDefault();
+            showMainSection(sectionByTrigger[triggerId]);
+          });
+        });
+
+        showMainSection(initialSection);
+        document.getElementById("historyEightChartButton")?.click();
       });
     </script>
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <div class="version-badge">Version 0.5.0</div>
-  </body>
-  <script>
-    (function () {
-      const body = document.body;
-      const stored = localStorage.getItem("sidebarCollapsed") === "1";
-      if (stored) {
-        body.classList.remove("nav-md");
-        body.classList.add("nav-sm");
-      }
-
-      const btn = document.getElementById("sidebarToggle");
-      btn?.addEventListener("click", () => {
-        const collapsed = body.classList.contains("nav-sm");
-        if (collapsed) {
-          body.classList.remove("nav-sm");
-          body.classList.add("nav-md");
-          localStorage.setItem("sidebarCollapsed", "0");
-        } else {
+    <script>
+      (function () {
+        const body = document.body;
+        const stored = localStorage.getItem("sidebarCollapsed") === "1";
+        if (stored) {
           body.classList.remove("nav-md");
           body.classList.add("nav-sm");
-          localStorage.setItem("sidebarCollapsed", "1");
         }
-      });
-    })();
-  </script>
+
+        // Ensure charts reflow after restoring sidebar state.
+        try {
+          window.dispatchEvent(new Event("sidebar:toggled"));
+          window.dispatchEvent(new Event("resize"));
+          setTimeout(() => window.dispatchEvent(new Event("resize")), 250);
+        } catch {
+          // ignore
+        }
+
+        const btn = document.getElementById("sidebarToggle");
+        btn?.addEventListener("click", () => {
+          const collapsed = body.classList.contains("nav-sm");
+          if (collapsed) {
+            body.classList.remove("nav-sm");
+            body.classList.add("nav-md");
+            localStorage.setItem("sidebarCollapsed", "0");
+          } else {
+            body.classList.remove("nav-md");
+            body.classList.add("nav-sm");
+            localStorage.setItem("sidebarCollapsed", "1");
+          }
+
+          // Notify chart resize handlers (ECharts, etc).
+          try {
+            window.dispatchEvent(new Event("sidebar:toggled"));
+            window.dispatchEvent(new Event("resize"));
+            setTimeout(() => window.dispatchEvent(new Event("resize")), 150);
+            setTimeout(() => window.dispatchEvent(new Event("resize")), 350);
+          } catch {
+            // ignore
+          }
+        });
+      })();
+    </script>
+    <div class="version-badge">Version 0.5.0</div>
+  </body>
 </html>

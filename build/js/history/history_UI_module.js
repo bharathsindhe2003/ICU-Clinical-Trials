@@ -1,35 +1,16 @@
-import { ecg_lineChart } from "./Ecg_line_chart.js";
-//mport {context_assessment_operation} from '../context_assessment/context_assessment_operation.js';
-var EWS_Score_opt;
 var context_assment_opt;
 var ECG_scatter_opt;
-var Heart_rate_graph_opt;
-var blood_oxygen_opt;
-var temperature_opt;
-var blood_pressure_opt;
-var Respiration_opt;
 
-var context_assment_graph = echarts.init(document.getElementById("echart_context"));
-var ECG_scatter_graph = echarts.init(document.getElementById("echart_ecg"));
+const context_assment_graph = echarts.init(document.getElementById("echart_context"));
+const ECG_scatter_graph = echarts.init(document.getElementById("echart_ecg"));
 
 function history_context_assessment(min_time, max_time, id, context_timestamp) {
   if ($("#echart_context").length) {
-    // console.log("context assessment is : ",context_timestamp,id);
-
     var context_data = context_timestamp; //replace_zero.apply(this,context_timestamp);
-    //var finaldata=join(static_data,context_data,trim);
     context_data.unshift([min_time * 1000, null]);
     context_data.push([max_time * 1000, null]);
-    //////console.log("dataset scnned of context ass data outcome: "+outcome_data);
-
-    //console.log("context_data: "+context_data);
 
     context_assment_opt = {
-      toolbox: {
-        feature: {
-          saveAsImage: {},
-        },
-      },
       grid: {
         top: 30,
         left: 30,
@@ -176,15 +157,12 @@ function history_context_assessment(min_time, max_time, id, context_timestamp) {
     var param2 = btoa(id);
     var param3 = btoa("1");
     var param1 = btoa(timestamp_c / 1000);
-    console.log("OPEN MODEL");
 
     var url = "context_assment.html" + "?param1=" + param1 + "&param2=" + param2 + "&param3=" + param3;
     openModal(url);
   });
 }
 function history_ECG(min_time, max_time, ecg_timestamp, id) {
-  // console.log("history_ECG is : ", ecg_timestamp, id);
-
   if ($("#echart_ecg").length) {
     var ECG_scatter_data = ecg_timestamp;
     ECG_scatter_data.unshift([min_time * 1000, null]);
@@ -208,16 +186,10 @@ function history_ECG(min_time, max_time, ecg_timestamp, id) {
           fontSize: 12,
         },
       },
-      toolbox: {
-        feature: {
-          saveAsImage: {},
-        },
-      },
       dataZoom: [
         {
           type: "inside",
           xAxisIndex: [0],
-          // allow zoom with mouse wheel and dragging
           zoomOnMouseWheel: "ctrl", // use "ctrl" or "alt" or "shift" or true depending on desired modifier
           moveOnMouseMove: true,
           moveOnMouseWheel: true,
@@ -244,7 +216,6 @@ function history_ECG(min_time, max_time, ecg_timestamp, id) {
           end: 100,
         },
       ],
-
       xAxis: {
         name: "Time",
         nameLocation: "end",
@@ -317,11 +288,6 @@ function history_ECG(min_time, max_time, ecg_timestamp, id) {
       var param3 = btoa("2");
       var url = "context_assment.html" + "?param1=" + param1 + "&param2=" + param2 + "&param3=" + param3;
       openModal(url);
-      //   var childWindow=  window.open(url, "Context Assessment", "width=1100,height=670,left=150,top=200,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,copyhistory=no");
-      //   childWindow.addEventListener('load', function() {
-      // // Access the child window's document and remove the minimize and maximize buttons
-      // childWindow.document.body.style.setProperty("overflow", "hidden", "important");
-      //});
     });
   }
   ECG_scatter_graph.clear();
@@ -357,82 +323,4 @@ window.onclick = function (event) {
   }
 };
 
-function join(static_data, fb_data, trim) {
-  var joineddata = [];
-  var fb_data_presence;
-  for (var i = 0; i < static_data.length; i++) {
-    var x = static_data[i][0] / 1000;
-    fb_data_presence = 0;
-    for (var j = 0; j < fb_data.length; j++) {
-      //var x= (static_data[i][0].toString()).slice(0,6);
-      //var y= (fb_data[j][0].toString()).slice(0,6);
-      //var str = fb_data[j][0];
-
-      var y = fb_data[j][0] / 1000;
-      //  x= (static_data[i][0].toString()).slice(0,6);
-      //  y= (fb_data[j][0].toString()).slice(0,6);
-      // ////console.log("data pushing X,Y:",x,y);
-      if (x == y) {
-        joineddata.push(fb_data[j]);
-        fb_data_presence = 1;
-        break;
-      }
-    }
-    if (fb_data_presence == 0) {
-      //console
-      joineddata.push(static_data[i]);
-    }
-  }
-
-  return joineddata;
-}
-
-function replace_zero() {
-  var i = 0;
-  var j = 0;
-  var newdataset;
-  //////console.log("arguments are : ",arguments);
-  const newdataset1 = [];
-  for (i = 0; i < arguments.length; i++) {
-    var d = arguments[i];
-    var newd;
-    for (j = 0; j < d.length; j++) {
-      if (d[1] == 0) {
-        d.splice(0, 2, d[0], null);
-        newd = d;
-        //////console.log('updated dataset', newd.length,newd);
-      }
-    }
-    //////console.log("the d value is: ",d);
-    newdataset = d.splice(d, 2, newd);
-    newdataset1.push(newdataset);
-    //////console.log('new dataset', newdataset.length,newdataset);
-  }
-  //////console.log('new dataset', newdataset1.length,newdataset1);
-  return newdataset1;
-}
-
-/* EWS_Score_graph.setOption(EWS_Score_opt);
-	context_assment_graph.setOption(context_assment_opt);
-	ECG_scatter_graph.setOption(ECG_scatter_opt);
-	Heart_rate_graph.setOption(Heart_rate_graph_opt);
-	blood_oxygen_graph.setOption(blood_oxygen_opt);
-	temperature_graph.setOption(temperature_opt);
-	blood_pressure_graph.setOption(blood_pressure_opt);
-	Respiration_graph.setOption(Respiration_opt); */
-
-/*************************** Echarts initilization (Do not touch this portion!!) ********************/
-//////console.log("independ",sensor_data);
-
-/********************* End of Echarts initilization (Do not touch this portion!!) *****************/
-
-export {
-  //history_ews,
-  history_context_assessment,
-  history_ECG,
-  // history_Heart_Rate,
-  // history_Blood_Oxygen,
-  // history_temperature,
-  // history_Blood_presure,
-  //history_Respiration_Rate,
-};
+export { history_context_assessment, history_ECG };

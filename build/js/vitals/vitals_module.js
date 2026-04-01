@@ -1,18 +1,13 @@
 import { fb } from "../firebase/config.js";
 
 var uid = localStorage.getItem("patient_unique_id");
-console.log("vitals id", uid);
 
 var vitals_data = fb.database().ref().child("Threshold_Default").child(uid);
 
 vitals_data.once("value", function (snapshot) {
-  console.log("vitals_data", snapshot.val());
-
   // Spo2
   var spo2min = snapshot.val()?.spo2?.Min;
-  console.log("spo2min:", spo2min);
   var spo2max = snapshot.val()?.spo2?.Max;
-  console.log("spo2max:", spo2max);
   var spo2 = document.getElementById("spo2min");
   spo2.value = spo2min;
   var spo21 = document.getElementById("spo2max");
@@ -20,9 +15,7 @@ vitals_data.once("value", function (snapshot) {
 
   // Heart Rate
   var hrmin = snapshot.val()?.hr?.Min;
-  console.log("hrmin:", hrmin);
   var hrmax = snapshot.val()?.hr?.Max;
-  console.log("hrmax:", hrmax);
   var hr = document.getElementById("hrmin");
   hr.value = hrmin;
   var hr1 = document.getElementById("hrmax");
@@ -30,9 +23,7 @@ vitals_data.once("value", function (snapshot) {
 
   // Temperature
   var tempmin = snapshot.val()?.temp?.Min;
-  console.log("tempmin:", tempmin);
   var tempmax = snapshot.val()?.temp?.Max;
-  console.log("tempmax:", tempmax);
   var temp = document.getElementById("tempmin");
   temp.value = tempmin;
   var temp1 = document.getElementById("tempmax");
@@ -44,7 +35,6 @@ vitals_data.once("value", function (snapshot) {
   var bpmin1 = bpmin[0];
   var bpmin2 = bpmin[1];
 
-  console.log("bpmin:", bpmin);
   var bpmax = snapshot.val()?.bp?.Max?.toString();
   bpmax = bpmax.split("/");
   var bpmax1 = bpmax[0];
@@ -60,9 +50,7 @@ vitals_data.once("value", function (snapshot) {
 
   // Respiratory Rate
   var rrmin = snapshot.val()?.rr?.Min;
-  console.log("rrmin:", rrmin);
   var rrmax = snapshot.val()?.rr?.Max;
-  console.log("rrmax:", rrmax);
   var rr = document.getElementById("rrmin");
   rr.value = rrmin;
   var rr1 = document.getElementById("rrmax");
@@ -145,7 +133,6 @@ if ($("#edit").text() === "Edit") {
 }
 
 $("#edit").on("click", function () {
-  console.log("button clicked");
   if ($(this).text() === "Edit") {
     enableInputFields();
     $(this).text("Save");

@@ -1,35 +1,116 @@
-body,
-html {
-  max-width: 95vw;
-  overflow-x: hidden;
-}
 .nav-sm .container.body .right_col {
-  padding: 10px 10px;
-  margin-left: 90px;
+  padding: 0 10px;
+  /* margin-left: 90px; */
 }
-.right_col {
-  overflow-x: hidden !important;
+
+/* ---------------------------------------------
+   Gauge panel compact overrides
+   Goal: reduce gauge height & remove vertical gap
+   --------------------------------------------- */
+.gauge-inline {
+  /* stack gauge + title tightly */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 6px 0 4px; /* minimal vertical padding */
+  gap: 2px; /* tiny space between gauge and title */
+  overflow: visible !important; /* allow title to render fully */
 }
-body .container.body .right_col {
-  padding: 30px 10px;
-  height: 100%;
+
+.gauge-inline .x_content {
+  /* remove default padding if any */
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.gauge-inline .echartsgauges1 {
+  /* make gauge fill the box */
+  width: 100% !important;
+  height: 120px !important;
+  max-width: none !important;
+}
+
+.gauge-inline h4.name_title {
+  /* remove large default h4 margins */
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 13px;
+  line-height: 1.1;
+  color: #fff;
+  text-align: center;
+}
+
+/* Reduce overall card height without shrinking the gauge too much */
+.x_panel.gauge-inline,
+.x_panel.fixed_height_310.gauge-inline {
+  height: 190px !important; /* allow larger gauge + title */
+  min-height: 190px !important;
+}
+
+/* Responsive fine-tuning: keep gauges readable on very small heights */
+@media (max-height: 500px) {
+  .gauge-inline .echartsgauges1 {
+    height: 44px !important;
+  }
+  .gauge-inline h4.name_title {
+    font-size: 12px;
+  }
+}
+
+#ews_id.ews_card_js {
   position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+  z-index: auto;
+  width: 100%;
+  max-width: 100%;
+  pointer-events: auto;
+  animation: none;
+}
+
+#ews_id .ews_card {
+  background: transparent;
+  border-radius: 10px;
+  box-shadow: none;
+  overflow: visible;
+  display: block;
+  margin: 0 auto;
+}
+
+#ews_id .ews_bar {
+  border-radius: 999px;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  /* padding: 0 14px !important; */
+  margin: 0 auto;
+}
+
+#ews_id .ews_no {
+  margin: 0;
+  font-weight: 600;
+  color: #111;
+  text-align: center;
+  line-height: 1;
+}
+
+body .container.body .right_col {
+  padding: 0 20px;
+  height: 100%;
+  position: absolute;
   overflow-y: auto;
   overflow-x: hidden;
   background: #dbebf3;
   box-sizing: border-box;
 }
-.LiveSpecification .container {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 1.5rem 1rem;
-  margin: 0;
-}
+
 .nav-md .container.body .right_col {
-  padding: 4px 10px 0;
-  margin-left: 280px;
+  padding: 0 10px 0;
+  /* margin-left: 80px; */
   height: 100dvh;
-  width: calc(100% - 280px);
+  width: 98%;
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -38,6 +119,8 @@ body .container.body .right_col {
 .LiveSpecification {
   position: relative;
   overflow-x: hidden;
+  margin-left: 0px;
+
   width: 100%;
 }
 
@@ -66,13 +149,12 @@ body .container.body .right_col {
   font-size: 18px;
   color: #000;
   display: block;
-  margin-bottom: 12px;
   width: 150px;
   height: 30px;
   border: 1px solid #e4e4e4;
   -webkit-border-radius: 5px;
   overflow: hidden;
-  padding-bottom: 5px;
+
   -webkit-background-clip: padding-box;
   -moz-border-radius: 5px;
   -moz-background-clip: padding;
@@ -86,9 +168,11 @@ body .container.body .right_col {
   width: auto;
   height: auto;
   align-items: center;
+  z-index: 9999;
 }
 .ews_card.ews_bar.ews {
   margin-left: 200px;
+
   text-align: center;
   font-size: 25px;
   font-weight: bold;
@@ -186,6 +270,25 @@ body .container.body .right_col {
   opacity: 1;
   -webkit-transition: all 0.2s ease;
   transition: all 0.2s ease;
+}
+
+/* Live ECG/PPG panels: make chart fill available vertical space */
+.x_panel.live-chart-panel {
+  display: flex;
+  flex-direction: column;
+  /* dynamic height relative to viewport so charts scale */
+  height: 28vh;
+}
+
+.x_panel.live-chart-panel .x_title {
+  flex: 0 0 auto;
+}
+
+.x_panel.live-chart-panel #LiveECGId,
+.x_panel.live-chart-panel #LivePPGId {
+  flex: 1 1 auto;
+  width: 100%;
+  height: auto;
 }
 
 .x_title {
@@ -308,6 +411,13 @@ form:after {
   width: 100%;
   height: 200px;
   background-color: #000000;
+  /* ensure chart canvas never visually overflows its panel */
+  overflow: hidden;
+}
+
+/* Prevent ECharts from painting outside the card while layout is changing */
+.LiveSpecification .x_panel .x_content {
+  overflow: hidden;
 }
 
 .progress_summary .row .col-xs-2 {
@@ -381,7 +491,17 @@ form:after {
   top: 10px;
   width: 98dvw;
   height: 98dvh;
+  overflow: auto;
   background-color: #000(0, 0, 0, 0.5);
+}
+.modal-content.modal2 {
+  background-color: #ffffff;
+  margin: 0% auto;
+  padding: 0px;
+  border: 1px solid #888;
+  width: 98dvw;
+  height: 20dvh;
+  overflow: hidden;
 }
 
 .modal-content {
@@ -393,7 +513,6 @@ form:after {
   height: 98dvh;
   overflow: hidden;
 }
-
 .close {
   color: #000000;
   float: right;
@@ -414,32 +533,158 @@ iframe {
   border: none;
 }
 
-@media all and (min-width: 1024px) and (max-width: 1280px) {
-  #LiveECGId {
-    width: 95%;
-    height: 260px;
-  }
-  #LivePPGId {
-    width: 95%;
-    height: 260px;
-  }
+.gauge-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.echartsgauges1 {
+  width: 100%;
+  max-width: 180px;
+  height: 70px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.left_col {
+  transition: width 0.25s ease;
+}
+.nav_menu,
+.main_container .top_nav,
+.container.body .right_col {
+  transition:
+    margin-left 0.25s ease,
+    width 0.25s ease;
+}
+
+body.nav-sm .left_col {
+  width: 70px;
+  overflow: hidden;
+}
+body.nav-sm .nav_title {
+  width: 70px;
+}
+/* In collapsed mode, push the first menu item (sidebar toggle)
+   further down so it is clearly below the logo */
+body.nav-sm #sidebar-menu .side-menu li:first-child a {
+  margin-top: 40px;
+}
+body.nav-sm .site_title span {
+  display: none;
+}
+body.nav-sm .profile,
+body.nav-sm #left_colomn_details {
+  display: none;
+}
+body.nav-sm #sidebar-menu .side-menu li a {
+  white-space: nowrap;
+  font-size: 0;
+  padding: 14px 12px;
+}
+body.nav-sm #sidebar-menu .side-menu li a i {
+  font-size: 20px;
+  margin-right: 0;
+}
+body.nav-sm .main_container .top_nav {
+  margin-left: 70px;
+}
+body.nav-sm .container.body .right_col {
+  margin-left: 70px;
+  width: calc(100% - 70px);
+}
+
+body.nav-md #sidebar-menu .side-menu li a {
+  font-size: 14px;
+}
+
+body.nav-sm #sidebar-menu .side-menu li a:hover {
+  font-size: 12px;
+  position: relative;
+}
+body.nav-sm #sidebar-menu .side-menu li a:hover span {
+  display: inline-block;
+}
+
+body.nav-sm .nav-md .container.body .right_col {
+  width: 98%;
+}
+
+.left_col {
+  width: 280px;
+  transition: width 0.25s ease;
+}
+
+body.nav-md .main_container .top_nav {
+  margin-left: 280px !important;
+  transition: margin-left 0.25s ease;
+}
+body.nav-md .container.body .right_col {
+  /* margin-left: 280px !important; */
+  width: 98%;
+  transition:
+    margin-left 0.25s ease,
+    width 0.25s ease;
+  position: relative;
+}
+
+body.nav-sm .left_col {
+  width: 70px !important;
+  overflow: hidden;
+}
+body.nav-sm .main_container .top_nav {
+  margin-left: 70px !important;
+}
+body.nav-sm .container.body .right_col {
+  margin-left: 70px !important;
+  width: calc(100% - 70px) !important;
+}
+
+body.nav-sm .site_title span,
+body.nav-sm #left_colomn_details,
+body.nav-sm .profile {
+  display: none !important;
+}
+
+body.nav-sm #sidebar-menu .side-menu li a {
+  font-size: 0;
+  padding: 14px 12px;
+  white-space: nowrap;
+  transition: font-size 0.15s;
+}
+body.nav-sm #sidebar-menu .side-menu li a i {
+  font-size: 20px;
+  margin-right: 0;
+}
+body.nav-sm #sidebar-menu .side-menu li a:hover {
+  font-size: 12px;
+}
+
+.container.body .right_col {
+  box-sizing: border-box;
 }
 
 @media all and (min-width: 1024px) and (max-width: 1280px) {
-  #LivePPGId {
+  #LiveECGId,
+  #LivePPGId,
+  #LiveRRId {
     width: 95%;
-    height: 260px;
+    height: 260px; /* Ensure waves/canvas never spill outside the black panel during layout transitions */
+    position: relative;
+    overflow: hidden;
   }
 }
 
 @media all and (min-width: 768px) and (max-width: 1280px) {
-  #LiveECGId {
-    width: 95%;
-    height: 260px;
-  }
-  #LivePPGId {
-    width: 95%;
-    height: 260px;
+  #LiveECGId,
+  #LivePPGId,
+  #LiveRRId {
+    width: 100%;
+    height: 200px;
+    background-color: #000000; /* Ensure waves/canvas never spill outside the black panel during layout transitions */
+    position: relative;
+    overflow: hidden;
   }
   .col-lg-2 {
     .echartsgauges1 {
@@ -454,19 +699,20 @@ iframe {
 
   .nav-md .container.body .right_col {
     padding: 10px 0px 0;
-    margin-left: 270px;
-    width: 80%;
+    /* margin-left: 270px; */
+    width: 98%;
   }
 }
 
 @media (min-width: 800px) and (max-width: 1024px) and (orientation: landscape) {
-  #LiveECGId {
-    width: 95%;
-    height: 120px;
-  }
-  #LivePPGId {
-    width: 95%;
-    height: 120px;
+  #LiveECGId,
+  #LivePPGId,
+  #LiveRRId {
+    width: 100%;
+    height: 200px;
+    background-color: #000000; /* Ensure waves/canvas never spill outside the black panel during layout transitions */
+    position: relative;
+    overflow: hidden;
   }
   .col-lg-2 {
     .echartsgauges1 {
@@ -489,64 +735,500 @@ iframe {
   }
 }
 
-@media (min-width: 768px) and (max-width: 1024px) {
-  body,
-  html {
-    max-width: 100vw;
-    overflow-x: auto;
+@media (max-height: 500px) {
+  .echartsgauges1 {
+    height: 80px;
   }
+}
 
-  .right_col {
-    overflow-x: auto !important;
+@media (min-width: 901px) and (max-width: 1341px) {
+  #LiveECGId,
+  #LivePPGId,
+  #LiveRRId {
+    width: 100%;
+    height: 200px;
+    background-color: #000000; /* Ensure waves/canvas never spill outside the black panel during layout transitions */
+    position: relative;
+    overflow: hidden;
   }
+  .echartsgauges1 {
+    max-width: 160px;
+    height: 100px;
+  }
+}
 
-  body .container.body .right_col {
-    overflow-x: auto;
+@media (min-width: 901px) and (max-width: 1341px) {
+  .echartsgauges1 {
+    max-width: 160px;
+    height: 100px;
   }
+}
 
-  .nav-md .container.body .right_col {
-    overflow-x: auto;
-    width: calc(100vw - 280px);
+@media (min-width: 768px) and (max-width: 900px) {
+  .echartsgauges1 {
+    max-width: 150px;
+    height: 95px;
   }
+}
 
-  .LiveSpecification {
-    overflow-x: auto;
-    min-width: 100%;
+@media (max-height: 500px) {
+  .echartsgauges1 {
+    height: 80px;
   }
+}
 
-  .container {
-    min-width: 100%;
-    overflow-x: auto;
-    margin-right: 5rem;
+@media all and (min-width: 768px) and (max-width: 1280px) {
+  .col-lg-2 .echartsgauges1,
+  .col-md-2 .echartsgauges1 {
+    max-width: 170px;
+    height: 100px;
   }
-  .fixed_height_310 {
-    width: 150px;
-    height: 250px;
-    gap: 0px;
-    padding: 0px;
-  }
-
-  .big-charts {
-    min-width: 70%;
-    flex-shrink: 0;
-  }
-
-  .small-gauges {
-    min-width: 30%;
-    flex-shrink: 0;
-  }
-
-  .container[style*="display: flex"] {
-    overflow-x: auto;
-    min-width: 100%;
+  .col-lg-2 .mydiv,
+  .col-md-2 .mydiv {
+    height: 0;
   }
 }
 
 @media (min-width: 800px) and (max-width: 1024px) and (orientation: landscape) {
+  .col-lg-2 .echartsgauges1,
+  .col-md-2 .echartsgauges1 {
+    max-width: 160px;
+    height: 95px;
+    padding-right: 0;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1341px) {
+  #LiveECGId,
+  #LivePPGId,
+  #LiveRRId {
+    width: 100%;
+    height: 260px; /* Ensure waves/canvas never spill outside the black panel during layout transitions */
+    position: relative;
+    overflow: hidden;
+  }
+}
+
+@media (min-width: 1000px) and (max-width: 1100px) {
   .nav-md .container.body .right_col {
-    padding: 10px 0px 0;
-    margin-left: 270px;
-    width: calc(100vw - 270px);
-    overflow-x: auto;
+    /* margin-left: 200px !important; */
+    width: 980% !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    position: relative !important;
+  }
+  .nav-sm .container.body .right_col {
+    margin-left: 70px !important;
+  }
+
+  .LiveSpecification {
+    margin-left: 0px !important;
+    padding-left: 0px !important;
+    width: 100% !important;
+  }
+
+  .col-md-12,
+  .col-sm-12,
+  .col-xs-12 {
+    padding-left: 0px !important;
+    padding-right: 10px !important;
+  }
+}
+
+/* Context pages refresh aligned with the live page surfaces */
+body .container.body .right_col.context-page {
+  margin-left: 0 !important;
+  width: 100% !important;
+  min-height: 100vh;
+  padding: 18px 12px 24px !important;
+  position: relative !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: radial-gradient(circle at top left, rgba(79, 195, 217, 0.18), transparent 30%), linear-gradient(180deg, #f2f9fd 0%, #edf5fb 45%, #f8fbfd 100%) !important;
+}
+
+body.nav-md .container.body .right_col.context-page,
+body.nav-sm .container.body .right_col.context-page {
+  margin-left: 0 !important;
+  width: 100% !important;
+}
+
+.context-page .LiveSpecification {
+  width: 100%;
+  min-height: 100%;
+  overflow: visible;
+  background: transparent;
+}
+
+.context-page .context-shell {
+  max-width: none;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.context-page .context-monitor-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(360px, 1fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.context-page .context-chart-column,
+.context-page .context-side-column {
+  min-width: 0;
+  width: 100%;
+}
+
+.context-page .context-chart-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.context-page .context-side-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-self: stretch;
+  min-height: 100%;
+}
+
+.context-page .context-wave-card,
+.context-page .context-details-surface,
+.context-page .context-vitals-surface {
+  padding: 22px;
+  border: 1px solid rgba(128, 164, 186, 0.2);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 18px 34px rgba(29, 75, 102, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.context-page .context-wave-card {
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.context-page .context-wave-card:hover,
+.context-page .context-vital-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 42px rgba(24, 70, 95, 0.14);
+}
+
+.context-page .context-section-kicker {
+  margin: 0 0 8px;
+  font-size: 12px;
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #0d6284;
+}
+
+.context-page .context-section-kicker:empty {
+  display: none;
+}
+
+.context-page .context-wave-card__header,
+.context-page .context-details-surface__header,
+.context-page .context-vitals-surface__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.context-page .context-wave-card__header h2,
+.context-page .context-details-surface__header h2,
+.context-page .context-vitals-surface__header h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #11384c;
+}
+
+.context-page .context-wave-card__meta,
+.context-page .context-vitals-surface__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.context-page .context-wave-card__meta span,
+.context-page .context-vitals-surface__meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #eef5fa;
+  color: #476476;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.context-page .context-wave-card__meta label,
+.context-page .context-vitals-surface__meta label {
+  margin: 0;
+  color: #0d6284;
+  font-weight: 800;
+}
+
+.context-page .x_panel.context-chart-panel {
+  margin-bottom: 0;
+  height: auto !important;
+  min-height: 0;
+  padding: 14px 14px 18px;
+  border: 1px solid rgba(94, 142, 173, 0.28);
+  border-radius: 22px;
+  background: linear-gradient(180deg, #08131d 0%, #11283a 100%);
+  box-shadow: 0 22px 40px rgba(10, 36, 55, 0.2);
+  overflow: hidden;
+}
+
+.context-page .x_panel.context-chart-panel .x_content {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.context-page .x_panel.context-chart-panel:hover {
+  box-shadow: 0 28px 48px rgba(10, 36, 55, 0.28);
+}
+
+.context-page #context_ecg,
+.context-page #context_ppg,
+.context-page #context_rr {
+  display: block;
+  width: 100% !important;
+  height: clamp(270px, 34vh, 380px) !important;
+  border-radius: 18px;
+  background: radial-gradient(circle at top left, rgba(77, 160, 214, 0.18), transparent 34%), linear-gradient(180deg, #102536 0%, #0b1b28 100%);
+  box-shadow: inset 0 0 0 1px rgba(146, 193, 224, 0.08);
+  overflow: hidden;
+}
+
+.context-page.context-ecg-page #context_ecg {
+  height: clamp(420px, 62vh, 680px) !important;
+}
+
+.context-page .context-details-surface,
+.context-page .context-vitals-surface {
+  display: flex;
+  flex-direction: column;
+}
+
+.context-page .context-details-surface {
+  gap: 12px;
+}
+
+.context-page .context-ews-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+}
+
+.context-page #context_ews_id.ews_card_js {
+  width: 100%;
+  max-width: 240px;
+  margin: 0;
+}
+
+.context-page #context_ews_id .ews_card {
+  margin: 0;
+}
+
+.context-page #context_ews_id .ews_card > div {
+  width: 100%;
+  margin: 0;
+}
+
+.context-page #context_ews_id .ews_bar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 176px;
+  width: auto;
+  max-width: 100%;
+  height: 48px;
+  padding: 0 20px !important;
+  border: 0;
+  border-radius: 999px;
+  box-shadow:
+    inset 0 0 0 1px rgba(11, 58, 78, 0.12),
+    0 10px 22px rgba(30, 76, 104, 0.08);
+}
+
+.context-page #context_ews_id .ews_no {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: #0c3143;
+}
+
+.context-page .context-symptoms {
+  min-height: 58px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #eef5fa;
+  color: #365364;
+  font-size: 14px;
+  line-height: 1.6;
+  box-shadow: inset 0 0 0 1px rgba(110, 149, 174, 0.14);
+}
+
+.context-page .context-symptoms:empty {
+  display: none;
+}
+
+.context-page .context-vitals-surface {
+  gap: 16px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.context-page .context-vitals-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.context-page .context-vital-card {
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  min-height: 0;
+  border: 1px solid rgba(94, 142, 173, 0.28);
+  border-radius: 20px;
+  background: linear-gradient(180deg, #08131d 0%, #11283a 100%);
+  box-shadow: 0 22px 40px rgba(10, 36, 55, 0.2);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.context-page .context-vital-card--full {
+  grid-column: 1 / -1;
+}
+
+.context-page .context-vital-card__chart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-height: 118px;
+  margin-bottom: 8px;
+  border-radius: 18px;
+  background: radial-gradient(circle at top left, rgba(77, 160, 214, 0.18), transparent 34%), linear-gradient(180deg, #102536 0%, #0b1b28 100%);
+  box-shadow: inset 0 0 0 1px rgba(146, 193, 224, 0.08);
+}
+
+.context-page .context-vital-card .echartsgauges1 {
+  width: 100% !important;
+  max-width: none !important;
+  height: 100% !important;
+  min-height: 118px !important;
+  margin: 0 auto !important;
+}
+
+.context-page .context-vital-card .name_title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #f2fbff;
+  text-align: center;
+}
+
+@media (max-width: 1199px) {
+  .context-page .context-monitor-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .context-page .context-wave-card__header,
+  .context-page .context-details-surface__header,
+  .context-page .context-vitals-surface__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 991px) {
+  body .container.body .right_col.context-page {
+    padding: 16px 12px 24px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .context-page .context-wave-card,
+  .context-page .context-details-surface,
+  .context-page .context-vitals-surface {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .context-page .context-wave-card__meta,
+  .context-page .context-vitals-surface__meta {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .context-page .context-wave-card__meta span,
+  .context-page .context-vitals-surface__meta span {
+    flex: 1 1 100%;
+    white-space: normal;
+  }
+
+  .context-page .context-vitals-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .context-page .context-vital-card--full {
+    grid-column: auto;
+  }
+
+  .context-page #context_ecg,
+  .context-page #context_ppg,
+  .context-page #context_rr {
+    height: 260px !important;
+  }
+
+  .context-page.context-ecg-page #context_ecg {
+    height: 320px !important;
+  }
+}
+
+@media (max-width: 479px) {
+  body .container.body .right_col.context-page {
+    padding: 12px 10px 20px !important;
+  }
+
+  .context-page .context-wave-card__header h2,
+  .context-page .context-details-surface__header h2,
+  .context-page .context-vitals-surface__header h2 {
+    font-size: 21px;
+  }
+
+  .context-page #context_ews_id.ews_card_js {
+    max-width: 100%;
+  }
+
+  .context-page #context_ews_id .ews_bar {
+    width: 100%;
+    min-width: 0;
   }
 }

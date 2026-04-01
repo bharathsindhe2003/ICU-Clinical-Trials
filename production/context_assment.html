@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -36,173 +36,128 @@
   <body class="nav-md">
     <div class="container body">
       <div class="main_container">
-        <div class="col-md-3 left_col">
-          <div class="left_col scroll-view">
-            <div class="nav_title">
-              <a class="site_title"><img src="images/svasthyaicon.png" width="55" height="55" /> <span id="SvasthyaTitle">SVASTHYA &trade;</span></a>
-            </div>
-            <div id="loader"></div>
-            <div class="clearfix"></div>
-
-            <!-- menu profile quick info -->
-            <div id="left_colomn_details" class="left_colomn_details">
-              <div class="profile clearfix">
-                <div class="profile_pic">
-                  <img id="PatientImg" alt="..." class="img-circle profile_img" />
-                </div>
-                <div id="profile_info" class="profile_info">
-                  <h2 id="PatientName"></h2>
-                  <h2 id="PatientGender"></h2>
-                  <h2 id="PatientAge"></h2>
-                  <h2 id="PatientHeight"></h2>
-                  <h2 id="PatientWeight"></h2>
-                </div>
-                <div class="profile_info2">
-                  <h2 id="PatientAilments"></h2>
-                  <h2 id="PatientMob"></h2>
-                  <h2 id="PatientEmail"></h2>
-                </div>
-              </div>
-            </div>
-            <br />
-
-            <!-- sidebar menu -->
-            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-              <div class="menu_section">
-                <ul class="nav side-menu"></ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- top navigation -->
-        <div class="top_nav">
-          <div class="nav_menu">
-            <div class="Lefthand">
-              <p id="DoctorName"></p>
-            </div>
-          </div>
-        </div>
+        <div id="loader"></div>
       </div>
-      <div class="right_col" role="main">
+      <div class="right_col context-page context-assessment-page" role="main">
         <div class="LiveSpecification">
-          <div class="Live_context_assessment">
-            <p id="ContextSymptomName"></p>
-          </div>
-          <!-- Ews card -->
-          <div id="ews_id" class="ews_card_js">
-            <div class="ews_card"></div>
-          </div>
-          <!-- /Ews card -->
+          <div class="context-shell">
+            <div class="context-monitor-layout">
+              <section class="context-chart-column" aria-label="Context waveform charts">
+                <article class="context-wave-card">
+                  <div class="context-wave-card__header">
+                    <div>
+                      <p id="ContextSymptomName" class="context-section-kicker"></p>
+                      <h2>Electrocardiogram (ECG)</h2>
+                    </div>
+                    <div class="context-wave-card__meta">
+                      <span>ECG Date: <label id="contextecgdate"></label></span>
+                      <span>ECG Time: <label id="contextecgtime"></label></span>
+                    </div>
+                  </div>
+                  <div class="x_panel context-chart-panel">
+                    <div class="x_content">
+                      <div id="context_ecg"></div>
+                    </div>
+                  </div>
+                </article>
 
-          <div class="container" style="display: flex; width: 100%; gap: 1rem; padding: 2rem; flex-direction: row; margin-bottom: 5rem">
-            <!-- Left: Big charts 70% -->
-            <div class="big-charts" style="flex: 0 0 70%; display: flex; flex-direction: column; gap: 1rem">
-              <!-- Top row: ECG Date/Time -->
-              <div style="display: flex; align-items: center; margin-bottom: 1rem">
-                <span>ECG Date: <label id="contextecgdate"></label></span>
-                <span style="margin: 0 1.5rem"></span>
-                <span>ECG Time: <label id="contextecgtime"></label></span>
-              </div>
-              <!-- ECG -->
-              <div class="x_panel">
-                <div class="x_title">
-                  <h2>Electrocardiogram (ECG)</h2>
-                  <div class="clearfix"></div>
-                </div>
-                <div class="x_content"><div id="context_ecg" style="width: 100%; height: 200px"></div></div>
-              </div>
-              <!-- PPG -->
-              <div style="display: flex; align-items: center; margin-bottom: 0.5rem">
-                <span>PPG Date: <label id="contextppgdate"></label></span>
-                <span style="margin: 0 1.5rem"></span>
-                <span>PPG Time: <label id="contextppgtime"></label></span>
-              </div>
-              <div class="x_panel">
-                <div class="x_title">
-                  <h2>Photoplethysmogram (PPG)</h2>
-                  <div class="clearfix"></div>
-                </div>
-                <!-- Added Date/Time Row -->
-                <div class="x_content">
-                  <div id="context_ppg" style="width: 100%; height: 200px"></div>
-                </div>
-              </div>
+                <article class="context-wave-card">
+                  <div class="context-wave-card__header">
+                    <h2>Photoplethysmogram (PPG)</h2>
+                    <div class="context-wave-card__meta">
+                      <span>PPG Date: <label id="contextppgdate"></label></span>
+                      <span>PPG Time: <label id="contextppgtime"></label></span>
+                    </div>
+                  </div>
+                  <div class="x_panel context-chart-panel">
+                    <div class="x_content">
+                      <div id="context_ppg"></div>
+                    </div>
+                  </div>
+                </article>
 
-              <!-- RR -->
-              <div style="display: flex; align-items: center; margin-bottom: 0.5rem">
-                <span>RR Date: <label id="contextrrdate"></label></span>
-                <span style="margin: 0 1.5rem"></span>
-                <span>RR Time: <label id="contextrrtime"></label></span>
-              </div>
-              <div class="x_panel">
-                <div class="x_title">
-                  <h2>Respiration Rate (RR)</h2>
-                  <div class="clearfix"></div>
-                </div>
-                <!-- Added Date/Time Row -->
-                <div class="x_content">
-                  <div id="context_rr" style="width: 100%; height: 200px"></div>
-                </div>
-              </div>
-            </div>
+                <article class="context-wave-card">
+                  <div class="context-wave-card__header">
+                    <h2>Respiratory Rate (RR)</h2>
+                    <div class="context-wave-card__meta">
+                      <span>RR Date: <label id="contextrrdate"></label></span>
+                      <span>RR Time: <label id="contextrrtime"></label></span>
+                    </div>
+                  </div>
+                  <div class="x_panel context-chart-panel">
+                    <div class="x_content">
+                      <div id="context_rr"></div>
+                    </div>
+                  </div>
+                </article>
+              </section>
 
-            <!-- Right: Small gauges 30% -->
-            <div class="small-gauges" style="flex: 0 0 30%; display: flex; flex-direction: column">
-              <!-- Top row: Sensor Date/Time -->
-              <div style="display: flex; align-items: center; justify-content: flex-end; margin-bottom: 1rem">
-                <span>Vital Date: <label id="contextsensordate"></label></span>
-                <span style="margin: 0 1.5rem"></span>
-                <span>Vital Time: <label id="contextsensortime"></label></span>
-              </div>
-              <!-- 2x3 grid for gauges -->
-              <div style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 1rem; height: 100%">
-                <!-- Heart Rate -->
-                <div class="x_panel ui-ribbon-container fixed_height_310" style="">
-                  <div class="x_content" style="display: flex; flex-direction: column; align-items: center; height: 100%">
-                    <div id="ContextHeartRateId" class="echartsgauges1" style="width: 100%; height: 100%"></div>
-                    <div style="display: flex; align-items: center; margin-top: 2px">
-                      <h4 class="name_title" style="color: #fff; margin: 0 12px 0 0; font-weight: 600">Heart Rate</h4>
+              <aside class="context-side-column" aria-label="Context details and vital signs">
+                <!-- <section class="context-details-surface"> -->
+                <!-- <div class="context-details-surface__header">
+                    <h2>Alert Context</h2>
+                  </div> -->
+                <div class="context-ews-slot">
+                  <div id="context_ews_id" class="ews_card_js">
+                    <div class="ews_card">
+                      <div class="animated flipInY col-lg-12 col-md-12 col-sm-12">
+                        <div id="context_ews_color1" class="ews_bar">
+                          <p class="ews_no" id="context_ews_id1"></p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <!-- Blood Oxygen -->
-                <div class="x_panel ui-ribbon-container fixed_height_310" style="padding: 5px">
-                  <div class="x_content" style="display: flex; flex-direction: column; align-items: center; height: 100%">
-                    <div id="ContextBloodOxygenId" class="echartsgauges1" style="width: 100%; height: 100%"></div>
-                    <div style="display: flex; align-items: center; margin-top: 2px">
-                      <h4 class="name_title" style="color: #fff; margin: 0 12px 0 0; font-weight: 600">Blood Oxygen</h4>
+                <div class="context-symptoms" id="symtoms"></div>
+                <!-- </section> -->
+
+                <section class="context-vitals-surface">
+                  <div class="context-vitals-surface__header">
+                    <h2>Vitals</h2>
+                    <div class="context-vitals-surface__meta">
+                      <span>Vital Date: <label id="contextsensordate"></label></span>
+                      <span>Vital Time: <label id="contextsensortime"></label></span>
                     </div>
                   </div>
-                </div>
-                <!-- Temperature -->
-                <div class="x_panel ui-ribbon-container fixed_height_310" style="padding: 5px">
-                  <div class="x_content" style="display: flex; flex-direction: column; align-items: center; height: 100%">
-                    <div id="ContextTemperatureId" class="echartsgauges1" style="width: 100%; height: 100%"></div>
-                    <div style="display: flex; align-items: center; margin-top: 2px">
-                      <h4 class="name_title" style="color: #fff; margin: 0 12px 0 0; font-weight: 600">Temperature</h4>
-                    </div>
+
+                  <div class="context-vitals-grid">
+                    <article class="context-vital-card">
+                      <div class="context-vital-card__chart">
+                        <div id="ContextHeartRateId" class="echartsgauges1"></div>
+                      </div>
+                      <h4 class="name_title">Heart Rate</h4>
+                    </article>
+
+                    <article class="context-vital-card">
+                      <div class="context-vital-card__chart">
+                        <div id="ContextBloodOxygenId" class="echartsgauges1"></div>
+                      </div>
+                      <h4 class="name_title">Blood Oxygen</h4>
+                    </article>
+
+                    <article class="context-vital-card">
+                      <div class="context-vital-card__chart">
+                        <div id="ContextTemperatureId" class="echartsgauges1"></div>
+                      </div>
+                      <h4 class="name_title">Temperature</h4>
+                    </article>
+
+                    <article class="context-vital-card">
+                      <div class="context-vital-card__chart">
+                        <div id="ContextBloodPressureId" class="echartsgauges1"></div>
+                      </div>
+                      <h4 class="name_title">Blood Pressure</h4>
+                    </article>
+
+                    <article class="context-vital-card context-vital-card--full">
+                      <div class="context-vital-card__chart">
+                        <div id="ContextRespirationRateId" class="echartsgauges1"></div>
+                      </div>
+                      <h4 class="name_title">Respiration Rate</h4>
+                    </article>
                   </div>
-                </div>
-                <!-- Blood Pressure -->
-                <div class="x_panel ui-ribbon-container fixed_height_310" style="padding: 5px">
-                  <div class="x_content" style="display: flex; flex-direction: column; align-items: center; height: 100%">
-                    <div id="ContextBloodPressureId" class="echartsgauges1" style="width: 100%; height: 100%"></div>
-                    <div style="display: flex; align-items: center; margin-top: 2px">
-                      <h4 class="name_title" style="color: #fff; margin: 0 12px 0 0; font-weight: 600">Blood Pressure</h4>
-                    </div>
-                  </div>
-                </div>
-                <!-- Respiration Rate -->
-                <div class="x_panel ui-ribbon-container fixed_height_310" style="padding: 5px; grid-column: 1 / span 2; justify-self: center; width: 50%">
-                  <div class="x_content" style="display: flex; flex-direction: column; align-items: center; height: 100%">
-                    <div id="ContextRespirationRateId" class="echartsgauges1" style="width: 100%; height: 100%"></div>
-                    <div style="display: flex; align-items: center; margin-top: 2px">
-                      <h4 class="name_title" style="color: #fff; margin: 0; font-weight: 600">Respiration Rate</h4>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                </section>
+              </aside>
             </div>
           </div>
         </div>
@@ -255,7 +210,7 @@
     <script src="../vendors/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
     <!-- Custom Theme Scripts -->
     <script type="module" src="../build/js/context_assessment/context_assessment_UI.js"></script>
-    <script type="module" src="../build/js/LeftandTopNavigation/LeftandTopNavigation.js"></script>
+    <!-- <script type="module" src="../build/js/LeftandTopNavigation/LeftandTopNavigation.js"></script> -->
 
     <!-- easy-pie-chart -->
     <script src="../vendors/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js"></script>

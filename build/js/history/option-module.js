@@ -1,8 +1,5 @@
 import { firebase } from "./history_fb_module.js";
-import { fb } from "../firebase/config.js";
 import { showToast } from "../backend/toastmsg.js";
-
-//console.log("fb",fb);
 
 const element1 = document.getElementById("onehourbutton");
 const element2 = document.getElementById("onedaybutton");
@@ -18,9 +15,6 @@ cancelbutton.addEventListener("click", cancelfunction);
 document.getElementById("onehourbutton").click();
 
 export function onehourclick() {
-  //$("#graphs").load(" #graphs > *");
-  //$( "#graphs" ).load(window.location.href + " #graphs" );
-
   var max_time = Math.floor(Date.now() / 1000);
   max_time = Math.floor(max_time / 60);
   max_time = max_time * 60;
@@ -34,7 +28,6 @@ export function onehourclick() {
     y = x;
   }
 
-  //console.log("localarray",localarray);
   document.getElementById("loader").className = "loader";
   firebase(min_time, max_time, localarray, 0);
 }
@@ -53,7 +46,6 @@ export function onedayclick() {
     localarray.push([y, null]);
     y = y + 60000;
   }
-  console.log("localarray", localarray);
   document.getElementById("loader").className = "loader";
   firebase(min_time, max_time, localarray, 7);
 }
@@ -62,14 +54,13 @@ export function oneweekclick() {
   var max_time = Math.floor(Date.now() / 1000);
   max_time = Math.floor(max_time / 60);
   max_time = max_time * 60;
-  var min_time = max_time - 3600 * 168; //(3600*168);
+  var min_time = max_time - 3600 * 168;
   var localarray = [];
   var y = min_time * 1000;
   for (var i = 0; i < 168; i++) {
     localarray.push([y, null]);
     y = y + 3600000;
   }
-  // console.log("localarray",localarray);
   document.getElementById("loader").className = "loader";
   firebase(min_time, max_time, localarray, 7);
 }
@@ -93,51 +84,22 @@ function applyfunction() {
 
   var SetTotality = (max_time - min_time) / 60;
 
-  //console.log("range is : ",(min_time-max_time));
   if (max_time > currentDate) {
     showToast("Please select the To date until the present day");
   } else if (min_time > max_time) {
     showToast("'To' date should be greater than 'From' date, Kindly enter valid days");
   } else if (max_time - min_time > 604800) {
     showToast("Select only between 7 days");
-  }
-  //if((max_time-min_time)<=604800 && !(min_time>max_time) )
-  else {
+  } else {
     var localarray = [];
     var y = min_time * 1000;
-    console.log("total", SetTotality);
     for (var i = 0; i < SetTotality; i++) {
       localarray.push([y, "-"]);
       y = y + 60000;
     }
-    console.log("localarray1", localarray);
     document.getElementById("loader").className = "loader";
     firebase(min_time, max_time, localarray, 7);
   }
-
-  /*   switch(min_time){
-        case (max_time-min_time)<= 3600:
-            firebase(min_time,max_time,localarray,0);
-            break;
-        case (max_time-min_time)<= 7200 && (max_time-min_time)>3600:
-            firebase(min_time,max_time,localarray,0);
-            break;
-        case (max_time-min_time)<= 10800 && (max_time-min_time)>7200:
-            firebase(min_time,max_time,localarray,7);
-            break;
-        case (max_time-min_time)<= 14400 && (max_time-min_time)>10800:
-            firebase(min_time,max_time,localarray,7);
-            break;
-        case (max_time-min_time)<= 18000 && (max_time-min_time)>14400://3600000  15552000
-             firebase(min_time,max_time,localarray,7);
-            break;
-        case (max_time-min_time)<= 21600 && (max_time-min_time)>18000://3600000  
-            firebase(min_time,max_time,localarray,7);
-             break;
-        default :
-            firebase(min_time,max_time,localarray,0);
-            break; 
-    } */
 }
 
 function cancelfunction() {
@@ -146,25 +108,3 @@ function cancelfunction() {
   fromdate.value = "";
   todate.value = "";
 }
-
-/* switch (option_clicked) {
-	
-    case "want_hour":
-        mintime=max_time-3200;//1637585100;
-        break;
-    case "want_day":
-        mintime=max_time-(3200*24);
-        break;
-    case "want_week":
-        mintime=max_time-(3200*168);
-        break;
-    
-    case "want_custom":
-        var fromdate = document.getElementById("fromdate").value;
-        var todate = document.getElementById("todate").value;
-        var fromdate_timestamp = Date.parse(fromdate);
-        var todate_timestamp = Date.parse(todate);
-        mintime=fromdate_timestamp;
-        max_time=todate_timestamp;
-    break;
-} */

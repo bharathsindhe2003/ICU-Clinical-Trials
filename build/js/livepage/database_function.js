@@ -1,3 +1,4 @@
+import { fb } from "../firebase/config.js";
 import {
   heartrate_data,
   blood_pressure_data,
@@ -11,61 +12,46 @@ import {
   RR_data_passing,
 } from "./live-custom.js";
 import { NoEcgData, NoData, NoPpgData, NoRRData } from "./EchartGraphs.js";
+import { installGlobalEchartsAutoResize } from "../utils/echarts-auto-resize.js";
 
-import { fb } from "../firebase/config.js";
+
+installGlobalEchartsAutoResize();
 
 function init_echarts() {
   $(document).ready(() => {
-    var PatientName;
     var heart_rate;
     var spo2;
     var sbp;
     var dbp;
     var oldtemp;
     var option1;
-    var newTemp;
-    var sbp_dbp;
+
     var respiration_rate;
     var temp;
     var acc;
     var final_min_ecg;
     var batteryPercentage;
     var value;
-    var scale;
-    var symptoms;
-    var pain_spot;
-    var flag = false;
-    var id = localStorage.getItem("patient_unique_id");
-    var ref;
-    let ref_chart;
-    let ecg_min;
-    let ppg_min;
-    let rr_min;
-    let ews;
-    var ref_valid;
-    var context_assessment;
-    var patients;
+    const id = localStorage.getItem("patient_unique_id");
     var ecg_flag = 0;
-    var ppg_ref;
-    var rr_ref;
-    var pat_bp_5sec_ref;
     let latestPatHr = null;
     let latestPatHrTs = 0;
     if (id != null || id != undefined) {
       // Show live Data
-      ref = fb.database().ref().child("patientlivedata7s").child(id);
-      ref_chart = fb.database().ref().child("ECG_plot").child(id);
-      ppg_ref = fb.database().ref().child("PPG_plot").child(id);
-      rr_ref = fb.database().ref().child("RR_plot").child(id);
-      pat_bp_5sec_ref = fb.database().ref().child("PAT_BP_5s_tree").child(id);
+      const ref = fb.database().ref().child("patientlivedata7s").child(id);
+      const ref_chart = fb.database().ref().child("ECG_plot").child(id);
+      const ppg_ref = fb.database().ref().child("PPG_plot").child(id);
+      const rr_ref = fb.database().ref().child("RR_plot").child(id);
+      const pat_bp_5sec_ref = fb.database().ref().child("PAT_BP_5s_tree").child(id);
 
       // Show valid data
-      ecg_min = fb.database().ref().child("patientecgdata").child(id).limitToLast(1); //1 minute data
-      ppg_min = fb.database().ref().child("patientppgdata").child(id).limitToLast(1); //1 minute data
-      rr_min = fb.database().ref().child("patientrrdata").child(id).limitToLast(1); //1 minute data
-      ref_valid = fb.database().ref().child("validpatientlivedata").child(id);
-      ews = fb.database().ref().child("EWS").child(id).limitToLast(1); //ews inititlization
+      const ecg_min = fb.database().ref().child("patientecgdata").child(id).limitToLast(1); //1 minute data
+      const ppg_min = fb.database().ref().child("patientppgdata").child(id).limitToLast(1); //1 minute data
+      const rr_min = fb.database().ref().child("patientrrdata").child(id).limitToLast(1); //1 minute data
+      const ref_valid = fb.database().ref().child("validpatientlivedata").child(id);
+      const ews = fb.database().ref().child("EWS").child(id).limitToLast(1); //ews inititlization
 
+      // Listener on PAT_BP_5s_tree
       pat_bp_5sec_ref.on("value", function (snapshot) {
         const val = snapshot.val();
         if (!val) return;
@@ -81,11 +67,10 @@ function init_echarts() {
         }
       });
 
-      let listener = ref.on("value", function (snapshot) {
+      // Listener on patientlivedata7s
+      ref.on("value", function (snapshot) {
         const live = snapshot.val();
         if (live != null) {
-          counter++;
-
           // Avoid unnecessary stringify/parse
           const data1 = live;
 
@@ -97,8 +82,6 @@ function init_echarts() {
           } else {
             heart_rate = (data1.hr ?? 0) / 100;
           }
-
-          let presentTimestamp = data1.timestamp;
 
           respiration_rate = data1.rr;
           spo2 = (data1.spo ?? 0) / 100;
@@ -130,8 +113,6 @@ function init_echarts() {
           spo2 = parseInt(spo2) === 238 || spo2 === 2.38 ? "--" : spo2;
           temp = parseInt(temp) === 238 ? "--" : temp;
 
-          console.log("LiveTemperature 7s", temp);
-
           heartrate_data(heart_rate, "");
           blood_pressure_data(sbp, dbp, "", "");
           respiration_rate_data(respiration_rate, "");
@@ -145,8 +126,8 @@ function init_echarts() {
           batteryPercentageElement.innerHTML = batteryIconMarkup + batteryPercentage + "%";
         }
       });
-
-      let listener1 = ref_chart.on("value", function (snapshot) {
+      // Listener on ECG_plot
+      ref_chart.on("value", function (snapshot) {
         if (snapshot.val() != null) {
           if (ecg_flag == 1) {
             let chart_json = snapshot.val() || {};
@@ -173,7 +154,8 @@ function init_echarts() {
           }
         }
       });
-      let listener2 = ppg_ref.on(
+      // Listener on PPG_plot
+      ppg_ref.on(
         "value",
         function (snapshot) {
           if (snapshot.val() !== null) {
@@ -190,7 +172,7 @@ function init_echarts() {
               document.getElementById("ppgdate").innerHTML = ppgdate;
               document.getElementById("ppgtime").innerHTML = ppgtime;
             } catch (e) {
-              console.log("In HTML, ppgdate and ppgtime ID is not defined");
+              console.warn("In HTML, ppgdate and ppgtime ID is not defined");
             }
             var final_ppg;
             if (ppgdata != undefined) {
@@ -199,15 +181,15 @@ function init_echarts() {
             }
             PPG_data_passing(final_ppg, "", "", "", "", "", 0);
           } else {
-            console.log("No PPG data available."); // Log if no data is available
+            console.warn("No PPG data available."); // Log if no data is available
           }
         },
         function (error) {
           console.error("Error fetching PPG data:", error); // Log any errors that occur
         },
       );
-
-      let listener4 = rr_ref.on("value", function (snapshot) {
+      // Listener on RR_plot
+      rr_ref.on("value", function (snapshot) {
         if (snapshot.val() != null) {
           let rr_json = snapshot.val() || {};
           let rrdata = rr_json.res;
@@ -221,7 +203,7 @@ function init_echarts() {
             document.getElementById("rrdate").innerHTML = rrdate;
             document.getElementById("rrtime").innerHTML = rrtime;
           } catch (e) {
-            console.log("In HTML, rrdate and rrtime ID is not defined");
+            console.warn("In HTML, rrdate and rrtime ID is not defined");
           }
           var final_rr;
           if (rrdata != undefined) {
@@ -231,11 +213,22 @@ function init_echarts() {
           RR_data_passing(final_rr); // Pass processed array
         }
       });
+      ews.on("value", function (snapshot) {
+        const parsedData = snapshot.val() || {};
+        const key = Object.keys(parsedData)[0];
 
-      var list = ref_valid.once("value", function (snapshot) {
+        let ews_value = parsedData[key].ews_score;
+        let ewscolor = parsedData[key].color;
+        if (ews_value !== undefined && ews_value !== null) {
+          ews_value_passing(ews_value, ewscolor);
+        } else {
+          ews_value_passing(NoData);
+        }
+      });
+      // Get last valid data from validpatientlivedata, patientecgdata, patientppgdata and patientrrdata
+      ref_valid.once("value", function (snapshot) {
         if (snapshot.val() != null) {
           let data = snapshot.val() || {};
-          ValidpatientLiveTimestamp = data.timestamp;
           respiration_rate = data.rr;
           heart_rate = data.hr / 100;
           spo2 = data.spo / 100;
@@ -266,10 +259,7 @@ function init_echarts() {
           temperature_data(temp, "");
         }
       });
-
-      var counter = 0;
-
-      var list2 = ecg_min.once("value", function (snapshot) {
+      ecg_min.once("value", function (snapshot) {
         if (snapshot.val() != null) {
           const parsedData = snapshot.val() || {};
 
@@ -295,7 +285,7 @@ function init_echarts() {
             document.getElementById("ecgdate").innerHTML = ecgdate;
             document.getElementById("ecgtime").innerHTML = ecgtime;
           } catch (e) {
-            console.log("In HTML, ecgdate and ecgtime ID is not defined");
+            console.warn("In HTML, ecgdate and ecgtime ID is not defined");
           }
           ECG_data_passing(final_min_ecg, ecgdate, ecgtime, option1, value, "", 625);
         } else {
@@ -305,14 +295,13 @@ function init_echarts() {
         }
       });
 
-      var list3 = ppg_min.once("value", function (snapshot) {
+      ppg_min.once("value", function (snapshot) {
         if (snapshot.val() != null) {
           const parsedData = snapshot.val() || {};
 
           const key = Object.keys(parsedData)[0];
 
           let ppgdata = parsedData[key].payload;
-          console.log("Fetching live patient PPG data...", ppgdata);
           var f_ppgtimestamp = parsedData[key].timestamp;
           var date = new Date(f_ppgtimestamp * 1000);
           var ppgdate = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
@@ -323,7 +312,7 @@ function init_echarts() {
             document.getElementById("ppgdate").innerHTML = ppgdate;
             document.getElementById("ppgtime").innerHTML = ppgtime;
           } catch (e) {
-            console.log("In HTML, ppgdate and ppgtime ID is not defined");
+            console.warn("In HTML, ppgdate and ppgtime ID is not defined");
           }
           let result1;
           var final_ppg;
@@ -331,7 +320,6 @@ function init_echarts() {
             result1 = ppgdata.replace(/\,/g, "").trim();
             final_ppg = result1.split(" ").map(Number);
           }
-          console.log("ppg data passed successfully ", final_ppg);
           PPG_data_passing(final_ppg, "", "", "", "", "", 500);
         } else {
           var echartLinecontext = echarts.init(document.getElementById("LivePPGId"));
@@ -340,7 +328,7 @@ function init_echarts() {
         }
       });
 
-      var list4 = rr_min.once("value", function (snapshot) {
+      rr_min.once("value", function (snapshot) {
         if (snapshot.val() != null) {
           const parsedData = snapshot.val() || {};
           const key = Object.keys(parsedData)[0];
@@ -357,7 +345,7 @@ function init_echarts() {
             document.getElementById("rrdate").innerHTML = rrdate;
             document.getElementById("rrtime").innerHTML = rrtime;
           } catch (e) {
-            console.log("In HTML, rrdate and time ID is not defined");
+            console.warn("In HTML, rrdate and rrtime ID is not defined");
           }
 
           let final_rr = [];
@@ -372,22 +360,6 @@ function init_echarts() {
           var echartLinecontext = echarts.init(document.getElementById("LiveRRId"));
           echartLinecontext.clear();
           echartLinecontext.setOption(NoRRData);
-        }
-      });
-
-      let listener3 = ews.on("value", function (snapshot) {
-        const parsedData = snapshot.val() || {};
-        const key = Object.keys(parsedData)[0];
-
-        console.log("ews_value" + parsedData);
-        let ews_value = parsedData[key].ews_score;
-        let ewscolor = parsedData[key].color;
-        console.log("ews_value" + ews_value);
-        if (ews_value !== undefined && ews_value !== null) {
-          ews_value_passing(ews_value, ewscolor);
-        } else {
-          console.log("ews_value", ews_value);
-          ews_value_passing(NoData);
         }
       });
     }

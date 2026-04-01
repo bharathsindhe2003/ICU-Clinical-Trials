@@ -4,7 +4,6 @@ import { NoEcgData, NoPpgData } from "./EchartGraphs.js";
 function ews_value_passing(ews_value, ews_color) {
   try {
     document.getElementById("ews_id1").className = "ews_card_js";
-    console.log("ewsvalue" + ews_value.color);
     if (ews_value == "--") {
       document.getElementById("ews_id1").innerHTML = "";
       document.getElementById("ews_color1").style.backgroundColor = "#ffffff00";
@@ -13,14 +12,13 @@ function ews_value_passing(ews_value, ews_color) {
       document.getElementById("ews_id1").innerHTML = "EWS Score - " + ews_value;
     }
   } catch (e) {
-    console.log("e.message:", e.message);
+    console.error("[ews_value_passing] Error while updating EWS value:", e);
   }
 }
 /***************************EOF of EWS on live page*****************************/
 
 /****************************Electrocardiogram(ECG)***********************************/
 function ECG_data_passing(LiveEcgValues, ecgdate, ecgtime, option1, value, ecgdata, endzoom) {
-  console.log("EcgValues in echarts", LiveEcgValues, "context:", ecgdata);
   var EcgData;
   var contextECG;
   var echartLine;
@@ -28,7 +26,6 @@ function ECG_data_passing(LiveEcgValues, ecgdate, ecgtime, option1, value, ecgda
   var echartLinecontext;
 
   if ($("#LiveECGId").length) {
-    console.log("Live  in echarts");
     echartLine = echarts.init(document.getElementById("LiveECGId"));
     EcgData = LiveEcgValues;
   }
@@ -59,10 +56,9 @@ function ECG_data_passing(LiveEcgValues, ecgdate, ecgtime, option1, value, ecgda
       data.push(randomData());
     }
   } catch (e) {
-    console.log("EcgData.length:", e.message);
+    console.error("[ECG_data_passing] Error while processing ECG data:", e);
   }
   var isZoomed = false;
-  console.log("ecg data after push", data);
   var plot = {
     title: {
       top: "0px",
@@ -297,13 +293,10 @@ function ECG_data_passing(LiveEcgValues, ecgdate, ecgtime, option1, value, ecgda
         }
       }
       echartLine.on("dataZoom", function (params) {
-        console.log(params.start, params.end);
         if (params.start !== 0 || params.end !== undefined) {
-          console.log("in if");
           isZoomed = true;
           plot.toolbox.feature.myTool1.show = isZoomed;
           echartLine.setOption(plot);
-          console.log(plot);
         } else {
           isZoomed = false;
           plot.toolbox.feature.myTool1.show = isZoomed;
@@ -312,7 +305,7 @@ function ECG_data_passing(LiveEcgValues, ecgdate, ecgtime, option1, value, ecgda
       });
     }
   } catch (e) {
-    console.log("Error:", e.message);
+    console.error("[ECG_data_passing] Error while processing ECG data:", e);
   }
 }
 /***************************EOF of Electrocardiogram(ECG)*****************************/
@@ -320,11 +313,6 @@ function ECG_data_passing(LiveEcgValues, ecgdate, ecgtime, option1, value, ecgda
 /**************************** Photoplethysmogram (PPG)***********************************/
 function PPG_data_passing(LivePpgValues, ecgdate, ecgtime, option1, value, ppgdata, endzoom) {
   if (window.location.pathname.includes("context_assment.html")) return;
-  console.log("PPG_data_passing called with:", {
-    LivePpgValues: LivePpgValues ? LivePpgValues.length : "null/undefined",
-    ppgdata: ppgdata ? ppgdata.length : "null/undefined",
-    endzoom: endzoom,
-  });
 
   var PpgData;
   var echartLine;
@@ -332,13 +320,11 @@ function PPG_data_passing(LivePpgValues, ecgdate, ecgtime, option1, value, ppgda
   var value1;
   var ppgOption; // Renamed to avoid conflict with parameter
   var counter = 0;
-  console.log(" PPG $('#context_ppg').length", $("#context_ppg").length, "$('#LivePPGId').length", $("#LivePPGId").length);
 
   if ($("#context_ppg").length) {
     echartLinecontext = echarts.init(document.getElementById("context_ppg"));
     PpgData = ppgdata;
   } else if ($("#LivePPGId").length) {
-    console.log("ppg in live", PpgData);
     echartLine = echarts.init(document.getElementById("LivePPGId"));
     PpgData = LivePpgValues;
   }
@@ -357,10 +343,8 @@ function PPG_data_passing(LivePpgValues, ecgdate, ecgtime, option1, value, ppgda
       data.push(randomData());
     }
   } catch (e) {
-    console.log("PPG error:", e.message);
+    console.error("[PPG_data_passing] Error while processing PPG data:", e);
   }
-
-  console.log("PPG data after push", data.length, data);
 
   try {
     if (PpgData.length < 500) {
@@ -562,7 +546,6 @@ function PPG_data_passing(LivePpgValues, ecgdate, ecgtime, option1, value, ppgda
         ],
       };
       if ($("#context_ppg").length && echartLinecontext) {
-        console.log("PPG: Setting option for context PPG");
         echartLinecontext.clear();
         echartLinecontext.setOption(ppgOption);
         if (endzoom !== 0) {
@@ -572,7 +555,6 @@ function PPG_data_passing(LivePpgValues, ecgdate, ecgtime, option1, value, ppgda
           });
         }
       } else if ($("#LivePPGId").length) {
-        console.log("PPG: Setting option for Live PPG");
         echartLine.clear();
         echartLine.setOption(ppgOption);
         if (endzoom !== 0) {
@@ -584,7 +566,7 @@ function PPG_data_passing(LivePpgValues, ecgdate, ecgtime, option1, value, ppgda
       }
     }
   } catch (e) {
-    console.log("PPG building chart:", e.message);
+    console.error("[PPG_data_passing] Error while building chart:", e);
   }
 }
 /***************************EOF of Photoplethysmogram (PPG)*****************************/
@@ -592,6 +574,9 @@ function PPG_data_passing(LivePpgValues, ecgdate, ecgtime, option1, value, ppgda
 /**************************** Respiration Rate ******************************/
 function RR_data_passing(LiveRrValues) {
   if (!$("#LiveRRId").length) return;
+  var counter = 0;
+  var value1;
+
   const echartLine = echarts.init(document.getElementById("LiveRRId"));
 
   const RrData = Array.isArray(LiveRrValues) ? LiveRrValues : [];
@@ -610,7 +595,7 @@ function RR_data_passing(LiveRrValues) {
       data.push(randomData());
     }
   } catch (e) {
-    console.log("RR error:", e.message);
+    console.error("[RR_data_passing] Error while processing RR data:", e);
   }
   echartLine.clear();
   let option;
@@ -718,7 +703,6 @@ function RR_data_passing(LiveRrValues) {
 /**************************** Heart Rate ******************************/
 
 function heartrate_data(LiveHeartrate, ContextHeartrate) {
-  console.log("Calling Heart rate *******88", ContextHeartrate);
   var LiveHRId;
   var ContextHRId;
 
@@ -802,7 +786,6 @@ function heartrate_data(LiveHeartrate, ContextHeartrate) {
     ContextHRId = echarts.init(document.getElementById("ContextHeartRateId"));
     if (ContextHeartrate !== "") {
       var echartGauge1 = RawechartGauge;
-      console.log("d1 data is :", d1);
       var d1 = ContextHeartrate;
       echartGauge1.series[0].data[0].value[0] = d1;
 
@@ -833,8 +816,6 @@ function heartrate_data(LiveHeartrate, ContextHeartrate) {
 
 /***************************  BloodOxygen(spo2) ***********************/
 function blood_oxygen_data(LiveBloodOxygen, ContextBloodOxygen) {
-  console.log("Calling blood_oxygen_data", ContextBloodOxygen);
-
   var LiveBloodOxygenId;
   var ContextBloodOxygenId;
 
@@ -924,7 +905,6 @@ function blood_oxygen_data(LiveBloodOxygen, ContextBloodOxygen) {
     LiveBloodOxygenId = echarts.init(document.getElementById("LiveBloodOxygenId"));
     var echartGauge2 = RawechartGauge;
     var d = LiveBloodOxygen;
-    console.log("LiveBloodOxygen", LiveBloodOxygen);
     if (isNaN(d) || d == 0 || d === undefined || d === "" || d === null) {
       echartGauge2.series[0].pointer.show = false;
     } else {
@@ -1019,7 +999,6 @@ function temperature_data(LiveTemperature, ContextTemperature) {
 
   if ($("#ContextTemperatureId").length) {
     ContextTemperatureId = echarts.init(document.getElementById("ContextTemperatureId"));
-    console.log("the ContextTemperature ** is: ", ContextTemperature);
     if (ContextTemperature !== "") {
       var echartGauge1 = RawechartGauge;
       var d1 = parseFloat(ContextTemperature);
@@ -1030,7 +1009,6 @@ function temperature_data(LiveTemperature, ContextTemperature) {
       } else {
         echartGauge1.series[0].pointer.show = true;
       }
-      console.log("d1", d1);
       // Assign numeric value directly (ECharts gauge expects a number)
       echartGauge1.series[0].data[0].value = d1;
       ContextTemperatureId.setOption(echartGauge1);
@@ -1055,8 +1033,6 @@ function temperature_data(LiveTemperature, ContextTemperature) {
 
 /************************  Activity Monitor ****************************/
 function acceleration_data(LiveAcc, ContextAcc) {
-  console.log("Calling acceleration_data", ContextAcc);
-
   var LiveAccId;
   var ContextAccId;
 
@@ -1137,7 +1113,6 @@ function acceleration_data(LiveAcc, ContextAcc) {
     if (ContextAcc != "") {
       var echartGauge1 = RawechartGauge;
       var d1 = ContextAcc;
-      console.log("ContextAcc", ContextAcc);
       if (isNaN(d1) || d1 == 0 || d1 === undefined || d1 === "" || d1 === null) {
         echartGauge1.series[0].pointer.show = false;
         d1 = "- -";
@@ -1151,7 +1126,6 @@ function acceleration_data(LiveAcc, ContextAcc) {
     LiveAccId = echarts.init(document.getElementById("LiveAccelrationId"));
     var echartGauge2 = RawechartGauge;
     var d = LiveAcc;
-    console.log("activityM", d);
     if (isNaN(d) || d == 0 || d === undefined || d === "" || d === null) {
       echartGauge2.series[0].pointer.show = false;
       d = "- -";
@@ -1251,7 +1225,6 @@ function blood_pressure_data(LiveSBP, LiveDBP, ContextSBP, ContextDBP) {
       var echartGauge1 = RawechartGauge;
       var d1 = ContextSBP;
       dbp = ContextDBP;
-      console.log("ContextBloodPressureId", d1, dbp);
       if (isNaN(d1) || d1 == 0 || d1 === undefined || d1 === "" || d1 === null) {
         echartGauge1.series[0].pointer.show = false;
       } else {
@@ -1278,7 +1251,6 @@ function blood_pressure_data(LiveSBP, LiveDBP, ContextSBP, ContextDBP) {
 
 /**************************** Respiration Rate *************************/
 function respiration_rate_data(LiveRRData, contextRRData) {
-  console.log("Calling LiveRRData in live page", LiveRRData, contextRRData);
   var LiveHRId;
   var ContextHRId;
 

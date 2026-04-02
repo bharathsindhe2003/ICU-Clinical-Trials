@@ -73,7 +73,21 @@
   border-radius: 50%;
   animation: loading 0.75s ease infinite;
 }
+.nav.side-menu li {
+  display: flex;
+  justify-content: center; /* horizontal center */
+}
 
+.nav.side-menu li a {
+  display: flex;
+  align-items: center; /* vertical alignment inside anchor */
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.nav-sm .nav.side-menu > li > a {
+  justify-content: center;
+}
 @keyframes loading {
   from {
     transform: rotate(0turn);

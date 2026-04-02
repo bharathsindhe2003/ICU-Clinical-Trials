@@ -14,7 +14,6 @@ import {
 import { NoEcgData, NoData, NoPpgData, NoRRData } from "./EchartGraphs.js";
 import { installGlobalEchartsAutoResize } from "../utils/echarts-auto-resize.js";
 
-
 installGlobalEchartsAutoResize();
 
 function init_echarts() {
@@ -113,12 +112,12 @@ function init_echarts() {
           spo2 = parseInt(spo2) === 238 || spo2 === 2.38 ? "--" : spo2;
           temp = parseInt(temp) === 238 ? "--" : temp;
 
-          heartrate_data(heart_rate, "");
-          blood_pressure_data(sbp, dbp, "", "");
-          respiration_rate_data(respiration_rate, "");
-          acceleration_data(acc, "");
-          blood_oxygen_data(spo2, "");
-          temperature_data(temp, "");
+          heartrate_data(heart_rate);
+          blood_pressure_data(sbp, dbp);
+          respiration_rate_data(respiration_rate);
+          acceleration_data(acc);
+          blood_oxygen_data(spo2);
+          temperature_data(temp);
 
           var batteryIconMarkup = getBatteryIcon(batteryPercentage);
           var batteryPercentageElement = document.getElementById("battery-percentage");
@@ -148,7 +147,7 @@ function init_echarts() {
             document.getElementById("ecgdate").innerHTML = ecgdate !== null && ecgdate !== undefined ? ecgdate : "--/--/----";
             document.getElementById("ecgtime").innerHTML = ecgtime !== null && ecgtime !== undefined ? ecgtime : "--:--:--";
 
-            ECG_data_passing(final_ecg, ecgdate, ecgtime, option1, value, "", 0);
+            ECG_data_passing(final_ecg, 0);
           } else {
             ecg_flag = 1;
           }
@@ -179,7 +178,7 @@ function init_echarts() {
               let result1 = ppgdata.replace(/\,/g, "").trim();
               final_ppg = result1.split(" ").map(Number);
             }
-            PPG_data_passing(final_ppg, "", "", "", "", "", 0);
+            PPG_data_passing(final_ppg, 0); // 0 To show live data
           } else {
             console.warn("No PPG data available."); // Log if no data is available
           }
@@ -217,8 +216,8 @@ function init_echarts() {
         const parsedData = snapshot.val() || {};
         const key = Object.keys(parsedData)[0];
 
-        let ews_value = parsedData[key].ews_score;
-        let ewscolor = parsedData[key].color;
+        let ews_value = parsedData[key]?.ews_score || "--";
+        let ewscolor = parsedData[key]?.color || "0";
         if (ews_value !== undefined && ews_value !== null) {
           ews_value_passing(ews_value, ewscolor);
         } else {
@@ -251,12 +250,19 @@ function init_echarts() {
           document.getElementById("sensordate").innerHTML = sensordate;
           document.getElementById("sensortime").innerHTML = sensortime;
 
-          heartrate_data(heart_rate, "");
-          blood_pressure_data(sbp, dbp, "", "");
-          respiration_rate_data(respiration_rate, "");
-          acceleration_data(acc, "");
-          blood_oxygen_data(spo2, "");
-          temperature_data(temp, "");
+          heartrate_data(heart_rate);
+          blood_pressure_data(sbp, dbp);
+          respiration_rate_data(respiration_rate);
+          acceleration_data(acc);
+          blood_oxygen_data(spo2);
+          temperature_data(temp);
+        } else {
+          heartrate_data(heart_rate);
+          blood_pressure_data(sbp, dbp);
+          respiration_rate_data(respiration_rate);
+          acceleration_data(acc);
+          blood_oxygen_data(spo2);
+          temperature_data(temp);
         }
       });
       ecg_min.once("value", function (snapshot) {
@@ -287,7 +293,7 @@ function init_echarts() {
           } catch (e) {
             console.warn("In HTML, ecgdate and ecgtime ID is not defined");
           }
-          ECG_data_passing(final_min_ecg, ecgdate, ecgtime, option1, value, "", 625);
+          ECG_data_passing(final_min_ecg, 625);
         } else {
           var echartLinecontext = echarts.init(document.getElementById("LiveECGId"));
           echartLinecontext.clear();
@@ -320,7 +326,7 @@ function init_echarts() {
             result1 = ppgdata.replace(/\,/g, "").trim();
             final_ppg = result1.split(" ").map(Number);
           }
-          PPG_data_passing(final_ppg, "", "", "", "", "", 500);
+          PPG_data_passing(final_ppg, 500); // 500 to show 500 point of valid data
         } else {
           var echartLinecontext = echarts.init(document.getElementById("LivePPGId"));
           echartLinecontext.clear();

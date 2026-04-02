@@ -220,7 +220,7 @@ function firebase_Data_retrieval(ref_doc_id) {
                 .once("value", (snapshot) => {
                   const data = snapshot.val() || {};
                   const key = Object.keys(data)[0];
-                  const timestamp = data[key].timestamp;
+                  const timestamp = data[key].timestamp || null;
                   if (timestamp != null && patientlivedata7s_timestamp != null) {
                     const nexttimestampdiffernce = patientlivedata7s_timestamp - timestamp;
                     if (nexttimestampdiffernce > 70) {
@@ -228,10 +228,6 @@ function firebase_Data_retrieval(ref_doc_id) {
                     }
                   }
                 });
-
-              if (i == vitalinfo.length - 1) {
-                resolve(vitalinfo);
-              }
             });
           }
           var ecg_info = [];
@@ -273,9 +269,6 @@ function firebase_Data_retrieval(ref_doc_id) {
               }
 
               createECGchart(currentPatient[PATIENT_ECG_INDEX], currentPatientId);
-              if (i == ecg_info.length - 1) {
-                resolve(ecg_info);
-              }
             });
           }
 
@@ -317,9 +310,6 @@ function firebase_Data_retrieval(ref_doc_id) {
                 currentPatient[PATIENT_PPG_TIMESTAMP_INDEX] = "";
               }
               createPPGchart(currentPatient[PATIENT_PPG_INDEX], currentPatientId);
-              if (i == ppg_info.length - 1) {
-                resolve(ppg_info);
-              }
             });
           }
           const rr_info = [];
@@ -349,9 +339,6 @@ function firebase_Data_retrieval(ref_doc_id) {
                 currentPatient[PATIENT_RR_TIMESTAMP_INDEX] = "";
               }
               createRRchart(currentPatient[PATIENT_RR_WAVE_INDEX], currentPatientId);
-              if (i == rr_info.length - 1) {
-                resolve(rr_info);
-              }
             });
           }
 

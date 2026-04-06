@@ -1,12 +1,27 @@
 function ews_value_passing(ews_value, ews_color) {
   try {
-    document.getElementById("ews_id1").className = "ews_card_js";
+    const ewsCard = document.getElementById("context-ews-slot") || document.querySelector(".context-ews-slot");
+    const ewsValueElement = document.getElementById("context_ews_id1");
+    const ewsColorElement = document.getElementById("context_ews_color1");
+
+    if (!ewsValueElement || !ewsColorElement) {
+      return;
+    }
+
+    ewsValueElement.className = "ews_card_js";
+
     if (ews_value == "--") {
-      document.getElementById("ews_id1").innerHTML = "";
-      document.getElementById("ews_color1").style.backgroundColor = "#ffffff00";
+      if (ewsCard) {
+        ewsCard.style.display = "none";
+      }
+      ewsValueElement.innerHTML = "";
+      ewsColorElement.style.backgroundColor = "#ffffff00";
     } else {
-      document.getElementById("ews_color1").style.backgroundColor = ews_color;
-      document.getElementById("ews_id1").innerHTML = "EWS Score - " + ews_value;
+      if (ewsCard) {
+        ewsCard.style.display = "flex";
+      }
+      ewsColorElement.style.backgroundColor = ews_color;
+      ewsValueElement.innerHTML = "EWS Score - " + ews_value;
     }
   } catch (e) {
     console.error("[ews_value_passing] Error while updating EWS value:", e);
@@ -81,7 +96,7 @@ function ECG_data(ecgdata) {
                   (echartLinecontext || echartLine).dispatchAction({
                     type: "dataZoom",
                     start: 0,
-                    endValue: endzoom,
+                    endValue: 625,
                   });
                 },
               },
@@ -267,7 +282,7 @@ function PPG_data(ppgdata) {
                   (echartLinecontext || echartLine).dispatchAction({
                     type: "dataZoom",
                     start: 0,
-                    endValue: endzoom,
+                    endValue: 500,
                   });
                 },
               },
@@ -400,7 +415,7 @@ function RR_data(rrdata) {
       var value1;
       var counter = 0;
       var option1;
-      
+
       const echartLinecontext = echarts.init(document.getElementById("context_rr"));
       RrData = rrdata;
 
@@ -449,7 +464,7 @@ function RR_data(rrdata) {
                   (echartLinecontext || echartLine).dispatchAction({
                     type: "dataZoom",
                     start: 0,
-                    endValue: 250,
+                    endValue: 125,
                   });
                 },
               },
@@ -756,7 +771,7 @@ function blood_oxygen_data(ContextBloodOxygen) {
     console.error("[BloodOxygen_data] Error while processing Blood Oxygen data:", e);
   }
 }
-function temperature_data(LiveTemperature, ContextTemperature) {
+function temperature_data(ContextTemperature) {
   try {
     if ($("#ContextTemperatureId").length) {
       ContextTemperature = String(ContextTemperature);
@@ -948,7 +963,7 @@ function acceleration_data(ContextAcc) {
   }
 }
 
-function blood_pressure_data(LiveSBP, LiveDBP, ContextSBP, ContextDBP) {
+function blood_pressure_data(ContextSBP, ContextDBP) {
   try {
     if ($("#ContextBloodPressureId").length) {
       var ContextBPId = echarts.init(document.getElementById("ContextBloodPressureId"));
@@ -1048,7 +1063,7 @@ function blood_pressure_data(LiveSBP, LiveDBP, ContextSBP, ContextDBP) {
   }
 }
 
-function respiration_rate_data(LiveRRData, contextRRData) {
+function respiration_rate_data(contextRRData) {
   try {
     if ($("#ContextRespirationRateId").length) {
       var ContextHRId = echarts.init(document.getElementById("ContextRespirationRateId"));

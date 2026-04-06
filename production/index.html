@@ -31,6 +31,7 @@
     <link href="../vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet" />
     <!-- bootstrap-daterangepicker -->
     <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
 
     <!-- Custom Theme Style -->
     <script type="module" src="../build/js/history/option-module.js"></script>
@@ -238,6 +239,7 @@
           </div>
         </div>
       </div>
+
       <div id="HistoryComponents" class="right_col" role="main">
         <div class="Historyspecification">
           <div class="Horizontalclick">
@@ -330,11 +332,7 @@
         </div>
       </div>
 
-      <div
-        id="VitalsComponents"
-        class="right_col"
-        role="main"
-        style="padding: 2rem; background: radial-gradient(circle at top left, rgba(79, 195, 217, 0.18), transparent 30%), linear-gradient(180deg, #f2f9fd 0%, #edf5fb 45%, #f8fbfd 100%)">
+      <div id="VitalsComponents" class="right_col" role="main">
         <section class="vitals-shell">
           <div class="vitals-hero">
             <div class="vitals-hero__heading">
@@ -543,6 +541,12 @@
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
+      function syncViewportLayoutMetrics() {
+        var navMenu = document.querySelector(".top_nav .nav_menu");
+        var topNavHeight = navMenu ? navMenu.offsetHeight : 57;
+
+        document.documentElement.style.setProperty("--app-top-nav-height", topNavHeight + "px");
+      }
       function showMainSection(sectionId) {
         var sectionMap = {
           LiveComponents: "defaultOpen",

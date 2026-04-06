@@ -1,13 +1,28 @@
 /**************************** EWS on live page **********************************/
 function ews_value_passing(ews_value, ews_color) {
   try {
-    document.getElementById("ews_id1").className = "ews_card_js";
+    const ewsCard = document.getElementById("live-ews-card") || document.querySelector(".live-ews-card");
+    const ewsValueElement = document.getElementById("ews_id1");
+    const ewsColorElement = document.getElementById("ews_color1");
+
+    if (!ewsValueElement || !ewsColorElement) {
+      return;
+    }
+
+    ewsValueElement.className = "ews_card_js";
+
     if (ews_value == "--") {
-      document.getElementById("ews_id1").innerHTML = "";
-      document.getElementById("ews_color1").style.backgroundColor = "#ffffff00";
+      if (ewsCard) {
+        ewsCard.style.display = "none";
+      }
+      ewsValueElement.innerHTML = "";
+      ewsColorElement.style.backgroundColor = "#ffffff00";
     } else {
-      document.getElementById("ews_color1").style.backgroundColor = ews_color;
-      document.getElementById("ews_id1").innerHTML = "EWS Score - " + ews_value;
+      if (ewsCard) {
+        ewsCard.style.display = "flex";
+      }
+      ewsColorElement.style.backgroundColor = ews_color;
+      ewsValueElement.innerHTML = "EWS Score - " + ews_value;
     }
   } catch (e) {
     console.error("[ews_value_passing] Error while updating EWS value:", e);
@@ -20,10 +35,11 @@ function ECG_data_passing(LiveEcgValues, endzoom) {
   try {
     if ($("#LiveECGId").length) {
       var EcgData;
-      var echartLine;
+      const echartLine = echarts.init(document.getElementById("LiveECGId"));
       var value1;
+      var option1;
       var echartLinecontext;
-      echartLine = echarts.init(document.getElementById("LiveECGId"));
+
       EcgData = LiveEcgValues;
 
       var reference_data = [
@@ -55,174 +71,6 @@ function ECG_data_passing(LiveEcgValues, endzoom) {
         console.error("[ECG_data_passing] Error while pushing random ECG data:", e);
       }
       var isZoomed = false;
-      var plot = {
-        title: {
-          top: "0px",
-          left: "35px",
-          text: "",
-          textStyle: {
-            fontSize: 12,
-            fontStyle: "normal",
-          },
-        },
-        grid: {
-          top: 5,
-          left: 40,
-          right: 40,
-          bottom: 52,
-        },
-        toolbox: {
-          orient: "",
-          right: 8,
-          feature: {
-            myTool1: {
-              show: isZoomed,
-              title: "Reset",
-              icon: "image://data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PgogICAgICAgIDwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgCiAgICAgICAgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+ICA8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMTAgMmg0IiAvPiA8cGF0aCBkPSJNMTIgMTR2LTQiIC8+IDxwYXRoIGQ9Ik00IDEzYTggOCAwIDAgMSA4LTcgOCA4IDAgMSAxLTUuMyAxNEw0IDE3LjYiIC8+IDxwYXRoIGQ9Ik05IDE3SDR2NSIgLz4gPC9zdmc+ICA=",
-              fontSize: 28,
-              onclick: function () {
-                (echartLinecontext || echartLine).dispatchAction({
-                  type: "dataZoom",
-                  start: 0,
-                  endValue: endzoom,
-                });
-              },
-            },
-          },
-        },
-
-        dataZoom: [
-          {
-            id: "dataZoomX",
-            type: "slider",
-            xAxisIndex: [0],
-            filterMode: "none",
-            zoomLock: false,
-            showDetail: false,
-            height: 25,
-            handleIcon: "pin",
-            handleStyle: {
-              color: "#0865C1",
-              borderColor: "#ACB8D1",
-              borderWidth: 1,
-            },
-            //endValue:[],
-          },
-        ],
-        xAxis: {
-          type: "value",
-          splitNumber: 25,
-          splitLine: {
-            lineStyle: {
-              color: "#0686AF",
-              width: 1.2,
-            },
-          },
-          grid: {
-            show: false,
-          },
-          minorSplitLine: {
-            show: true,
-            lineStyle: {
-              color: "#23B5E4",
-              width: 0.5,
-            },
-          },
-          axisLine: {
-            show: false, // Hide full Line
-          },
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false,
-          },
-          minorTick: {
-            show: false,
-          },
-          alignTicks: false,
-        },
-        yAxis: {
-          type: "value",
-          show: true,
-          //scale: true ,
-          //splitNumber:8,
-          splitLine: {
-            lineStyle: {
-              color: "#0686AF",
-              width: 1.2,
-            },
-          },
-          /* min: function (value) {
-						return value.min -40;
-					}, */
-          max: function (value) {
-            return value.max + 99;
-          },
-          grid: {
-            show: false,
-          },
-          minorSplitLine: {
-            show: true,
-            lineStyle: {
-              color: "#23B5E4",
-              width: 0.5,
-            },
-          },
-          axisLine: {
-            show: false, // Hide full Line
-          },
-          axisLabel: {
-            show: false,
-          },
-          axisTick: {
-            show: false,
-          },
-          minorTick: {
-            show: false,
-          },
-          alignTicks: false,
-        },
-
-        series: [
-          {
-            name: "????",
-            type: "line",
-            xAxisIndex: 0,
-            yAxisIndex: 0,
-            showSymbol: false,
-            //symbol: 'emptyCircle' ,
-            //hoverAnimation: false,
-            data: data,
-            animation: false,
-            smooth: false,
-            lineStyle: {
-              color: "#ffffff",
-              width: 1.6,
-              //miterLimit: 10 ,
-            },
-            labelLine: {
-              show: false,
-            },
-            seriesLayoutBy: "column",
-          },
-
-          {
-            name: "????",
-            type: "line",
-            showSymbol: false,
-            hoverAnimation: false,
-            data: reference_data,
-            lineStyle: {
-              color: "#ffffff",
-              width: 1.5,
-            },
-            label: {
-              show: false,
-            },
-          },
-        ],
-      };
       if (EcgData.length < 625) {
         option1 = {
           title: {
@@ -272,7 +120,176 @@ function ECG_data_passing(LiveEcgValues, endzoom) {
         echartLine.clear();
         echartLine.setOption(option1);
       } else {
-        echartLine.setOption(plot);
+        option1 = {
+          title: {
+            top: "0px",
+            left: "35px",
+            text: "",
+            textStyle: {
+              fontSize: 12,
+              fontStyle: "normal",
+            },
+          },
+          grid: {
+            top: 5,
+            left: 40,
+            right: 40,
+            bottom: 52,
+          },
+          toolbox: {
+            orient: "",
+            right: 8,
+            feature: {
+              myTool1: {
+                show: isZoomed,
+                title: "Reset",
+                icon: "image://data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PgogICAgICAgIDwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgCiAgICAgICAgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+ICA8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMTAgMmg0IiAvPiA8cGF0aCBkPSJNMTIgMTR2LTQiIC8+IDxwYXRoIGQ9Ik00IDEzYTggOCAwIDAgMSA4LTcgOCA4IDAgMSAxLTUuMyAxNEw0IDE3LjYiIC8+IDxwYXRoIGQ9Ik05IDE3SDR2NSIgLz4gPC9zdmc+ICA=",
+                fontSize: 28,
+                onclick: function () {
+                  (echartLinecontext || echartLine).dispatchAction({
+                    type: "dataZoom",
+                    start: 0,
+                    endValue: endzoom,
+                  });
+                },
+              },
+            },
+          },
+
+          dataZoom: [
+            {
+              id: "dataZoomX",
+              type: "slider",
+              xAxisIndex: [0],
+              filterMode: "none",
+              zoomLock: false,
+              showDetail: false,
+              height: 25,
+              handleIcon: "pin",
+              handleStyle: {
+                color: "#0865C1",
+                borderColor: "#ACB8D1",
+                borderWidth: 1,
+              },
+              //endValue:[],
+            },
+          ],
+          xAxis: {
+            type: "value",
+            splitNumber: 25,
+            splitLine: {
+              lineStyle: {
+                color: "#0686AF",
+                width: 1.2,
+              },
+            },
+            grid: {
+              show: false,
+            },
+            minorSplitLine: {
+              show: true,
+              lineStyle: {
+                color: "#23B5E4",
+                width: 0.5,
+              },
+            },
+            axisLine: {
+              show: false, // Hide full Line
+            },
+            axisLabel: {
+              show: false,
+            },
+            axisTick: {
+              show: false,
+            },
+            minorTick: {
+              show: false,
+            },
+            alignTicks: false,
+          },
+          yAxis: {
+            type: "value",
+            show: true,
+            //scale: true ,
+            //splitNumber:8,
+            splitLine: {
+              lineStyle: {
+                color: "#0686AF",
+                width: 1.2,
+              },
+            },
+            /* min: function (value) {
+						return value.min -40;
+					}, */
+            max: function (value) {
+              return value.max + 99;
+            },
+            grid: {
+              show: false,
+            },
+            minorSplitLine: {
+              show: true,
+              lineStyle: {
+                color: "#23B5E4",
+                width: 0.5,
+              },
+            },
+            axisLine: {
+              show: false, // Hide full Line
+            },
+            axisLabel: {
+              show: false,
+            },
+            axisTick: {
+              show: false,
+            },
+            minorTick: {
+              show: false,
+            },
+            alignTicks: false,
+          },
+
+          series: [
+            {
+              name: "????",
+              type: "line",
+              xAxisIndex: 0,
+              yAxisIndex: 0,
+              showSymbol: false,
+              //symbol: 'emptyCircle' ,
+              //hoverAnimation: false,
+              data: data,
+              animation: false,
+              smooth: false,
+              lineStyle: {
+                color: "#ffffff",
+                width: 1.6,
+                //miterLimit: 10 ,
+              },
+              labelLine: {
+                show: false,
+              },
+              seriesLayoutBy: "column",
+            },
+
+            {
+              name: "????",
+              type: "line",
+              showSymbol: false,
+              hoverAnimation: false,
+              data: reference_data,
+              lineStyle: {
+                color: "#ffffff",
+                width: 1.5,
+              },
+              label: {
+                show: false,
+              },
+            },
+          ],
+        };
+        echartLine.clear();
+        echartLine.setOption(option1);
         if (endzoom !== 0) {
           echartLine.dispatchAction({
             type: "dataZoom",
@@ -282,12 +299,12 @@ function ECG_data_passing(LiveEcgValues, endzoom) {
         echartLine.on("dataZoom", function (params) {
           if (params.start !== 0 || params.end !== undefined) {
             isZoomed = true;
-            plot.toolbox.feature.myTool1.show = isZoomed;
-            echartLine.setOption(plot);
+            option1.toolbox.feature.myTool1.show = isZoomed;
+            echartLine.setOption(option1);
           } else {
             isZoomed = false;
-            plot.toolbox.feature.myTool1.show = isZoomed;
-            echartLine.setOption(plot);
+            option1.toolbox.feature.myTool1.show = isZoomed;
+            echartLine.setOption(option1);
           }
         });
       }
@@ -303,12 +320,12 @@ function PPG_data_passing(LivePpgValues, endzoom) {
   try {
     if ($("#LivePPGId").length) {
       var PpgData;
-      var echartLine;
+      const echartLine = echarts.init(document.getElementById("LivePPGId"));
       var echartLinecontext;
       var value1;
       var ppgOption; // Renamed to avoid conflict with parameter
       var counter = 0;
-      echartLine = echarts.init(document.getElementById("LivePPGId"));
+
       PpgData = LivePpgValues;
 
       function randomData() {
@@ -537,22 +554,22 @@ function PPG_data_passing(LivePpgValues, endzoom) {
 /***************************EOF of Photoplethysmogram (PPG)*****************************/
 
 /**************************** Respiration Rate ******************************/
-function RR_data_passing(LiveRrValues) {
+function RR_data_passing(LiveRrValues, endzoom) {
   try {
-    if (!$("#LiveRRId").length) {
+    if ($("#LiveRRId").length) {
+      var RrData;
+      const echartLine = echarts.init(document.getElementById("LiveRRId"));
       var counter = 0;
       var value1;
-
-      const echartLine = echarts.init(document.getElementById("LiveRRId"));
-
-      const RrData = Array.isArray(LiveRrValues) ? LiveRrValues : [];
+      let option;
+      RrData = LiveRrValues;
 
       function randomData() {
         if (RrData.length === 0) return { value: [0, 0] };
         value1 = RrData[counter % RrData.length];
         counter++;
         return {
-          value: [counter % RrData.length, Math.round(value1)],
+          value: [counter % RrData.length, value1],
         };
       }
       var data = [];
@@ -563,9 +580,7 @@ function RR_data_passing(LiveRrValues) {
       } catch (e) {
         console.error("[RR_data_passing] Error while pushing random RR data:", e);
       }
-      echartLine.clear();
-      let option;
-      if (data.length < 120) {
+      if (RrData.length < 119 && endzoom != 0) {
         option = {
           title: {
             text: "WAITING FOR VALID RR",
@@ -581,6 +596,9 @@ function RR_data_passing(LiveRrValues) {
           yAxis: { show: false },
           series: [],
         };
+        echartLine.clear();
+
+        echartLine.setOption(option);
       } else {
         option = {
           grid: { top: 5, left: 10, right: 10, bottom: 52 },
@@ -622,12 +640,8 @@ function RR_data_passing(LiveRrValues) {
           yAxis: {
             type: "value",
             show: false,
-            min: function (value) {
-              return value.min - 10;
-            },
-            max: function (value) {
-              return value.max + 100;
-            },
+            min: "dataMin",
+            max: "dataMax",
             splitLine: { show: false },
             axisLine: { show: false },
           },
@@ -639,14 +653,23 @@ function RR_data_passing(LiveRrValues) {
               data: data,
               animation: false,
               smooth: true,
+              sampling: "average",
               lineStyle: { color: "#FFFFFF", width: 2 },
               connectNulls: true,
               clip: true,
             },
           ],
         };
+        echartLine.clear();
+
+        echartLine.setOption(option);
+        if (endzoom !== 0) {
+          echartLine.dispatchAction({
+            type: "dataZoom",
+            endValue: endzoom,
+          });
+        }
       }
-      echartLine.setOption(option, true);
     }
   } catch (e) {
     console.error("Error in respiration rate data processing:", e);
@@ -658,8 +681,8 @@ function RR_data_passing(LiveRrValues) {
 
 function heartrate_data(LiveHeartrate) {
   if ($("#LiveHeartRateId").length) {
-    var LiveHRId;
-
+    console.log("Updating Heart Rate:", LiveHeartrate);
+    const LiveHRId = echarts.init(document.getElementById("LiveHeartRateId"));
     var RawechartGauge = {
       series: [
         {
@@ -736,7 +759,6 @@ function heartrate_data(LiveHeartrate) {
       ],
     };
 
-    LiveHRId = echarts.init(document.getElementById("LiveHeartRateId"));
     var echartGauge2 = RawechartGauge;
     var d = LiveHeartrate;
     echartGauge2.series[0].data[0].value[0] = d;

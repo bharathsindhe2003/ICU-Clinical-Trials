@@ -67,5 +67,6 @@ Version Update: 0.5.0
    - Update Livepage, HistoryPage and configuration page.
    - Update History page.
    - Removed unused code.
+   - Fixed Toast message in Dashborad and live page.
 
 <hr>

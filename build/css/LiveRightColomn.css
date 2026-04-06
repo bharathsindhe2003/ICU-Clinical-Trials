@@ -1040,17 +1040,24 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
 
 /* Live section refresh aligned with History and Configuration surfaces */
 #LiveComponents.right_col {
-  min-height: 100vh;
-  padding: 18px 12px 24px !important;
+  --live-viewport-height: calc(100dvh - var(--app-top-nav-height, 57px));
+  min-height: var(--live-viewport-height);
+  height: var(--live-viewport-height);
+  padding: 10px 10px 16px !important;
+  display: flex;
+  flex-direction: column;
   position: relative !important;
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
   background: radial-gradient(circle at top left, rgba(79, 195, 217, 0.18), transparent 30%), linear-gradient(180deg, #f2f9fd 0%, #edf5fb 45%, #f8fbfd 100%) !important;
 }
 
 #LiveComponents .LiveSpecification {
   width: 100%;
-  min-height: 100%;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex: 1 1 auto;
   overflow: visible;
   background: transparent;
 }
@@ -1059,8 +1066,10 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
   max-width: none;
   margin: 0 auto;
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
-  gap: 14px;
+  min-height: 0;
+  gap: 12px;
 }
 
 #LiveComponents #ews_id.ews_card_js {
@@ -1101,8 +1110,10 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
 
 #LiveComponents .live-monitor-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(380px, 1fr);
-  gap: 14px;
+  grid-template-columns: minmax(0, 1.7fr) minmax(320px, 1fr);
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 12px;
   align-items: stretch;
 }
 
@@ -1116,25 +1127,28 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
 }
 
 #LiveComponents .live-chart-column {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  height: 100%;
+  min-height: 0;
 }
 
 #LiveComponents .live-vitals-column {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   align-self: stretch;
-  min-height: 100%;
+  min-height: 0;
+  height: 100%;
 }
 
 #LiveComponents .live-wave-card,
 #LiveComponents .live-ews-surface,
 #LiveComponents .live-vitals-surface {
-  padding: 22px;
+  padding: 16px;
   border: 1px solid rgba(128, 164, 186, 0.2);
-  border-radius: 24px;
+  border-radius: 20px;
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 18px 34px rgba(29, 75, 102, 0.08);
   backdrop-filter: blur(10px);
@@ -1142,7 +1156,9 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
 
 #LiveComponents .live-wave-card {
   display: flex;
+  flex: 1 1 0;
   flex-direction: column;
+  min-height: 0;
   overflow: visible;
   transition:
     transform 0.2s ease,
@@ -1179,26 +1195,26 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
 }
 
 #LiveComponents .live-ews-card {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
-  min-height: 54px;
-  padding: 10px 0 2px;
+  min-height: 46px;
+  padding: 4px 0 0;
 }
 
 #LiveComponents .live-wave-card__header,
 #LiveComponents .live-vitals-surface__header {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
-  align-items: center;
-  margin-bottom: 16px;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
 }
 
 #LiveComponents .live-wave-card__header h2,
 #LiveComponents .live-vitals-surface__header h2 {
   margin: 0;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1.2;
   font-weight: 700;
   color: #11384c;
@@ -1208,7 +1224,7 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
 #LiveComponents .live-vitals-surface__meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   justify-content: flex-end;
 }
 
@@ -1216,12 +1232,12 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
 #LiveComponents .live-vitals-surface__meta span {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
+  gap: 6px;
+  padding: 8px 10px;
   border-radius: 999px;
   background: #eef5fa;
   color: #476476;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -1235,12 +1251,13 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
 
 #LiveComponents .x_panel.live-chart-panel {
   margin-bottom: 0;
+  display: flex;
+  flex: 1 1 auto;
   height: auto !important;
   min-height: 0;
-  flex: 0 0 auto;
-  padding: 14px 14px 18px;
+  padding: 10px 10px 12px;
   border: 1px solid rgba(94, 142, 173, 0.28);
-  border-radius: 22px;
+  border-radius: 18px;
   background: linear-gradient(180deg, #08131d 0%, #11283a 100%);
   box-shadow: 0 22px 40px rgba(10, 36, 55, 0.2);
   overflow: hidden;
@@ -1255,7 +1272,8 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
 #LiveComponents #LiveRRId {
   display: block;
   width: 100% !important;
-  height: clamp(270px, 34vh, 380px) !important;
+  height: 100% !important;
+  min-height: 118px;
   border-radius: 18px;
   background: radial-gradient(circle at top left, rgba(77, 160, 214, 0.18), transparent 34%), linear-gradient(180deg, #102536 0%, #0b1b28 100%);
   box-shadow: inset 0 0 0 1px rgba(146, 193, 224, 0.08);
@@ -1275,7 +1293,7 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  gap: 12px;
   flex: 1 1 auto;
   min-height: 0;
 }
@@ -1283,10 +1301,10 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
 #LiveComponents .live-vital-card {
   display: flex;
   flex-direction: column;
-  padding: 14px;
+  padding: 10px;
   min-height: 0;
   border: 1px solid rgba(94, 142, 173, 0.28);
-  border-radius: 20px;
+  border-radius: 18px;
   background: linear-gradient(180deg, #08131d 0%, #11283a 100%);
   box-shadow: 0 22px 40px rgba(10, 36, 55, 0.2);
   transition:
@@ -1304,9 +1322,9 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
   align-items: center;
   justify-content: center;
   flex: 1 1 auto;
-  min-height: 118px;
-  margin-bottom: 8px;
-  border-radius: 18px;
+  min-height: 92px;
+  margin-bottom: 6px;
+  border-radius: 14px;
   background: radial-gradient(circle at top left, rgba(77, 160, 214, 0.18), transparent 34%), linear-gradient(180deg, #102536 0%, #0b1b28 100%);
   box-shadow: inset 0 0 0 1px rgba(146, 193, 224, 0.08);
 }
@@ -1315,20 +1333,26 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
   width: 100% !important;
   max-width: none !important;
   height: 100% !important;
-  min-height: 118px !important;
+  min-height: 92px !important;
   margin: 0 auto !important;
 }
 
 #LiveComponents .live-vital-card .name_title {
   margin: 0;
-  font-size: 20px;
+  font-size: 16px;
   line-height: 1.25;
   font-weight: 700;
   color: #f2fbff;
   text-align: center;
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 1099px) {
+  #LiveComponents.right_col {
+    min-height: var(--live-viewport-height);
+    height: auto;
+    overflow-y: auto;
+  }
+
   #LiveComponents .live-monitor-layout,
   #LiveComponents .live-wave-card__header,
   #LiveComponents .live-vitals-surface__header {
@@ -1343,10 +1367,18 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
 
   #LiveComponents .live-monitor-layout {
     grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  #LiveComponents .live-chart-column {
+    display: flex;
+    flex-direction: column;
+    height: auto;
   }
 
   #LiveComponents .live-vitals-column {
     min-height: auto;
+    height: auto;
   }
 
   #LiveComponents .live-vitals-grid {
@@ -1356,7 +1388,7 @@ body.nav-sm #sidebar-menu .side-menu li a:hover {
 
 @media (max-width: 991px) {
   #LiveComponents.right_col {
-    padding: 16px 12px 24px !important;
+    padding: 14px 12px 20px !important;
   }
 }
 

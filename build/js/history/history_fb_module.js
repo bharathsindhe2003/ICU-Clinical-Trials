@@ -10,10 +10,10 @@ export function firebase(min_time, max_time, localarray, trim) {
     const id = localStorage.getItem("patient_unique_id");
     console.log("id", id);
 
-    const context_assessment = fb.database().ref().child("context_assessment").child(id).orderByKey().startAt(start_index).endAt(end_index);
+    const context_assessment = fb.database().ref().child("patientlivedata").child(id).orderByKey().startAt(start_index).endAt(end_index);
     const context_timestamp = [];
 
-    const averageCompleteDataRef = fb.database().ref().child("Average_complete_Data").child(id).orderByKey().startAt(start_index).endAt(end_index);
+    // const averageCompleteDataRef = fb.database().ref().child("Average_complete_Data").child(id).orderByKey().startAt(start_index).endAt(end_index);
 
     const ecg_time = fb.database().ref().child("one_min_average").child(id).orderByKey().startAt(start_index).endAt(end_index);
     const ecg_timestamp = [];
@@ -33,17 +33,17 @@ export function firebase(min_time, max_time, localarray, trim) {
         history_context_assessment(min_time, max_time, id, context_timestamp);
       });
 
-      averageCompleteDataRef.once("value", function (snapshot) {
-        if (snapshot.exists()) {
-          snapshot.forEach(function (data) {
-            const timestamp = parseInt(data.key); // Assuming timestamps are integers
-            const timestampInMs = timestamp * 1000; // Convert timestamp to milliseconds
-            context_timestamp.push([timestampInMs, parseInt(5)]); // Assuming the value is 5 for now
-          });
-          // Call the function to render the graph after fetching timestamps from Average_complete_Data
-          history_context_assessment(min_time, max_time, id, context_timestamp);
-        }
-      });
+      // averageCompleteDataRef.once("value", function (snapshot) {
+      //   if (snapshot.exists()) {
+      //     snapshot.forEach(function (data) {
+      //       const timestamp = parseInt(data.key); // Assuming timestamps are integers
+      //       const timestampInMs = timestamp * 1000; // Convert timestamp to milliseconds
+      //       context_timestamp.push([timestampInMs, parseInt(5)]); // Assuming the value is 5 for now
+      //     });
+      //     // Call the function to render the graph after fetching timestamps from Average_complete_Data
+      //     history_context_assessment(min_time, max_time, id, context_timestamp);
+      //   }
+      // });
 
       ecg_time
         .once("value", function (snapshot) {

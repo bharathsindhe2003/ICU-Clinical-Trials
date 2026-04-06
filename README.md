@@ -59,14 +59,13 @@ Version Update: 0.4.2
 
 Version Update: 0.5.0
 
-1. RELEASE DATE:
+1. RELEASE DATE: 06-04-2026
 
 2. Features
    - Update Login page.
    - Update Dashboard page.
    - Update Livepage, HistoryPage and configuration page.
-   - Update History page.
-   - Removed unused code.
    - Fixed Toast message in Dashborad and live page.
+   - Added EWS Score and ECG lead details in history.
 
 <hr>

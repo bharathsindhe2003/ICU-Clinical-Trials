@@ -1,10 +1,7 @@
 import { fb } from "../firebase/config.js";
 
 if (fb !== undefined) {
-  // console.log("Firebase initialized successfully.");
-
   const messaging = fb.messaging();
-  // console.log("Messaging initialized successfully.");
 
   navigator.serviceWorker
     .register("../../../firebase-messaging-sw.js")
@@ -20,7 +17,7 @@ if (fb !== undefined) {
       var docid = localStorage.getItem("doctor_id");
       console.log("Doctor ID retrieved from local storage:", docid);
 
-      return messaging.getToken({ vapidKey: "BN0RxqABNgv0WPRmYtNw1tXkyaDeRf1Q5adqVLCaGe_SbhJsyy9LNHt30VXmwKRxA3cDTBnMKdCa4k0zMCbPxkI" });
+      return messaging.getToken({ vapidKey: "BLZPiTmu6G792TeXG8Zs0AIAff0HtQ0ReXxlG-Tz0pItTZVy3dHehms1Uh1j8vkOyXCVGKUbHQp6gMn_0Nn0C9A" });
     })
     .then((currentToken) => {
       if (currentToken) {

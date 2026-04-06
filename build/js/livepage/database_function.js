@@ -109,7 +109,7 @@ function init_echarts() {
           spo2 = parseInt(spo2) === 238 || spo2 === 2.38 ? "--" : String(spo2);
           temp = parseInt(temp) === 238 ? "--" : String(temp);
 
-          console.log("Listener ID", id, "heart_rate", heart_rate, "sbp", sbp, "dbp", dbp, "respiration_rate", respiration_rate, "acc", acc, "spo2", spo2, "temp", temp, "data", data);
+          // console.log("Listener ID", id, "heart_rate", heart_rate, "sbp", sbp, "dbp", dbp, "respiration_rate", respiration_rate, "acc", acc, "spo2", spo2, "temp", temp, "data", data);
           heartrate_data(heart_rate);
           blood_pressure_data(sbp, dbp);
           respiration_rate_data(respiration_rate);
@@ -194,7 +194,6 @@ function init_echarts() {
           let rrdata = rr_json.res;
           let rr_timestamp = rr_json.timestamp;
 
-          // console.log("final_rr rrdata", rrdata);
           var date = new Date(rr_timestamp * 1000);
           var rrdate = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
           var rrtime = ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);
@@ -209,10 +208,11 @@ function init_echarts() {
           }
           var final_rr;
           if (rrdata != undefined) {
-            let result1 = rrdata.replace(/\,/g, "").trim();
-            final_rr = result1.split(" ").map(Number).filter(Boolean);
+            let result1 = rrdata.replace(/\]\[/g, ", ").trim();
+            result1 = result1.replace(/\[/g, "").trim();
+            result1 = result1.replace(/\]/g, "").trim();
+            final_rr = result1.split(",").map(Number);
           }
-          console.log("final_rr", final_rr);
           RR_data_passing(final_rr, 0); // Pass processed array
         }
       });
@@ -222,7 +222,7 @@ function init_echarts() {
           const key = Object.keys(parsedData)[0];
           let ews_value = parsedData[key]?.ews_score || "--";
           let ewscolor = parsedData[key]?.color || "0";
-          console.log("EWS Value:", ews_value, "EWS Color:", ewscolor);
+          // console.log("EWS Value:", ews_value, "EWS Color:", ewscolor);
           if (ews_value !== undefined && ews_value !== null) {
             ews_value_passing(ews_value, ewscolor);
           } else {
@@ -289,7 +289,9 @@ function init_echarts() {
           if (type == "noise" || type == "flat") {
             final_min_ecg = [];
           } else {
-            let ecg_result = ecg.replace(/\]\[/g, ", ").replace(/\]/g, "").replace(/\[/g, "").trim();
+            let ecg_result = ecg.replace(/\]\[/g, ", ").trim();
+            ecg_result = ecg_result.replace(/\]/g, "").trim();
+            ecg_result = ecg_result.replace(/\[/g, "").trim();
             final_min_ecg = ecg_result.split(",").map(Number);
           }
 
@@ -312,7 +314,6 @@ function init_echarts() {
           echartLinecontext.setOption(NoEcgData);
         }
       });
-
       ppg_min.once("value", function (snapshot) {
         if (snapshot.exists()) {
           const parsedData = snapshot.val() || {};
@@ -346,12 +347,11 @@ function init_echarts() {
           echartLinecontext.setOption(NoPpgData);
         }
       });
-
       rr_min.once("value", function (snapshot) {
         if (snapshot.exists()) {
           const parsedData = snapshot.val() || {};
           const key = Object.keys(parsedData)[0];
-          let rrdata = parsedData[key].res; // Use payload instead of res
+          let rrdata = parsedData[key].payload; // Use payload instead of res
           let rr_timestamp = parsedData[key].timestamp;
           var date = new Date(rr_timestamp * 1000);
           var rrdate = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
@@ -369,12 +369,12 @@ function init_echarts() {
 
           let final_rr = [];
           if (rrdata != undefined) {
-            let result1 = rrdata.replace(/\]\[/g, ", ").replace(/\[/g, "").replace(/\]/g, "");
+            let result1 = rrdata.replace(/\]\[/g, ", ").trim();
+            result1 = result1.replace(/\[/g, "").trim();
+            result1 = result1.replace(/\]/g, "").trim();
             final_rr = result1.split(",").map(Number);
           }
-          if (final_rr.length) {
-            RR_data_passing(final_rr, 125);
-          }
+          RR_data_passing(final_rr, 125);
         } else {
           document.getElementById("rrdate").innerHTML = "--/--/----";
           document.getElementById("rrtime").innerHTML = "--:--:--";

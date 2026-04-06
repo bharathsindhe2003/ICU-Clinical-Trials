@@ -8,7 +8,6 @@ export function firebase(min_time, max_time, localarray, trim) {
     const end_index = max_time.toString();
 
     const id = localStorage.getItem("patient_unique_id");
-    console.log("id", id);
 
     const context_assessment = fb.database().ref().child("patientlivedata").child(id).orderByKey().startAt(start_index).endAt(end_index);
     const context_timestamp = [];

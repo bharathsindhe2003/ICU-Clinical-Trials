@@ -1,5 +1,6 @@
 function ews_value_passing(ews_value, ews_color) {
   try {
+    console.log("EWS Value:", ews_value, "EWS Color:", ews_color);
     const ewsCard = document.getElementById("context-ews-slot") || document.querySelector(".context-ews-slot");
     const ewsValueElement = document.getElementById("context_ews_id1");
     const ewsColorElement = document.getElementById("context_ews_color1");
@@ -30,11 +31,12 @@ function ews_value_passing(ews_value, ews_color) {
 function ECG_data(ecgdata) {
   try {
     if ($("#context_ecg").length) {
-      var value1;
+      const echartLinecontext = echarts.init(document.getElementById("context_ecg"));
       var counter = 0;
+
+      var value1;
       var option1;
       var EcgData = ecgdata;
-      const echartLinecontext = echarts.init(document.getElementById("context_ecg"));
 
       var reference_data = [
         [-20, 100],
@@ -227,6 +229,10 @@ function ECG_data(ecgdata) {
         };
         echartLinecontext.clear();
         echartLinecontext.setOption(option1);
+        echartLinecontext.dispatchAction({
+          type: "dataZoom",
+          endValue: 625,
+        });
       }
     }
   } catch (e) {
@@ -237,13 +243,11 @@ function ECG_data(ecgdata) {
 function PPG_data(ppgdata) {
   try {
     if ($("#context_ppg").length) {
-      var PpgData;
+      const echartLinecontext = echarts.init(document.getElementById("context_ppg"));
+      var counter = 0;
+      var PpgData = ppgdata;
       var value1;
       var option1;
-      var counter = 0;
-
-      const echartLinecontext = echarts.init(document.getElementById("context_ppg"));
-      PpgData = ppgdata;
 
       function randomData() {
         if (PpgData.length === 0) return { value: [0, 0] };
@@ -401,6 +405,10 @@ function PPG_data(ppgdata) {
         };
         echartLinecontext.clear();
         echartLinecontext.setOption(option1);
+        echartLinecontext.dispatchAction({
+          type: "dataZoom",
+          endValue: 500,
+        });
       }
     }
   } catch (e) {
@@ -411,13 +419,11 @@ function PPG_data(ppgdata) {
 function RR_data(rrdata) {
   try {
     if ($("#context_rr").length) {
-      var RrData;
+      const echartLinecontext = echarts.init(document.getElementById("context_rr"));
+      var RrData = rrdata;
       var value1;
       var counter = 0;
       var option1;
-
-      const echartLinecontext = echarts.init(document.getElementById("context_rr"));
-      RrData = rrdata;
 
       function randomData() {
         value1 = RrData[counter % RrData.length];
@@ -577,6 +583,10 @@ function RR_data(rrdata) {
         };
         echartLinecontext.clear();
         echartLinecontext.setOption(option1);
+        echartLinecontext.dispatchAction({
+          type: "dataZoom",
+          endValue: 125,
+        });
       }
     }
   } catch (e) {

@@ -101,7 +101,7 @@ patientsDataRef
           ews_ref.once("value", function (snapshot) {
             if (snapshot.exists()) {
               const ewsData = snapshot.val();
-              const ews_score = ewsData?.score || "--";
+              const ews_score = ewsData?.ews_score || "--";
               const ews_color = ewsData?.color || "0";
               if (ewsData) {
                 ews_value_passing(ews_score, ews_color);

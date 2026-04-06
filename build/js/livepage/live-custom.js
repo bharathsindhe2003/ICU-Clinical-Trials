@@ -1,4 +1,3 @@
-/**************************** EWS on live page **********************************/
 function ews_value_passing(ews_value, ews_color) {
   try {
     const ewsCard = document.getElementById("live-ews-card") || document.querySelector(".live-ews-card");
@@ -28,20 +27,17 @@ function ews_value_passing(ews_value, ews_color) {
     console.error("[ews_value_passing] Error while updating EWS value:", e);
   }
 }
-/***************************EOF of EWS on live page*****************************/
-
-/****************************Electrocardiogram(ECG)***********************************/
 function ECG_data_passing(LiveEcgValues, endzoom) {
   try {
     if ($("#LiveECGId").length) {
-      var EcgData;
       const echartLine = echarts.init(document.getElementById("LiveECGId"));
+      var EcgData;
       var value1;
+      var counter = 0;
       var option1;
-      var echartLinecontext;
 
       EcgData = LiveEcgValues;
-
+      console.log("[ECG_data_passing] endzoom:", endzoom, "LiveEcgValues len:", LiveEcgValues.length);
       var reference_data = [
         [-20, 100],
         [-30, 100],
@@ -50,8 +46,6 @@ function ECG_data_passing(LiveEcgValues, endzoom) {
         [-50, 100],
         [-60, 100],
       ];
-
-      var counter = 0;
 
       function randomData() {
         value1 = EcgData[counter % EcgData.length];
@@ -70,6 +64,7 @@ function ECG_data_passing(LiveEcgValues, endzoom) {
       } catch (e) {
         console.error("[ECG_data_passing] Error while pushing random ECG data:", e);
       }
+      console.log("[ECG_data_passing] endzoom:", endzoom, "data len:", data.length);
       var isZoomed = false;
       if (EcgData.length < 625) {
         option1 = {
@@ -116,9 +111,6 @@ function ECG_data_passing(LiveEcgValues, endzoom) {
             },
           },
         };
-
-        echartLine.clear();
-        echartLine.setOption(option1);
       } else {
         option1 = {
           title: {
@@ -146,7 +138,7 @@ function ECG_data_passing(LiveEcgValues, endzoom) {
                 icon: "image://data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PgogICAgICAgIDwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgCiAgICAgICAgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+ICA8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMTAgMmg0IiAvPiA8cGF0aCBkPSJNMTIgMTR2LTQiIC8+IDxwYXRoIGQ9Ik00IDEzYTggOCAwIDAgMSA4LTcgOCA4IDAgMSAxLTUuMyAxNEw0IDE3LjYiIC8+IDxwYXRoIGQ9Ik05IDE3SDR2NSIgLz4gPC9zdmc+ICA=",
                 fontSize: 28,
                 onclick: function () {
-                  (echartLinecontext || echartLine).dispatchAction({
+                  echartLine.dispatchAction({
                     type: "dataZoom",
                     start: 0,
                     endValue: endzoom,
@@ -288,45 +280,42 @@ function ECG_data_passing(LiveEcgValues, endzoom) {
             },
           ],
         };
-        echartLine.clear();
-        echartLine.setOption(option1);
-        if (endzoom !== 0) {
-          echartLine.dispatchAction({
-            type: "dataZoom",
-            endValue: endzoom,
-          });
-        }
-        echartLine.on("dataZoom", function (params) {
-          if (params.start !== 0 || params.end !== undefined) {
-            isZoomed = true;
-            option1.toolbox.feature.myTool1.show = isZoomed;
-            echartLine.setOption(option1);
-          } else {
-            isZoomed = false;
-            option1.toolbox.feature.myTool1.show = isZoomed;
-            echartLine.setOption(option1);
-          }
+      }
+      echartLine.clear();
+      echartLine.setOption(option1);
+      if (endzoom !== 0) {
+        echartLine.dispatchAction({
+          type: "dataZoom",
+          endValue: endzoom,
         });
       }
+      echartLine.on("dataZoom", function (params) {
+        if (params.start !== 0 || params.end !== undefined) {
+          isZoomed = true;
+          option1.toolbox.feature.myTool1.show = isZoomed;
+          echartLine.setOption(option1);
+        } else {
+          isZoomed = false;
+          option1.toolbox.feature.myTool1.show = isZoomed;
+          echartLine.setOption(option1);
+        }
+      });
     }
   } catch (error) {
     console.error("[ECG_data_passing] Error while processing ECG data:", error);
   }
 }
-/***************************EOF of Electrocardiogram(ECG)*****************************/
-
-/**************************** Photoplethysmogram (PPG)***********************************/
 function PPG_data_passing(LivePpgValues, endzoom) {
   try {
     if ($("#LivePPGId").length) {
-      var PpgData;
       const echartLine = echarts.init(document.getElementById("LivePPGId"));
-      var echartLinecontext;
+      var PpgData;
       var value1;
-      var ppgOption; // Renamed to avoid conflict with parameter
+      var option1; // Renamed to avoid conflict with parameter
       var counter = 0;
 
       PpgData = LivePpgValues;
+      console.log("[PPG_data_passing] endzoom:", endzoom, "LivePpgValues len:", LivePpgValues.length);
 
       function randomData() {
         if (PpgData.length === 0) return { value: [0, 0] };
@@ -344,8 +333,9 @@ function PPG_data_passing(LivePpgValues, endzoom) {
       } catch (e) {
         console.error("[PPG_data_passing] Error while pushing random PPG data:", e);
       }
+      console.log("[PPG_data_passing] endzoom:", endzoom, " data len:", data.length);
       if (PpgData.length < 500) {
-        ppgOption = {
+        option1 = {
           title: {
             text: "WAITING FOR VALID PPG",
             textStyle: {
@@ -390,11 +380,8 @@ function PPG_data_passing(LivePpgValues, endzoom) {
             },
           },
         };
-
-        echartLine.clear();
-        echartLine.setOption(ppgOption);
       } else {
-        ppgOption = {
+        option1 = {
           grid: {
             top: 5,
             left: 40,
@@ -410,7 +397,7 @@ function PPG_data_passing(LivePpgValues, endzoom) {
                 title: "Reset",
                 icon: "image://data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PgogICAgICAgIDwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgCiAgICAgICAgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+ICA8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMTAgMmg0IiAvPiA8cGF0aCBkPSJNMTIgMTR2LTQiIC8+IDxwYXRoIGQ9Ik00IDEzYTggOCAwIDAgMSA4LTcgOCA4IDAgMSAxLTUuMyAxNEw0IDE3LjYiIC8+IDxwYXRoIGQ9Ik05IDE3SDR2NSIgLz4gPC9zdmc+ICA=",
                 onclick: function () {
-                  (echartLinecontext || echartLine).dispatchAction({
+                  echartLine.dispatchAction({
                     type: "dataZoom",
                     start: 0,
                     endValue: endzoom,
@@ -537,33 +524,30 @@ function PPG_data_passing(LivePpgValues, endzoom) {
             },
           ],
         };
-        echartLine.clear();
-        echartLine.setOption(ppgOption);
-        if (endzoom !== 0) {
-          echartLine.dispatchAction({
-            type: "dataZoom",
-            endValue: endzoom,
-          });
-        }
+      }
+      echartLine.clear();
+      echartLine.setOption(option1);
+      if (endzoom !== 0) {
+        echartLine.dispatchAction({
+          type: "dataZoom",
+          endValue: endzoom,
+        });
       }
     }
   } catch (e) {
     console.error("[PPG_data_passing] Error while processing chart:", e);
   }
 }
-/***************************EOF of Photoplethysmogram (PPG)*****************************/
-
-/**************************** Respiration Rate ******************************/
 function RR_data_passing(LiveRrValues, endzoom) {
   try {
     if ($("#LiveRRId").length) {
-      var RrData;
       const echartLine = echarts.init(document.getElementById("LiveRRId"));
+      var RrData;
       var counter = 0;
       var value1;
       let option;
       RrData = LiveRrValues;
-
+      console.log("[RR_data_passing] endzoom:", endzoom, "LiveRrValues len:", LiveRrValues.length);
       function randomData() {
         if (RrData.length === 0) return { value: [0, 0] };
         value1 = RrData[counter % RrData.length];
@@ -580,6 +564,7 @@ function RR_data_passing(LiveRrValues, endzoom) {
       } catch (e) {
         console.error("[RR_data_passing] Error while pushing random RR data:", e);
       }
+      console.log("[RR_data_passing] endzoom:", endzoom, "data len:", data.length);
       if (RrData.length < 119 && endzoom != 0) {
         option = {
           title: {
@@ -596,9 +581,6 @@ function RR_data_passing(LiveRrValues, endzoom) {
           yAxis: { show: false },
           series: [],
         };
-        echartLine.clear();
-
-        echartLine.setOption(option);
       } else {
         option = {
           grid: { top: 5, left: 10, right: 10, bottom: 52 },
@@ -653,35 +635,30 @@ function RR_data_passing(LiveRrValues, endzoom) {
               data: data,
               animation: false,
               smooth: true,
-              sampling: "average",
+              // sampling: "average",
               lineStyle: { color: "#FFFFFF", width: 2 },
               connectNulls: true,
               clip: true,
             },
           ],
         };
-        echartLine.clear();
-
-        echartLine.setOption(option);
-        if (endzoom !== 0) {
-          echartLine.dispatchAction({
-            type: "dataZoom",
-            endValue: endzoom,
-          });
-        }
+      }
+      echartLine.clear();
+      echartLine.setOption(option);
+      if (endzoom !== 0) {
+        echartLine.dispatchAction({
+          type: "dataZoom",
+          endValue: endzoom,
+        });
       }
     }
   } catch (e) {
     console.error("Error in respiration rate data processing:", e);
   }
 }
-/*********************** EOF of Respiration Rate ****************************/
-
-/**************************** Heart Rate ******************************/
 
 function heartrate_data(LiveHeartrate) {
   if ($("#LiveHeartRateId").length) {
-    console.log("Updating Heart Rate:", LiveHeartrate);
     const LiveHRId = echarts.init(document.getElementById("LiveHeartRateId"));
     var RawechartGauge = {
       series: [
@@ -772,9 +749,6 @@ function heartrate_data(LiveHeartrate) {
     LiveHRId.setOption(echartGauge2);
   }
 }
-/*********************** EOF of Heart Rate ****************************/
-
-/***************************  BloodOxygen(spo2) ***********************/
 
 function blood_oxygen_data(LiveBloodOxygen) {
   if ($("#LiveBloodOxygenId").length) {
@@ -863,9 +837,6 @@ function blood_oxygen_data(LiveBloodOxygen) {
     LiveBloodOxygenId.setOption(echartGauge2);
   }
 }
-/************************* EOF of BloodOxygen(spo2) ********************/
-
-/************************ Temperature  ********************************/
 function temperature_data(LiveTemperature) {
   if ($("#LiveTemperatureId").length) {
     LiveTemperature = String(LiveTemperature);
@@ -960,9 +931,6 @@ function temperature_data(LiveTemperature) {
     LiveTemperatureId.setOption(echartGauge2);
   }
 }
-/*********************** EOF of Temperature  ****************************/
-
-/************************  Activity Monitor ****************************/
 function acceleration_data(LiveAcc) {
   if ($("#LiveAccelrationId").length) {
     var LiveAccId;
@@ -1051,7 +1019,6 @@ function acceleration_data(LiveAcc) {
     LiveAccId.setOption(echartGauge2);
   }
 }
-/*********************EOF of Activity Monitor ************************/
 
 function blood_pressure_data(LiveSBP, LiveDBP) {
   if ($("#LiveBloodPressureId").length) {
@@ -1148,7 +1115,6 @@ function blood_pressure_data(LiveSBP, LiveDBP) {
   }
 }
 
-/**************************** Respiration Rate *************************/
 function respiration_rate_data(LiveRRData) {
   if ($("#LiveRespirationRateId").length) {
     var LiveHRId;
@@ -1241,5 +1207,4 @@ function respiration_rate_data(LiveRRData) {
     LiveHRId.setOption(echartGauge2);
   }
 }
-/**************************** EOF of Respiration Rate *************************/
 export { heartrate_data, blood_pressure_data, respiration_rate_data, acceleration_data, blood_oxygen_data, temperature_data, RR_data_passing, PPG_data_passing, ECG_data_passing, ews_value_passing };

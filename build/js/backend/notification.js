@@ -1,10 +1,10 @@
 import { fb } from "../firebase/config.js";
 
 if (fb !== undefined) {
-  console.log("Firebase initialized successfully.");
+  // console.log("Firebase initialized successfully.");
 
   const messaging = fb.messaging();
-  console.log("Messaging initialized successfully.");
+  // console.log("Messaging initialized successfully.");
 
   navigator.serviceWorker
     .register("../../../firebase-messaging-sw.js")
